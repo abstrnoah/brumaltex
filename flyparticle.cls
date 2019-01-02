@@ -44,4 +44,12 @@
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
 %%%%%%
 
+%%% nested environment (wrapper for addmargin) %%%
+\RequirePackage{scrextend}
+
+\newenvironment{nested}
+  {\begin{addmargin}{\parindent}}
+  {\end{addmargin}}
+%%%%%%
+
 \makeatother
