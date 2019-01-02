@@ -2,8 +2,9 @@
 
 \ProvidesClass{flyparticle}
 
-\LoadClass{article}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions\relax
+\LoadClass{article}
 
 \makeatletter
 
