@@ -1,6 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
+
 \ProvidesClass{flyparticle}
+
 \LoadClass{article}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 
 \makeatletter
 
