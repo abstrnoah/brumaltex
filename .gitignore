@@ -1,0 +1,7 @@
+*.pdf
+*.synctex*
+*.aux
+*.idx
+*.log
+*.out
+test*
