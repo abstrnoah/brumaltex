@@ -6,11 +6,11 @@
 
 %%% ams mathematics packages %%%
 \RequirePackage{amsmath, amssymb, amsthm}
-%%% %%%
+%%%%%%
 
 %%% reasonable margins %%%
 \RequirePackage{fullpage}
-%%% %%%
+%%%%%%
 
 %%% header configuration %%%
 \RequirePackage{fancyhdr, lastpage}
@@ -39,6 +39,6 @@
 \fancyfoot[L]{\@namespace\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
-%%% %%%
+%%%%%%
 
 \makeatother
