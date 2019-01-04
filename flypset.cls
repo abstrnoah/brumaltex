@@ -46,6 +46,10 @@
 \theoremstyle{remark}\newtheorem*{discussion}{\@discussiontitle}
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
+% make problem, subproblem nested
+\makenested{problem} % produces `nestedproblem' env
+\makenested{subproblem} % produces `nestedsubproblem' env
+
 %%%%%%
 
 \makeatother
