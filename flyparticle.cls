@@ -8,15 +8,16 @@
 
 \makeatletter
 
-%%% ams mathematics packages %%%
+%%% ams mathematics packages ------------------------------------------------------------
 \RequirePackage{amsmath, amssymb, amsthm}
 %%%%%%
 
-%%% reasonable margins %%%
+%%% reasonable margins ------------------------------------------------------------------
 \RequirePackage{fullpage}
 %%%%%%
 
-%%% header configuration %%%
+%%% header configuration ----------------------------------------------------------------
+
 \RequirePackage{fancyhdr, lastpage}
 
 % supported header parameters:
@@ -43,14 +44,17 @@
 \fancyfoot[L]{\@namespace\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
+
 %%%%%%
 
-%%% nested environment (wrapper for addmargin) %%%
+%%% nested environment (wrapper for addmargin) ------------------------------------------
+
 \RequirePackage{scrextend}
 
 \newenvironment{nested}
   {\begin{addmargin}{\parindent}}
   {\end{addmargin}}
+
 %%%%%%
 
 \makeatother
