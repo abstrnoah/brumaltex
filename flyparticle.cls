@@ -22,7 +22,7 @@
 
 % supported header parameters:
 %   \title, \author, \date, \namespace,
-%   \instsection, \instinstructor, \institution
+%   (NOT UNTIL ABLE TO MAKE CONDITIONAL:) \instsection, \instinstructor, \institution
 
 \title{} % title not mandatory, unlike article
 \newcommand{\@namespace}{}
@@ -30,9 +30,9 @@
 \newcommand{\@instinstructor}{}
 \newcommand{\@institution}{}
 \newcommand{\namespace}[1]{\renewcommand{\@namespace}{#1}}
-\newcommand{\instsection}[1]{\renewcommand{\@instsection}{#1}}
-\newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
-\newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
+% \newcommand{\instsection}[1]{\renewcommand{\@instsection}{#1}}
+% \newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
+% \newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
 
 \setlength{\headheight}{15.2pt}
 \pagestyle{fancyplain}
@@ -41,8 +41,8 @@
 \setlength{\headsep}{0.1in}
 
 \fancyhead[C]{\@title}
-\fancyhead[R]{\@author, \@institution}
-\fancyfoot[L]{\@namespace\ (\@instsection,\ \@instinstructor)}
+\fancyhead[R]{\@author}%, \@institution}
+\fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
 
