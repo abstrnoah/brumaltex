@@ -24,6 +24,7 @@
 %   \title, \author, \date, \namespace,
 %   \instsection, \instinstructor, \institution
 
+\title{} % title not mandatory, unlike article
 \newcommand{\@namespace}{}
 \newcommand{\@instsection}{}
 \newcommand{\@instinstructor}{}
