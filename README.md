@@ -90,3 +90,16 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
 * `nestedproblem`
 * `nestedproblem*`
 * `nestedsubproblem`
+
+### [*flypmacros*](flypmacros.sty) package
+
+* `\sset` - alias to `\mathbb`.
+* `\abs` - nice absolute value vertical bars.
+* `\paren` - nice parentheses.
+* `\recipr` - identical to `\frac`, except numerator and denominator are swapped.
+* `\dleib{(f)}{(t)}` - Leibniz's "d(f)/d(t)" derivative notation.
+* `\mprd` - places a nice period while in mathematics mode.
+* `\mconj` - created for inserting "and", "or", etc. within mathematics mode, with lots of space on either side. E.g.
+  > <pre> (some cool maths)    and    (some more maths) </pre>
+* `\vec` - boldfaced vectors (no arrow).
+* `\hat` - boldfaced unit vecor (carrot on top).
