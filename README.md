@@ -43,7 +43,7 @@ Also be sure to have all of the [required packages](#Dependencies) installed.
 
 ## Per-file Manuals
 
-Documentation for each file follows. Refer to external package documentation (usually found at [ctan](https://ctan.org)) for anything you'd like to do but is not mentioned here. I documented features as I expect them to be used. Arguments are indicated with parentheses, i.e. if there's a command with one parameter, it will be indicated as
+Documentation for each file follows. Refer to external package documentation (usually found at [ctan](https://ctan.org)) for anything you'd like to do not mentioned here -- I documented features as I expect them to be used. Arguments are indicated with parentheses, i.e. if there's a command with one parameter, it will be indicated as
 
     \command{(param)}
 
@@ -69,3 +69,24 @@ The class provides simple indent-nesting of environments via an `addmargin` wrap
     \makenested{(environment)}
 
 will make a new environment named `nested(environment)` which behaves just as `(environment)` does but increases the left margin within by a certain length. Set length `\nesting` to adjust this margin; its default value is `\parindent`. (Note that currently the resulting `nested(environment)` only supports one parameter, mostly because I haven't needed more. If you'd like to nest an environment which takes more than one parameter, feel free to improve `\makenested` and submit a pull request!)
+
+### [*flypset*](flypset.cls) documentclass
+
+This class is geared towards typesetting problem sets or homework solutions. It derives from [*flyparticle*](#flyparticle-documentclass) and imports [*flypmacros*](#flypmacros-package). It provides *enumerate* and *booktabs* for nice enumeration.
+
+The class implements *amsthm* with two theoremstyles (in addition to the standard ones) and five theorem definitions:
+* `problem` (numerically enumerated) (implements `problem` style)
+* `problem*` (same except not enumerated) (implements `problem*` style)
+* `subproblem` (alphabetical enumeration, heading text removed) (implements `problem` style)
+* `proposition` (implements standard `plain` style)
+* `discussion` (implements standard `remark` style)
+
+The heading text can be customized in your preamble with these commands:
+* `\problemtitle` (default "Problem")
+* `\propositiontitle` (default "Proposition")
+* `\discussiontitle` (default "Discussion")
+
+Additionally, the following nested environments (see [*flyparticle*'s](#flyparticle-documentclass) `\makenested`) are provided:
+* `nestedproblem`
+* `nestedproblem*`
+* `nestedsubproblem`
