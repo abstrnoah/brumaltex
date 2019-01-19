@@ -113,4 +113,4 @@ Provides a list of physical constants, given to known precision as of Jan 2019 i
 Refer to the [file](flypconstants.sty) itself for the list. Macro names are as follows:
 * `\(symbol)(unit)`, where "SI" refers to standard SI units.
 * `\(symbol)dig` - the quantity without order of magnitude (i.e. scientific notation with power-of-ten omitted.
-* `\(symbol)ul` - the quantity given without units.
+* `\(symbol)val` - the quantity given without units.
