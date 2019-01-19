@@ -59,8 +59,8 @@
 % command to create nested env from regular env
 % \makenested{<env>} produces nested<env> env
 \newcommand{\makenested}[1]{%%
-  \newenvironment{nested#1}
-    {\begin{#1}\begin{addmargin}{\nesting}}
+  \newenvironment{nested#1}[1][]
+    {\begin{#1}[##1]\begin{addmargin}{\nesting}}
     {\end{addmargin}\end{#1}}
 }
 

@@ -41,13 +41,15 @@
 
 % theorem definitions
 \theoremstyle{problem}\newtheorem{problem}{\@problemtitle}
+\theoremstyle{problem*}\newtheorem{problem*}[problem]{\@problemtitle}
 \theoremstyle{problem}\newtheorem{subproblem}{}[problem]
 \theoremstyle{plain}\newtheorem*{proposition}{\@propositiontitle}
 \theoremstyle{remark}\newtheorem*{discussion}{\@discussiontitle}
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
-% make problem, subproblem nested
+% make %problem% nested
 \makenested{problem} % produces `nestedproblem' env
+\makenested{problem*}
 \makenested{subproblem} % produces `nestedsubproblem' env
 
 %%%%%%
