@@ -1,15 +1,15 @@
 # *flyptex*
 `\LaTeX` library of some useful documentclasses and packages.
 
-[*flyparticle*](#flyparticle-documentclass): space-efficient template to do just about anything.  
-[*flypset*](#flypset-documentclass): solve a problem set, create an exam, type up your notes.  
+[*flyparticle*](#flyparticle-documentclass): a better, space-efficient article.  
+[*flypset*](#flypset-documentclass): typeset a problem set, homework solutions, etc..  
 [*flypmacros*](#flypmacros-package): some useful macros.  
-[*flypconstants*](#flypconstants-package): physical constant library.
+[*flypconstants*](#flypconstants-package): physical constants library.
 
 
 ## Dependencies
 
-Per-file dependencies are listed below. If your system is lacking any of these, you'll find them over at [ctan](https://ctan.org). On Debian systems, you can install most packages via apt. Use `apt-file search <latex file>` first to query for the package that contains the desired latex file.
+Per-file dependencies are listed below. If your system is lacking any of these, you'll find them over at [ctan](https://ctan.org). On Debian systems, you can install most packages via apt. Use `apt-file search (latex file)` first to query for the package that contains the desired latex file.
 
 #### [*flyparticle*.cls](flyparticle.cls) requires
 * *article*.cls
@@ -51,7 +51,7 @@ and you should replace `(param)` with the relevant value.
 
 ### [*flyparticle*](flyparticle.cls) documentclass
 
-It derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*).
+This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*).
 
 Margins are reduced by *fullpage*.
 
@@ -74,7 +74,7 @@ will make a new environment named `nested(environment)` which behaves just as `(
 
 This class is geared towards typesetting problem sets or homework solutions. It derives from [*flyparticle*](#flyparticle-documentclass) and imports [*flypmacros*](#flypmacros-package). It provides *enumerate* and *booktabs* for nice enumeration.
 
-The class implements *amsthm* with two theoremstyles (in addition to the standard ones) and five theorem definitions:
+The class implements *amsthm* with two theoremstyles (in addition to the standard ones) and five theorem environments:
 * `problem` (numerically enumerated) (implements `problem` style)
 * `problem*` (same except not enumerated) (implements `problem*` style)
 * `subproblem` (alphabetical enumeration, heading text removed) (implements `problem` style)
@@ -101,16 +101,16 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
 * `\mprd` - places a nice period while in mathematics mode.
 * `\mconj` - created for inserting "and", "or", etc. within mathematics mode, with lots of space on either side. E.g.
   > <pre> (some cool maths)    and    (some more maths) </pre>
-* `\vec` - boldfaced vectors (no arrow).
-* `\hat` - boldfaced unit vecor (carrot on top).
+* `\vec` - boldfaced vector (no arrow).
+* `\hat` - boldfaced unit vecor (carrot atop).
 
 ### [*flypconstants*](flypconstants.sty) package
 
-Provides a list of physical constants, given to known precision as of Jan 2019 in scientific notation with *siunitx* package.
+Provides a library of physical constants, given to known precision as of Jan 2019 in scientific notation with *siunitx* package.
 
 (This is yet a meager list -- feel free to add to it and submit a pull request!)
 
-Refer to the [file](flypconstants.sty) itself for the list. Macro names are as follows:
+Refer to the [file](flypconstants.sty) itself for the list. Macro names use the following conventions:
 * `\(symbol)(unit)`, where "SI" refers to standard SI units.
 * `\(symbol)dig` - the quantity without order of magnitude (i.e. scientific notation with power-of-ten omitted.
 * `\(symbol)val` - the quantity given without units.
