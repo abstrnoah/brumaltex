@@ -35,7 +35,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 As with all latex packages, simply place .cls and .sty files anywhere within your `texmf/tex/latex` directory and then run
 
     texhash path/to/texmf
-    
+
 to update tex's index of your packages.
 
 Also be sure to have all of the [required packages](#Dependencies) installed.
@@ -103,3 +103,14 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
   > <pre> (some cool maths)    and    (some more maths) </pre>
 * `\vec` - boldfaced vectors (no arrow).
 * `\hat` - boldfaced unit vecor (carrot on top).
+
+### [*flypconstants*](flypconstants.sty) package
+
+Provides a list of physical constants, given to known precision as of Jan 2019 in scientific notation with *siunitx* package.
+
+(This is yet a meager list -- feel free to add to it and submit a pull request!)
+
+Refer to the [file](flypconstants.sty) itself for the list. Macro names are as follows:
+* `\(symbol)(unit)`, where "SI" refers to standard SI units.
+* `\(symbol)dig` - the quantity without order of magnitude (i.e. scientific notation with power-of-ten omitted.
+* `\(symbol)ul` - the quantity given without units.
