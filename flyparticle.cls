@@ -12,6 +12,11 @@
 \RequirePackage{amsmath, amssymb, amsthm}
 %%%%%%
 
+%%% nice enumeration and tables ---------------------------------------------------------
+\RequirePackage{enumerate}
+\RequirePackage{booktabs}
+%%%%%%
+
 %%% reasonable margins ------------------------------------------------------------------
 \RequirePackage{fullpage}
 %%%%%%

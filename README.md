@@ -17,11 +17,12 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *fullpage*.sty
 * *fancyhdr*.sty, *lastpage*.sty
 * *scrextend*.sty
+* *enumerate*.sty
+* *booktabs*.sty
 
 #### [*flypset*.cls](flypset.cls) requires
 * [*flyparticle*.cls](flyparticle.cls)
 * [*flypmacros*.sty](flypmacros.sty)
-* *enumerate*.sty, *booktabs*.sty
 * *amsthm*.sty
 
 #### [*flypmacros*.sty](flypmacros.sty) requires nothing special!
@@ -51,7 +52,7 @@ and you should replace `(param)` with the relevant value.
 
 ### [*flyparticle*](flyparticle.cls) documentclass
 
-This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*).
+This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*), as well as *enumerate* for nice enumeration and *booktabs* for extended table features.
 
 Margins are reduced by *fullpage*.
 
@@ -72,7 +73,7 @@ will make a new environment named `nested(environment)` which behaves just as `(
 
 ### [*flypset*](flypset.cls) documentclass
 
-This class is geared towards typesetting problem sets or homework solutions. It derives from [*flyparticle*](#flyparticle-documentclass) and imports [*flypmacros*](#flypmacros-package). It provides *enumerate* and *booktabs* for nice enumeration.
+This class is geared towards typesetting problem sets or homework solutions. It derives from [*flyparticle*](#flyparticle-documentclass) and imports [*flypmacros*](#flypmacros-package).
 
 The class implements *amsthm* with two theoremstyles (in addition to the standard ones) and five theorem environments:
 * `problem` (numerically enumerated) (implements `problem` style)

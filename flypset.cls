@@ -8,9 +8,6 @@
 
 \makeatletter
 
-%%% nice enumeration packages -----------------------------------------------------------
-\RequirePackage{enumerate, booktabs}
-%%%%%%
 
 %%% useful mathematical and other macros ------------------------------------------------
 \RequirePackage{flypmacros}
