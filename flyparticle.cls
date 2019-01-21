@@ -8,13 +8,20 @@
 
 \makeatletter
 
-%%% ams mathematics packages ------------------------------------------------------------
+%%% import some nice packages -----------------------------------------------------------
 \RequirePackage{amsmath, amssymb, amsthm}
-%%%%%%
-
-%%% nice enumeration and tables ---------------------------------------------------------
 \RequirePackage{enumerate}
 \RequirePackage{booktabs}
+\RequirePackage{xifthen}
+%%%%%%
+
+%%% hyperref setup ----------------------------------------------------------------------
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue}
+%%%%%%
+
+%%% structure setup ---------------------------------------------------------------------
+\RequirePackage[paren]{fancyref}
 %%%%%%
 
 %%% reasonable margins ------------------------------------------------------------------
@@ -45,6 +52,7 @@
 \renewcommand{\footrulewidth}{0pt}
 \setlength{\headsep}{0.1in}
 
+\fancyhf{}
 \fancyhead[C]{\@title}
 \fancyhead[R]{\@author}%, \@institution}
 \fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}

@@ -19,6 +19,9 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *scrextend*.sty
 * *enumerate*.sty
 * *booktabs*.sty
+* *xifthen*.sty
+* *hyperref*.sty
+* *fancyref*.sty
 
 #### [*flypset*.cls](flypset.cls) requires
 * [*flyparticle*.cls](flyparticle.cls)
@@ -52,9 +55,11 @@ and you should replace `(param)` with the relevant value.
 
 ### [*flyparticle*](flyparticle.cls) documentclass
 
-This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*), as well as *enumerate* for nice enumeration and *booktabs* for extended table features.
+This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*), as well as *enumerate* for nice enumeration, *booktabs* for extended table features, and *xifthen* for conditional support.
 
-Margins are reduced by *fullpage*.
+Margins are reduced by *fullpage*. Hyperlinks are enabled with *hyperref*, and internal links are set to appear blue, without boxes.
+
+References are handled by *fancyref*, with the `paren` option selected --- use `\label` and `\Fref` or `\fref` to implement.
 
 Headers are configured via *fancyhdr*. The class places the following parameters in the following locations:
 * `\title`, top-centre
