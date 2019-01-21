@@ -15,12 +15,9 @@
 \RequirePackage{xifthen}
 %%%%%%
 
-%%% hyperref setup ----------------------------------------------------------------------
+%%% reference setup ----------------------------------------------------------------------
 \RequirePackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue}
-%%%%%%
-
-%%% structure setup ---------------------------------------------------------------------
 \RequirePackage{varioref}
 \RequirePackage[capitalise,nameinlink]{cleveref}
 %%%%%%

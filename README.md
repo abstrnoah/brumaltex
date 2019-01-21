@@ -20,8 +20,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *enumerate*.sty
 * *booktabs*.sty
 * *xifthen*.sty
-* *hyperref*.sty
-* *fancyref*.sty
+* *hyperref*.sty, *varioref*.sty, *cleveref*.sty
 
 #### [*flypset*.cls](flypset.cls) requires
 * [*flyparticle*.cls](flyparticle.cls)
@@ -59,7 +58,7 @@ This class derives from the *article* documentclass. It provides the standard am
 
 Margins are reduced by *fullpage*. Hyperlinks are enabled with *hyperref*, and internal links are set to appear blue, without boxes.
 
-References are handled by *fancyref*, with the `paren` option selected --- use `\label` and `\Fref` or `\fref` to implement.
+Greatly improved cross-references are provided by *varioref* together with *cleveref* (capitalise and nameinlink options selected). Use `\Vref` and `vref` for full combined functionality.
 
 Headers are configured via *fancyhdr*. The class places the following parameters in the following locations:
 * `\title`, top-centre
@@ -100,8 +99,10 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
 ### [*flypmacros*](flypmacros.sty) package
 
 * `\sset` - alias to `\mathbb`.
+* `\suchthat` - prints "s.t." in text mode.
 * `\abs` - nice absolute value vertical bars.
 * `\paren` - nice parentheses.
+* `\angbracs` - left and right angle brackets.
 * `\recipr` - identical to `\frac`, except numerator and denominator are swapped.
 * `\dleib{(f)}{(t)}` - Leibniz's "d(f)/d(t)" derivative notation.
 * `\mprd` - places a nice period while in mathematics mode.
