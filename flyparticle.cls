@@ -21,7 +21,8 @@
 %%%%%%
 
 %%% structure setup ---------------------------------------------------------------------
-\RequirePackage[paren]{fancyref}
+\RequirePackage{varioref}
+\RequirePackage[capitalise,nameinlink]{cleveref}
 %%%%%%
 
 %%% reasonable margins ------------------------------------------------------------------
