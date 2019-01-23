@@ -19,7 +19,7 @@
 \RequirePackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \RequirePackage{varioref}
-\RequirePackage[capitalise,nameinlink]{cleveref}
+\RequirePackage[nameinlink]{cleveref}
 %%%%%%
 
 %%% reasonable margins ------------------------------------------------------------------
