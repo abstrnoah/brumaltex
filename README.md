@@ -58,7 +58,7 @@ This class derives from the *article* documentclass. It provides the standard am
 
 Margins are reduced by *fullpage*. Hyperlinks are enabled with *hyperref*, and internal links are set to appear blue, without boxes.
 
-Greatly improved cross-references are provided by *varioref* together with *cleveref* (capitalise and nameinlink options selected). Use `\Vref` and `vref` for full combined functionality.
+Greatly improved cross-references are provided by *varioref* together with *cleveref* (nameinlink options selected). Use `\Vref` and `vref` for full combined functionality.
 
 Headers are configured via *fancyhdr*. The class places the following parameters in the following locations:
 * `\title`, top-centre
@@ -105,11 +105,14 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
 * `\angbracs` - left and right angle brackets.
 * `\recipr` - identical to `\frac`, except numerator and denominator are swapped.
 * `\dleib{(f)}{(t)}` - Leibniz's "d(f)/d(t)" derivative notation.
-* `\mprd` - places a nice period while in mathematics mode.
-* `\mconj` - created for inserting "and", "or", etc. within mathematics mode, with lots of space on either side. E.g.
+* `\mprd` - places a nice period within mathematics mode.
+* `\mcom` - places a nice comma within mathematics mode.
+* `\mconj` - created for inserting "and", "or", etc. within mathematics mode, with lots of space on either side. e.g.
   > <pre> (some cool maths)    and    (some more maths) </pre>
+
 * `\vec` - boldfaced vector (no arrow).
 * `\hat` - boldfaced unit vecor (carrot atop).
+* `\toper{(oper)}{(param)}` and `\Toper{(oper)}{(param)}` - print a text-based operation (e.g. div, curl, dim, ker, etc.) in math mode with its parameter. the latter caps version places parentheses around the parameter.
 
 ### [*flypconstants*](flypconstants.sty) package
 
