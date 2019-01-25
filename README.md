@@ -102,7 +102,8 @@ Additionally, the following nested environments (see [*flyparticle*'s](#flyparti
 * `\suchthat` - prints "s.t." in text mode.
 * `\abs` - nice absolute value vertical bars.
 * `\paren` - nice parentheses.
-* `\angbracs` - left and right angle brackets.
+* `\brac` - nice brackets.
+* `\angbrac` - left and right angle brackets.
 * `\recipr` - identical to `\frac`, except numerator and denominator are swapped.
 * `\dleib{(f)}{(t)}` - Leibniz's "d(f)/d(t)" derivative notation.
 * `\mprd` - places a nice period within mathematics mode.
