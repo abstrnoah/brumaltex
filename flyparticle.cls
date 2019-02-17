@@ -10,6 +10,7 @@
 
 %%% import some nice packages -----------------------------------------------------------
 \RequirePackage{amsmath, amssymb, amsthm}
+\RequirePackage{physics}
 \RequirePackage{enumerate}
 \RequirePackage{booktabs}
 \RequirePackage{xifthen}
