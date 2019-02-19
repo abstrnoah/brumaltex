@@ -40,7 +40,7 @@
 \theoremstyle{problem}\newtheorem{problem}{\@problemtitle}
 \theoremstyle{problem*}\newtheorem{problem*}[problem]{\@problemtitle}
 \theoremstyle{problem}\newtheorem{subproblem}{}[problem]
-\theoremstyle{plain}\newtheorem*{proposition}{\@propositiontitle}
+\theoremstyle{plain}\newtheorem{proposition}{\@propositiontitle}
 \theoremstyle{remark}\newtheorem*{discussion}{\@discussiontitle}
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
