@@ -6,9 +6,6 @@
 \ProcessOptions\relax
 \LoadClass{flyparticle}
 
-\makeatletter
-
-
 %%% useful mathematical and other macros ------------------------------------------------
 \RequirePackage{flypmacros}
 %%%%%%
@@ -49,6 +46,13 @@
 \makenested{problem*}
 \makenested{subproblem} % produces `nestedsubproblem' env
 
-%%%%%%
+% solution environment
+\newenvironment{soln}{%%
+  \begin{proof}[Solution]\leavevmode\newline%%
+  \renewcommand{\qedsymbol}{}%%
+}
+{%%
+  \end{proof}%%
+}
 
-\makeatother
+%%%%%%
