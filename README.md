@@ -1,16 +1,16 @@
 # *flyptex*
 A `\LaTeX` library used by analyticalnoa and perhaps you.
 
-The library comes with a core library, auxiliary libraries, and a few classes. Individual files are documented in detail below, but here is a quick reference list:
+Individual files are documented in detail below, but here is a quick reference list:
 
-[*flyparticle.cls*](#flyparticle): Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
-[*flypcore.sty*](#flypcore): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
-[*flypset.sty*](#flypset): A library for typing up problem sets, solution sets, quizzes, or examinations.
-[*flypset.cls*](#flypset): A class that with *flypset.sty* and subclasses *flyparticle.cls*.
-[*flypch.sty*](#flypch): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
-[*flyplgcy.sty*](#flyplgcy): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
+* [*flyparticle.cls*](#flyparticle): Subclasses *article*. Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
+* [*flypcore.sty*](#flypcore): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
+* [*flypset.sty*](#flypset): A library for typing up problem sets, solution sets, quizzes, or examinations.
+* [*flypset.cls*](#flypset): Imports *flypset.sty* and subclasses *flyparticle.cls*.
+* [*flypch.sty*](#flypch): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
+* [*flyplgcy.sty*](#flyplgcy): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
 
-The *flyptex* package was created and is maintained by Noah D. Ortiz, a mathematics major at Caltech, who welcomes you to help improve this library. Feel free to contact him at (analyticalnoa@gmail.com)[mailto:analyticalnoa@gmail.com].
+The *flyptex* package was created and is maintained by Noah D. Ortiz, a mathematics major at Caltech, who welcomes you to help improve this library. Feel free to contact him at analyticalnoa@gmail.com.
 
 ## Dependencies
 
