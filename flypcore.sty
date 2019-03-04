@@ -1,0 +1,81 @@
+% created and maintained by Noah D. Ortiz at analyticalnoa@gmail.com.
+% component of the flyptex package.
+% public repo availabe at github.com/analyticalnoa/flyptex.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{flypcore}[2019/03/04]
+
+% import the standard library.
+\RequirePackage{amsmath, amssymb, amsthm}
+\RequirePackage{physics}
+\RequirePackage{enumerate}
+\RequirePackage{booktabs}
+\RequirePackage[load=accepted,load=prefixed,load=abbr]{siunitx}
+
+% import legacy macros for compatibility.
+\RequirePackage{flyplgcy}
+
+% references.
+\RequirePackage{varioref}
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
+\RequirePackage[nameinlink]{cleveref}
+
+% nested environment.
+\RequirePackage{scrextend}
+\newlength{\nesting}
+\setlength{\nesting}{\parindent}
+\newcommand{\makenested}[1]{%%
+  \newenvironment{nested#1}[1][]{
+    \begin{#1}[##1]\begin{addmargin}{\nesting}
+  }{
+    \end{addmargin}\end{#1}
+  }
+}
+
+% core environments.
+% ----------------------------------------------------------------------------------------
+\newcommand{\df}[1]{{\bfseries#1}}
+\newcommand{\conclude}{\phantom{}\hfill\ensuremath{\blacktriangleleft}}
+
+% PASSING THM NAMES SEEMS TO MESS UP VARIOREF -- HARDCODED UNTIL SOLN FOUND
+% \newcommand{\@defntitle}{Defn}
+% \newcommand{\@posttitle}{Postulate}
+% \newcommand{\@thmtitle}{Thm}
+% \newcommand{\@proptitle}{Proposition}
+% \newcommand{\defntitle}[1]{\renewcommand{\@defntitle}{#1}}
+% \newcommand{\posttitle}[1]{\renewcommand{\@posttitle}{#1}}
+% \newcommand{\thmtitle}[1]{\renewcommand{\@thmtitle}{#1}}
+% \newcommand{\proptitle}[1]{\renewcommand{\@proptitle}{#1}}
+
+\theoremstyle{definition}
+  \newtheorem{defn}{Defn}[section]
+  \newtheorem{post}{Postulate}[section]
+\theoremstyle{plain}
+  \newtheorem{thm}{Thm}[section]
+  \newtheorem{prop}{Proposition}
+% ----------------------------------------------------------------------------------------
+
+% core macros.
+% ----------------------------------------------------------------------------------------
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\Rank}{rank}
+\DeclareMathOperator{\cof}{cof}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\image}{im}
+
+\newcommand{\intl}{\int\limits}
+\newcommand{\recipr}[2]{\frac{#2}{#1}}
+\newcommand{\qsuchthat}{\qq{s.t.}}
+\newcommand{\abqty}[1]{\langle#1\rangle}
+\newcommand{\sset}[1]{\mathbb{#1}}
+\renewcommand{\vec}[1]{\vb*{#1}}
+
+\newcommand{\amat}[2]{
+  \qty(\begin{array}{#1}
+    #2
+  \end{array})
+}
+% ----------------------------------------------------------------------------------------
