@@ -12,11 +12,7 @@
 % ----------------------------------------------------------------------------------------
 % custom environment naming.
 \newcommand{\@problemtitle}{Problem}
-\newcommand{\@propositiontitle}{Proposition}
-\newcommand{\@discussiontitle}{Discussion}
 \newcommand{\problemtitle}[1]{\renewcommand{\@problemtitle}{#1}}
-\newcommand{\propositiontitle}[1]{\renewcommand{\@propositiontitle}{#1}}
-\newcommand{\discussiontitle}[1]{\renewcommand{\@discussiontitle}{#1}}
 
 \newtheoremstyle{problem}{}{}{}{}{%%
   \bfseries%%
@@ -32,8 +28,6 @@
 \theoremstyle{problem}\newtheorem{problem}{\@problemtitle}
 \theoremstyle{problem*}\newtheorem{problem*}[problem]{\@problemtitle}
 \theoremstyle{problem}\newtheorem{subproblem}{}[problem]
-\theoremstyle{plain}\newtheorem{proposition}{\@propositiontitle}
-\theoremstyle{remark}\newtheorem*{discussion}{\@discussiontitle}
 
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 

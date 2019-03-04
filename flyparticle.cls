@@ -12,6 +12,9 @@
 % import core.
 \RequirePackage{flypcore}
 
+% reasonable margins.
+\RequirePackage{fullpage}
+
 % headers
 % ----------------------------------------------------------------------------------------
 \RequirePackage{fancyhdr, lastpage}

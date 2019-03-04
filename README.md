@@ -1,37 +1,47 @@
 # *flyptex*
-`\LaTeX` library of some useful documentclasses and packages.
+A `\LaTeX` library used by analyticalnoa and perhaps you.
 
-[*flyparticle*](#flyparticle-documentclass): a better, space-efficient article.  
-[*flypset*](#flypset-documentclass): typeset a problem set, homework solutions, etc..  
-[*flypmacros*](#flypmacros-package): some useful macros.  
-[*flypconstants*](#flypconstants-package): physical constants library.
+The library comes with a core library, auxiliary libraries, and a few classes. Individual files are documented in detail below, but here is a quick reference list:
 
+[*flyparticle.cls*](#flyparticle): Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
+[*flypcore.sty*](#flypcore): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
+[*flypset.sty*](#flypset): A library for typing up problem sets, solution sets, quizzes, or examinations.
+[*flypset.cls*](#flypset): A class that with *flypset.sty* and subclasses *flyparticle.cls*.
+[*flypch.sty*](#flypch): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
+[*flyplgcy.sty*](#flyplgcy): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
+
+The *flyptex* package was created and is maintained by Noah D. Ortiz, a mathematics major at Caltech, who welcomes you to help improve this library. Feel free to contact him at (analyticalnoa@gmail.com)[mailto:analyticalnoa@gmail.com].
 
 ## Dependencies
 
 Per-file dependencies are listed below. If your system is lacking any of these, you'll find them over at [ctan](https://ctan.org). On Debian systems, you can install most packages via apt. Use `apt-file search (latex file)` first to query for the package that contains the desired latex file.
 
-#### [*flyparticle*.cls](flyparticle.cls) requires
-* *article*.cls
-* *amsmath*.sty, *amssymb*.sty, *amsthm*.sty
-* *fullpage*.sty
-* *fancyhdr*.sty, *lastpage*.sty
-* *scrextend*.sty
-* *enumerate*.sty
-* *booktabs*.sty
-* *xifthen*.sty
-* *hyperref*.sty, *varioref*.sty, *cleveref*.sty
+#### [*flyparticle.cls*](flyparticle.cls) requires
+* *flypcore.sty* and its dependencies
+* *fullpage.sty*
+* *fancyhdr.sty*
+* *lastpage.sty*
 
-#### [*flypset*.cls](flypset.cls) requires
-* [*flyparticle*.cls](flyparticle.cls)
-* [*flypmacros*.sty](flypmacros.sty)
-* *amsthm*.sty
+#### [*flypcore.sty*](flypcore.sty) requires
+* *amsmath.sty*, *amssymb.sty*, *amsthm.sty*
+* *physics.sty*
+* *enumerate.sty*
+* *booktabs.sty*
+* *siunitx.sty*
+* *varioref.sty*
+* *hyperref.sty*
+* *cleveref.sty*
+* *scrextend.sty*
 
-#### [*flypmacros*.sty](flypmacros.sty) requires nothing special!
+#### [*flypset.sty*](flypset.sty) requires
+* *flypcore.sty* and its dependencies
 
-#### [*flypconstants*.sty](flypconstants.sty) requires
-* *siunitx*.sty
+#### [*flypset.cls*](flypset.cls) requires
+* [*flyparticle.cls*](flyparticle.cls)
+* *flypcore.sty* and its dependencies
 
+#### [*flypch.sty*](flypch.sty) requires
+* *mhchem.sty*
 
 ## Install
 
@@ -39,26 +49,54 @@ As with all latex packages, simply place .cls and .sty files anywhere within you
 
     texhash path/to/texmf
 
-to update tex's index of your packages.
+to update the index of your packages.
 
 Also be sure to have all of the [required packages](#Dependencies) installed.
 
 
 ## Per-file Manuals
 
-Documentation for each file follows. Refer to external package documentation (usually found at [ctan](https://ctan.org)) for anything you'd like to do not mentioned here -- I documented features as I expect them to be used. Arguments are indicated with parentheses, i.e. if there's a command with one parameter, it will be indicated as
+Documentation for each file follows. Refer to external package documentation (usually found at [ctan](https://ctan.org)) for more elaborate documentation of external packages.
 
-    \command{(param)}
+### [*flypcore*](flypcore.sty) package
 
-and you should replace `(param)` with the relevant value.
+Provides the packages listed in [Dependencies](#Dependencies).
 
-### [*flyparticle*](flyparticle.cls) documentclass
+*siunitx* is loaded with *accepted*, *prefixed*, and *abbr* for additional functionality. Reference support is extended with *varioref*, *hyperref*, and *cleveref*, loaded in that order. Trial and error indicates that this sequence avoids most conflicts. *hyperref* is setup to colour links blue. *cleveref* is loaded with *nameinlink*. Use `\Vref` or `\vref` for full combined functionality.
 
-This class derives from the *article* documentclass. It provides the standard ams packages (*amsmath*, *amssymb*, *amsthm*), as well as *enumerate* for nice enumeration, *booktabs* for extended table features, and *xifthen* for conditional support.
+Provides simple indent-nesting of environments via an `addmargin` wrapper. The command
 
-Margins are reduced by *fullpage*. Hyperlinks are enabled with *hyperref*, and internal links are set to appear blue, without boxes.
+    \makenested{someenvironment}
 
-Greatly improved cross-references are provided by *varioref* together with *cleveref* (nameinlink options selected). Use `\Vref` and `vref` for full combined functionality.
+will make a new environment named `nestedsomeenvironment` which behaves just as `someenvironment` does but increases the left margin within by a certain length. Set length `\nesting` to adjust this margin; its default value is `\parindent`.
+
+The `\df{important term}` command provides emphasis, intended for newly-defined terms. I use this in typing up mathematics notes. By default, this is an alias for boldfacing; redefine as you wish. The `\conclude` command is offered to indicate conclusions to environments other than proofs with a black left triangle (customizability coming soon). I use this to conclude definitions and postulates.
+
+The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numbering of the first three are set to follow the section counter; you'll need to modify counters to change this (better documentation of this coming soon). `prop` numbering is independent. By default, environments are named as follows
+* `defn`: "Defn"
+* `post`: "Postulate"
+* `thm`: "Thm"
+* `prop`: "Proposition"
+
+These names can be modified by using one of `\defntitle{newtitle}`, `\posttitle{newtitle}`, and so on for the respective environment.
+
+The core library provides the following mathematics macros:
+* `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`.
+* `\intl` which is equivalent to `\int\limits`.
+* `\recipr` which is `\frac` but with the arguments exchanged.
+* `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
+* `\abqty`: places angle brackets around its argument.
+* `\sset`: alias for `\mathbb`, use to denote black board bold sets.
+* `\vec`: alias for *physics*' `\vb*` macro, which supports bold Greek letters.
+* `\amat`: an amateur augmented matrix; first argument is in the form {c...c|c} where c appears as many times as you have columns and second argument is the matrix.
+
+### [*flyparticle*](flyparticle.cls) class
+
+This class derives from the *article* class.
+
+In addition to loading the core library, flyparticle formats the page as follows.
+
+Margins are made reasonable with *fullpage*.
 
 Headers are configured via *fancyhdr*. The class places the following parameters in the following locations:
 * `\title`, top-centre
@@ -67,61 +105,12 @@ Headers are configured via *fancyhdr*. The class places the following parameters
 * `\namespace`, lower-left (the course, subject, project, etc.)
 * as well as "(page) of (pages)", lower-right
 
-These parameters are set to empty strings by default and none of them are required (unlike *article*). You're welcome to change this configuration with *fancyhdr*'s `\fancyhf` command in your preamble. Set `\headheight` (default 15.2pt) and `\headsep` (default 0.1in) to adjust the header's geometry.
+These parameters are set to empty strings by default and none of them are required. You're welcome to change this configuration with *fancyhdr*'s `\fancyhf` command in your preamble. Set `\headheight` (default 15.2pt) and `\headsep` (default 0.1in) to adjust the header's geometry.
 
-The class provides simple indent-nesting of environments via an `addmargin` wrapper. The command
+### [*flypset*](flypset.sty) package and class
 
-    \makenested{(environment)}
+This library is geared towards typesetting problem sets or homework solutions or exams and the like. The class of the same name simply subclasses *flyparticle* and loads *flypset.sty*.
 
-will make a new environment named `nested(environment)` which behaves just as `(environment)` does but increases the left margin within by a certain length. Set length `\nesting` to adjust this margin; its default value is `\parindent`. (Note that currently the resulting `nested(environment)` only supports one parameter, mostly because I haven't needed more. If you'd like to nest an environment which takes more than one parameter, feel free to improve `\makenested` and submit a pull request!)
+Provides problem environments: `problem`, `problem*`, and `subproblem`. Also included are the nested versions of these environments (`nestedproblem`, etc.); see *flypcore* above for nesting. The default problem name is "Problem", but this can be modified with `\problemtitle{newtitle}`. The starred version of `problem` omits the automatic problem number. You can specify the number with the optional argument, e.g. `\begin{problem}[P1.2]` this is useful when you have problems with non-sequential or non-standard numbers such as "QP2" or "23-5". The `subproblem` is alphabetically enumerated and has no title text.
 
-### [*flypset*](flypset.cls) documentclass
-
-This class is geared towards typesetting problem sets or homework solutions. It derives from [*flyparticle*](#flyparticle-documentclass) and imports [*flypmacros*](#flypmacros-package).
-
-The class implements *amsthm* with two theoremstyles (in addition to the standard ones) and five theorem environments:
-* `problem` (numerically enumerated) (implements `problem` style)
-* `problem*` (same except not enumerated) (implements `problem*` style)
-* `subproblem` (alphabetical enumeration, heading text removed) (implements `problem` style)
-* `proposition` (implements standard `plain` style)
-* `discussion` (implements standard `remark` style)
-
-The heading text can be customized in your preamble with these commands:
-* `\problemtitle` (default "Problem")
-* `\propositiontitle` (default "Proposition")
-* `\discussiontitle` (default "Discussion")
-
-Additionally, the following nested environments (see [*flyparticle*'s](#flyparticle-documentclass) `\makenested`) are provided:
-* `nestedproblem`
-* `nestedproblem*`
-* `nestedsubproblem`
-
-### [*flypmacros*](flypmacros.sty) package
-
-* `\sset` - alias to `\mathbb`.
-* `\suchthat` - prints "s.t." in text mode.
-* `\abs` - nice absolute value vertical bars.
-* `\paren` - nice parentheses.
-* `\brac` - nice brackets.
-* `\angbrac` - left and right angle brackets.
-* `\recipr` - identical to `\frac`, except numerator and denominator are swapped.
-* `\dleib{(f)}{(t)}` - Leibniz's "d(f)/d(t)" derivative notation.
-* `\mprd` - places a nice period within mathematics mode.
-* `\mcom` - places a nice comma within mathematics mode.
-* `\mconj` - created for inserting "and", "or", etc. within mathematics mode, with lots of space on either side. e.g.
-  > <pre> (some cool maths)    and    (some more maths) </pre>
-
-* `\vec` - boldfaced vector (no arrow).
-* `\hat` - boldfaced unit vecor (carrot atop).
-* `\toper{(oper)}{(param)}` and `\Toper{(oper)}{(param)}` - print a text-based operation (e.g. div, curl, dim, ker, etc.) in math mode with its parameter. the latter caps version places parentheses around the parameter.
-
-### [*flypconstants*](flypconstants.sty) package
-
-Provides a library of physical constants, given to known precision as of Jan 2019 in scientific notation with *siunitx* package.
-
-(This is yet a meager list -- feel free to add to it and submit a pull request!)
-
-Refer to the [file](flypconstants.sty) itself for the list. Macro names use the following conventions:
-* `\(symbol)(unit)`, where "SI" refers to standard SI units.
-* `\(symbol)dig` - the quantity without order of magnitude (i.e. scientific notation with power-of-ten omitted.
-* `\(symbol)val` - the quantity given without units.
+Provides the `soln` environment, named "Solution.", which is similar to amsthm's `proof`, but the QED symbol is omitted (customizability coming soon) and there is a return before the first line of text.
