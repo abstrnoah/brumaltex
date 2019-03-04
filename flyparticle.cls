@@ -8,6 +8,7 @@
 % deal with options.
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
+\LoadClass{article}
 
 % import core.
 \RequirePackage{flypcore}

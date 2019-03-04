@@ -78,7 +78,7 @@ The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numberi
 * `thm`: "Thm"
 * `prop`: "Proposition"
 
-These names can be modified by using one of `\defntitle{newtitle}`, `\posttitle{newtitle}`, and so on for the respective environment.
+(The interface for changing these names seems to be messing up *varioref* in recent updates, so names are hard coded until a fix is found.)
 
 The core library provides the following mathematics macros:
 * `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`.

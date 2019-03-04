@@ -38,21 +38,22 @@
 \newcommand{\df}[1]{{\bfseries#1}}
 \newcommand{\conclude}{\phantom{}\hfill\ensuremath{\blacktriangleleft}}
 
-\newcommand{\@defntitle}{Defn}
-\newcommand{\@posttitle}{Postulate}
-\newcommand{\@thmtitle}{Thm}
-\newcommand{\@proptitle}{Proposition}
-\newcommand{\defntitle}[1]{\renewcommand{\@defntitle}{#1}}
-\newcommand{\posttitle}[1]{\renewcommand{\@posttitle}{#1}}
-\newcommand{\thmtitle}[1]{\renewcommand{\@thmtitle}{#1}}
-\newcommand{\proptitle}[1]{\renewcommand{\@proptitle}{#1}}
+% PASSING THM NAMES SEEMS TO MESS UP VARIOREF -- HARDCODED UNTIL SOLN FOUND
+% \newcommand{\@defntitle}{Defn}
+% \newcommand{\@posttitle}{Postulate}
+% \newcommand{\@thmtitle}{Thm}
+% \newcommand{\@proptitle}{Proposition}
+% \newcommand{\defntitle}[1]{\renewcommand{\@defntitle}{#1}}
+% \newcommand{\posttitle}[1]{\renewcommand{\@posttitle}{#1}}
+% \newcommand{\thmtitle}[1]{\renewcommand{\@thmtitle}{#1}}
+% \newcommand{\proptitle}[1]{\renewcommand{\@proptitle}{#1}}
 
 \theoremstyle{definition}
-  \newtheorem{defn}{\@defntitle}[section]
-  \newtheorem{post}{\@posttitle}[section]
+  \newtheorem{defn}{Defn}[section]
+  \newtheorem{post}{Postulate}[section]
 \theoremstyle{plain}
-  \newtheorem{thm}{\@thmtitle}[section]
-  \newtheorem{prop}{\@propositiontitle}
+  \newtheorem{thm}{Thm}[section]
+  \newtheorem{prop}{Proposition}
 % ----------------------------------------------------------------------------------------
 
 % core macros.
