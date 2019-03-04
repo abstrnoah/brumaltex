@@ -18,7 +18,7 @@
 %%% reference setup ----------------------------------------------------------------------
 \RequirePackage{varioref}
 \RequirePackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=blue}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
 \RequirePackage[nameinlink]{cleveref}
 %%%%%%
 

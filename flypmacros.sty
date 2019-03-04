@@ -1,29 +1,35 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{flypmacros}
 
+% load legacy macros
+\RequirePackage{flyplgcy}
+
+%%% external packages -------------------------------------------------------------------
+\RequirePackage{physics}
+%%%%%%
+
 %%% mathematics -------------------------------------------------------------------------
 
 \newcommand{\sset}[1]{\mathbb{#1}}
+\renewcommand{\vec}[1]{\vb*{#1}}
 
-\newcommand{\suchthat}{\ \text{s.t.}\ }
-\newcommand{\sbsuchthat}{\,\middle|\,}
-
-\newcommand{\abs}[1]{\left|#1\right|}
-\newcommand{\paren}[1]{\left(#1\right)}
-\newcommand{\angbrac}[1]{\langle#1\rangle}
 \newcommand{\recipr}[2]{\frac{#2}{#1}}
 
-\newcommand{\dleib}[2]{\frac{d#1}{d#2}}
+\newcommand{\angbrac}[1]{\langle#1\rangle}
+\newcommand{\abqty}[1]{\angbrac{#1}}
 
-\newcommand{\mprd}{\, .}
-\newcommand{\mcom}{\, ,}
-\newcommand{\mconj}[1]{\text{\ \ \ \ #1\ \ \ \ }}
+\newcommand{\stmidbar}{\,\middle|\,}
+\newcommand{\qsuchthat}{\qq{s.t.}}
+% \newcommand{\qsuchthat*}{\qq*{s.t.}}
 
-\let\oldhat\hat
-\renewcommand{\vec}[1]{\mathbf{#1}}
-\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+\newcommand{\intl}{\int\limits}
 
-\newcommand{\toper}[2]{\textnormal{#1}\,#2}
-\newcommand{\Toper}[2]{\textnormal{#1}\paren{#2}}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\Rank}{rank}
+\DeclareMathOperator{\cof}{cof}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\image}{im}
 
 %%%%%%
