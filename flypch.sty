@@ -3,10 +3,7 @@
 % public repo availabe at github.com/analyticalnoa/flyptex.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{flypset}[2019/03/04]
+\ProvidesPackage{flypch}[2019/03/04]
 
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{flyparticle}}
-\ProcessOptions\relax
-\LoadClass{flyparticle}
-
-\RequirePackage{flypset}
+% the one and only chemistry package.
+\RequirePackage{mhchem}

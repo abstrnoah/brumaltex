@@ -1,38 +1,24 @@
+% created and maintained by Noah D. Ortiz at analyticalnoa@gmail.com.
+% component of the flyptex package.
+% public repo availabe at github.com/analyticalnoa/flyptex.
+
 \NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{flyparticle}[2019/03/04]
 
-\ProvidesClass{flyparticle}
-
+% deal with options.
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
-\LoadClass{article}
 
-\makeatletter
+% import core.
+\RequirePackage{flypcore}
 
-%%% import some nice packages -----------------------------------------------------------
-\RequirePackage{amsmath, amssymb, amsthm}
-\RequirePackage{enumerate}
-\RequirePackage{booktabs}
-\RequirePackage{xifthen}
-%%%%%%
-
-%%% reference setup ----------------------------------------------------------------------
-\RequirePackage{varioref}
-\RequirePackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
-\RequirePackage[nameinlink]{cleveref}
-%%%%%%
-
-%%% reasonable margins ------------------------------------------------------------------
-\RequirePackage{fullpage}
-%%%%%%
-
-%%% header configuration ----------------------------------------------------------------
-
+% headers
+% ----------------------------------------------------------------------------------------
 \RequirePackage{fancyhdr, lastpage}
 
 % supported header parameters:
 %   \title, \author, \date, \namespace,
-%   (NOT UNTIL ABLE TO MAKE CONDITIONAL:) \instsection, \instinstructor, \institution
+%   (NOT UNTIL BOTHER TO LEARN CONDITIONALS:) \instsection, \instinstructor, \institution
 
 \title{} % title not mandatory, unlike article
 \newcommand{\@namespace}{}
@@ -56,25 +42,4 @@
 \fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
-
-%%%%%%
-
-%%% nested environment ------------------------------------------------------------------
-
-\RequirePackage{scrextend}
-
-% configurable length: \nesting
-\newlength{\nesting}
-\setlength{\nesting}{\parindent}
-
-% command to create nested env from regular env
-% \makenested{<env>} produces nested<env> env
-\newcommand{\makenested}[1]{%%
-  \newenvironment{nested#1}[1][]
-    {\begin{#1}[##1]\begin{addmargin}{\nesting}}
-    {\end{addmargin}\end{#1}}
-}
-
-%%%%%%
-
-\makeatother
+% ----------------------------------------------------------------------------------------

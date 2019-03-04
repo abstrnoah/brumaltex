@@ -1,0 +1,51 @@
+% created and maintained by Noah D. Ortiz at analyticalnoa@gmail.com.
+% component of the flyptex package.
+% public repo availabe at github.com/analyticalnoa/flyptex.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{flypset}[2019/03/04]
+
+% import core.
+\RequirePackage{flypcore}
+
+% set environments
+% ----------------------------------------------------------------------------------------
+% custom environment naming.
+\newcommand{\@problemtitle}{Problem}
+\newcommand{\@propositiontitle}{Proposition}
+\newcommand{\@discussiontitle}{Discussion}
+\newcommand{\problemtitle}[1]{\renewcommand{\@problemtitle}{#1}}
+\newcommand{\propositiontitle}[1]{\renewcommand{\@propositiontitle}{#1}}
+\newcommand{\discussiontitle}[1]{\renewcommand{\@discussiontitle}{#1}}
+
+\newtheoremstyle{problem}{}{}{}{}{%%
+  \bfseries%%
+}{}{ }{%%
+  \thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}%%
+}
+\newtheoremstyle{problem*}{}{}{}{}{%%
+  \bfseries%%
+}{}{ }{%%
+  \thmname{#1}\thmnote{ #3}%%
+}
+
+\theoremstyle{problem}\newtheorem{problem}{\@problemtitle}
+\theoremstyle{problem*}\newtheorem{problem*}[problem]{\@problemtitle}
+\theoremstyle{problem}\newtheorem{subproblem}{}[problem]
+\theoremstyle{plain}\newtheorem{proposition}{\@propositiontitle}
+\theoremstyle{remark}\newtheorem*{discussion}{\@discussiontitle}
+
+\renewcommand{\thesubproblem}{(\alph{subproblem})}
+
+\newenvironment{soln}{%%
+  \begin{proof}[Solution]\leavevmode\newline%%
+  \renewcommand{\qedsymbol}{}%%
+}
+{%%
+  \end{proof}%%
+}
+
+\makenested{problem} % produces `nestedproblem' env
+\makenested{problem*}
+\makenested{subproblem} % produces `nestedsubproblem' env
+% ----------------------------------------------------------------------------------------
