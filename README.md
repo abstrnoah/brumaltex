@@ -107,7 +107,7 @@ Headers are configured via *fancyhdr*. The class places the arguments of the fol
 
 These parameters are set to empty strings by default and none of them are required. You're welcome to change this configuration with *fancyhdr*'s `\fancyhf` command in your preamble. Set `\headheight` (default 15.2pt) and `\headsep` (default 0.1in) to adjust the header's geometry.
 
-### [*flypset*](flypset.sty) package and class
+### *flypset* [package](flypset.sty) and [class](flypset.cls)
 
 This library is geared towards typesetting problem sets or homework solutions or exams and the like. The class of the same name simply subclasses *flyparticle* and loads *flypset.sty*.
 
