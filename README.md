@@ -1,14 +1,14 @@
 # *flyptex*
 A `\LaTeX` library used by analyticalnoa and perhaps you.
 
-Individual files are documented in detail below, but here is a quick reference list:
+See [installation](#install) below. Individual files are documented in [detail](#per-file-manuals), but here is a quick reference list:
 
-* [*flyparticle.cls*](#flyparticle): Subclasses *article*. Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
-* [*flypcore.sty*](#flypcore): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
-* [*flypset.sty*](#flypset): A library for typing up problem sets, solution sets, quizzes, or examinations.
-* [*flypset.cls*](#flypset): Imports *flypset.sty* and subclasses *flyparticle.cls*.
-* [*flypch.sty*](#flypch): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
-* [*flyplgcy.sty*](#flyplgcy): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
+* [*flyparticle.cls*](#flyparticle-class): Subclasses *article.cls*. Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
+* [*flypcore.sty*](#flypcore-package): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
+* [*flypset.sty*](#flypset-package-and-class): A library for typing up problem sets, solution sets, quizzes, or examinations.
+* [*flypset.cls*](#flypset-package-and-class): Imports *flypset.sty* and subclasses *flyparticle.cls*.
+* [*flypch.sty*](flypch.sty): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
+* [*flyplgcy.sty*](flyplgcy.sty): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
 
 The *flyptex* package was created and is maintained by Noah D. Ortiz, a mathematics major at Caltech, who welcomes you to help improve this library. Feel free to contact him at analyticalnoa@gmail.com.
 
@@ -37,7 +37,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *flypcore.sty* and its dependencies
 
 #### [*flypset.cls*](flypset.cls) requires
-* [*flyparticle.cls*](flyparticle.cls)
+* *flyparticle.cls*
 * *flypcore.sty* and its dependencies
 
 #### [*flypch.sty*](flypch.sty) requires
@@ -78,17 +78,17 @@ The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numberi
 * `thm`: "Thm"
 * `prop`: "Proposition"
 
-(The interface for changing these names seems to be messing up *varioref* in recent updates, so names are hard coded until a fix is found.)
+(The interface for changing these names seems to be messing up how *varioref* works in this last update of flyptex, so names are hard coded until a fix is found.)
 
 The core library provides the following mathematics macros:
 * `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`.
-* `\intl` which is equivalent to `\int\limits`.
-* `\recipr` which is `\frac` but with the arguments exchanged.
+* `\intl`: alias for `\int\limits`.
+* `\recipr`: is `\frac` but with the arguments exchanged.
 * `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
 * `\abqty`: places angle brackets around its argument.
 * `\sset`: alias for `\mathbb`, use to denote black board bold sets.
 * `\vec`: alias for *physics*' `\vb*` macro, which supports bold Greek letters.
-* `\amat`: an amateur augmented matrix; first argument is in the form {c...c|c} where c appears as many times as you have columns and second argument is the matrix.
+* `\amat`: an amateur augmented matrix (better one coming soon); first argument is in the form {c...c|c} where c appears as many times as you want columns and the bar appears where you want vertical lines; second argument is the matrix.
 
 ### [*flyparticle*](flyparticle.cls) class
 
@@ -98,7 +98,7 @@ In addition to loading the core library, flyparticle formats the page as follows
 
 Margins are made reasonable with *fullpage*.
 
-Headers are configured via *fancyhdr*. The class places the following parameters in the following locations:
+Headers are configured via *fancyhdr*. The class places the arguments of the following commands (defined in your preable) in the following locations:
 * `\title`, top-centre
 * `\author`, top-right
 * `\date`, lower-centre
@@ -111,6 +111,6 @@ These parameters are set to empty strings by default and none of them are requir
 
 This library is geared towards typesetting problem sets or homework solutions or exams and the like. The class of the same name simply subclasses *flyparticle* and loads *flypset.sty*.
 
-Provides problem environments: `problem`, `problem*`, and `subproblem`. Also included are the nested versions of these environments (`nestedproblem`, etc.); see *flypcore* above for nesting. The default problem name is "Problem", but this can be modified with `\problemtitle{newtitle}`. The starred version of `problem` omits the automatic problem number. You can specify the number with the optional argument, e.g. `\begin{problem}[P1.2]` this is useful when you have problems with non-sequential or non-standard numbers such as "QP2" or "23-5". The `subproblem` is alphabetically enumerated and has no title text.
+Provides problem environments: `problem`, `problem*`, and `subproblem`. Also included are the nested versions of these environments (`nestedproblem`, etc.); see [*flypcore*](#flypcore-package) for nesting. The default problem name is "Problem", but this can be modified with `\problemtitle{newtitle}`. The starred version of `problem` omits the automatic problem number. You can specify the number with the optional argument, e.g. `\begin{problem}[P1.2]` this is useful when you have problems with non-sequential or non-standard numbers such as "QP2" or "23-5". The `subproblem` is alphabetically enumerated and has no title text.
 
-Provides the `soln` environment, named "Solution.", which is similar to amsthm's `proof`, but the QED symbol is omitted (customizability coming soon) and there is a return before the first line of text.
+Provides the `soln` environment, named "Solution", which is similar to amsthm's `proof`, but the QED symbol is omitted (customizability coming soon) and there is a return before the first line of text.
