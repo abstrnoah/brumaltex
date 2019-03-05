@@ -88,7 +88,7 @@ The core library provides the following mathematics macros:
 * `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
 * `\abqty`: places angle brackets around its argument.
 * `\sset`: alias for `\mathbb`, use to denote black board bold sets.
-* `\vec`: alias for *physics*' `\vb*` macro, which supports bold Greek letters.
+* `\vec`, `\uvec`: vector and unit vector; aliases to `\vb*` and `\vu*`, which support bold Greek letters.
 * `\amat`: an amateur augmented matrix (better one coming soon); first argument is in the form {c...c|c} where c appears as many times as you want columns and the bar appears where you want vertical lines; second argument is the matrix.
 
 ### [*flyparticle*](flyparticle.cls) class
