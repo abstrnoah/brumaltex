@@ -28,6 +28,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *enumerate.sty*
 * *booktabs.sty*
 * *siunitx.sty*
+* *graphicx.sty*
 * *varioref.sty*
 * *hyperref.sty*
 * *cleveref.sty*
@@ -81,7 +82,7 @@ The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numberi
 (The interface for changing these names seems to be messing up how *varioref* works in this last update of flyptex, so names are hard coded until a fix is found.)
 
 The core library provides the following mathematics macros:
-* `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`.
+* `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`, `\smallo`, `\bigo`.
 * `\intl`: alias for `\int\limits`.
 * `\recipr`: is `\frac` but with the arguments exchanged.
 * `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
