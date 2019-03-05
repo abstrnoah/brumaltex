@@ -1,5 +1,5 @@
 # *flyptex*
-A `\LaTeX` library used by analyticalnoa and perhaps you.
+An alright `\LaTeX` library.
 
 See [installation](#install) below. Individual files are documented in [detail](#per-file-manuals), but here is a quick reference list:
 
