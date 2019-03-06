@@ -24,6 +24,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 
 #### [*flypcore.sty*](flypcore.sty) requires
 * *amsmath.sty*, *amssymb.sty*, *amsthm.sty*
+* *mathtools.sty*
 * *physics.sty*
 * *enumerate.sty*
 * *booktabs.sty*
@@ -83,13 +84,14 @@ The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numberi
 
 The core library provides the following mathematics macros:
 * `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`, `\smallo`, `\bigo`.
-* `\intl`: alias for `\int\limits`.
 * `\recipr`: is `\frac` but with the arguments exchanged.
 * `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
 * `\abqty`: places angle brackets around its argument.
 * `\sset`: alias for `\mathbb`, use to denote black board bold sets.
 * `\vec`, `\uvec`: vector and unit vector; aliases to `\vb*` and `\vu*`, which support bold Greek letters.
 * `\amat`: an amateur augmented matrix (better one coming soon); first argument is in the form {c...c|c} where c appears as many times as you want columns and the bar appears where you want vertical lines; second argument is the matrix.
+* `\intl`: alias for `\int\limits`; also `\iintl` and `\iiintl`.
+* `\intt`: same as `\intl` except takes one argument and places it below in text mode; also `\iintt` and `iiintt`.
 
 ### [*flyparticle*](flyparticle.cls) class
 

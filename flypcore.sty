@@ -7,6 +7,7 @@
 
 % import the standard library.
 \RequirePackage{amsmath, amssymb, amsthm}
+\RequirePackage{mathtools}
 \RequirePackage{physics}
 \RequirePackage{enumerate}
 \RequirePackage{booktabs}
@@ -70,6 +71,12 @@
 \DeclareMathOperator{\bigo}{\mathcal{O}}
 
 \newcommand{\intl}{\int\limits}
+\newcommand{\iintl}{\iint\limits}
+\newcommand{\iiintl}{\iiint\limits}
+\newcommand{\intt}[1]{\int\limits_{\text{#1}}}
+\newcommand{\iintt}[1]{\iint\limits_{\text{#1}}}
+\newcommand{\iiintt}[1]{\iiint\limits_{\text{#1}}}
+
 \newcommand{\recipr}[2]{\frac{#2}{#1}}
 \newcommand{\qsuchthat}{\qq{s.t.}}
 \newcommand{\abqty}[1]{\langle#1\rangle}
