@@ -1,6 +1,8 @@
 # *flyptex*
 An alright `\LaTeX` library.
 
+Public repository at [GitHub](https://github.com/analyticalnoa/flyptex) and [Overleaf](https://www.overleaf.com/read/vddqpjjvvswh).
+
 See [installation](#install) below. Individual files are documented in [detail](#per-file-manuals), but here is a quick reference list:
 
 * [*flyparticle.cls*](#flyparticle-class): Subclasses *article.cls*. Use this class for complete flyptex functionality. Imports all of flyptex and provides the flyptex page format.
