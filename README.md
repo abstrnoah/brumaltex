@@ -32,6 +32,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *booktabs.sty*
 * *siunitx.sty*
 * *graphicx.sty*
+* *placeins.sty*
 * *varioref.sty*
 * *hyperref.sty*
 * *cleveref.sty*
@@ -66,7 +67,7 @@ Documentation for each file follows. Refer to external package documentation (us
 
 Provides the packages listed in [Dependencies](#Dependencies).
 
-*siunitx* is loaded with *accepted*, *prefixed*, and *abbr* for additional functionality. Reference support is extended with *varioref*, *hyperref*, and *cleveref*, loaded in that order. Trial and error indicates that this sequence avoids most conflicts. *hyperref* is setup to colour links blue. *cleveref* is loaded with *nameinlink*. Use `\Vref` or `\vref` for full combined functionality.
+*siunitx* is loaded with *accepted*, *prefixed*, and *abbr* for additional functionality. Reference support is extended with *varioref*, *hyperref*, and *cleveref*, loaded in that order. Trial and error indicates that this sequence avoids most conflicts. *hyperref* is setup to colour links blue. *cleveref* is loaded with *nameinlink*. Use `\Vref` or `\vref` for full combined functionality. *placeins* is loaded with the *section* option, forcing floats (figures, tables, etc.) to not appear beyond their section.
 
 Provides simple indent-nesting of environments via an `addmargin` wrapper. The command
 
