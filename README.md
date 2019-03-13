@@ -33,6 +33,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *graphicx.sty*
 * *placeins.sty*
 * *mhchem.sty*
+* *microtype.sty*
 * *varioref.sty*
 * *hyperref.sty*
 * *cleveref.sty*
