@@ -9,7 +9,6 @@ See [installation](#install) below. Individual files are documented in [detail](
 * [*flypcore.sty*](#flypcore-package): Import this package to use flyptex alongside your own class or preamble. Includes all *flyparticle.cls* functionality except for page formating.
 * [*flypset.sty*](#flypset-package-and-class): A library for typing up problem sets, solution sets, quizzes, or examinations.
 * [*flypset.cls*](#flypset-package-and-class): Imports *flypset.sty* and subclasses *flyparticle.cls*.
-* [*flypch.sty*](flypch.sty): Import chemistry libraries. Is currently just an alias to the comprehensive *mhchem.sty*.
 * [*flyplgcy.sty*](flyplgcy.sty): A catchall for legacy macros that are retained for backwards-compatibility. Imported into the core library by default; there will soon be an option to suppress this.
 
 The *flyptex* package was created and is maintained by Noah D. Ortiz, a mathematics major at Caltech, who welcomes you to help improve this library. Feel free to contact him at analyticalnoa@gmail.com.
@@ -33,6 +32,7 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *siunitx.sty*
 * *graphicx.sty*
 * *placeins.sty*
+* *mhchem.sty*
 * *varioref.sty*
 * *hyperref.sty*
 * *cleveref.sty*
@@ -45,8 +45,6 @@ Per-file dependencies are listed below. If your system is lacking any of these, 
 * *flyparticle.cls*
 * *flypcore.sty* and its dependencies
 
-#### [*flypch.sty*](flypch.sty) requires
-* *mhchem.sty*
 
 ## Install
 
