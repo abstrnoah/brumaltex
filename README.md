@@ -85,7 +85,7 @@ The `defn`, `post`, `thm`, and `prop` environments come pre-defined. The numberi
 (The interface for changing these names seems to be messing up how *varioref* works in this last update of flyptex, so names are hard coded until a fix is found.)
 
 The core library provides the following mathematics macros:
-* `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`, `\smallo`, `\bigo`.
+* `\Span`, `\dom`, `\ran`, `\Rank`, `\cof`, `\diag`, `\image`, `\smallo`, `\bigo`, `\proj`.
 * `\recipr`: is `\frac` but with the arguments exchanged.
 * `\qsuchthat` uses *physics* to print `\quad\text{s.t.}\quad` in math mode.
 * `\abqty`: places angle brackets around its argument.
