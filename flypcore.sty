@@ -39,7 +39,7 @@
 }
 
 % core environments.
-% ----------------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 \newcommand{\df}[1]{{\bfseries#1}}
 \newcommand{\conclude}{\phantom{}\hfill\ensuremath{\blacktriangleleft}}
 
@@ -59,10 +59,10 @@
 \theoremstyle{plain}
   \newtheorem{thm}{Thm}[section]
   \newtheorem{prop}{Proposition}
-% ----------------------------------------------------------------------------------------
+
 
 % core macros.
-% ----------------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 \DeclareMathOperator{\Span}{span}
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\ran}{ran}
@@ -73,6 +73,12 @@
 \DeclareMathOperator{\smallo}{\scriptstyle\mathcal{O}}
 \DeclareMathOperator{\bigo}{\mathcal{O}}
 \DeclareMathOperator{\proj}{pr}
+\DeclareMathOperator*{\Usum}{U}
+\DeclareMathOperator*{\Lsum}{L}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator*{\osc}{\omega}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Alt}{Alt}
 
 \newcommand{\intl}{\int\limits}
 \newcommand{\iintl}{\iint\limits}
@@ -87,6 +93,8 @@
 \newcommand{\Norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\qcom}{\qq*{,}}
 \newcommand{\qocand}{\qcom\qand*}
+\newcommand{\qwhere}{\qq{where}}
+\newcommand{\qwhen}{\qq{when}}
 
 \newcommand{\sset}[1]{\mathbb{#1}}
 \newcommand{\N}{\sset{N}}
@@ -102,4 +110,4 @@
     #2
   \end{array})
 }
-% ----------------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
