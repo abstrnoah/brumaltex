@@ -5,6 +5,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{flypcore}[2019/05/25]
 
+% makeat commands
+\newcommand{\AL}{\makeatletter}
+\newcommand{\AO}{\makeatother}
+
 % import the standard library.
 \RequirePackage{amsmath, amssymb, amsthm}
 \RequirePackage{mathtools}
@@ -19,6 +23,7 @@
 \RequirePackage{empheq}
 \RequirePackage{easylist}
 \RequirePackage{setspace}
+\RequirePackage{fancyhdr}
 
 % import legacy macros for compatibility.
 \RequirePackage{flyplgcy}
@@ -133,4 +138,13 @@
     #2
   \end{array})
 }
+
+% latex utils
+\AL
+\ifcsname f@nch@setoffs\endcsname\else
+    \let\f@nch@setoffs\fancy@setoffs
+\fi
+\newcommand{\rehdr}{\f@nch@setoffs}
+\AO
+
 % ------------------------------------------------------------------------------
