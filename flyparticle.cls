@@ -29,7 +29,9 @@
 \newcommand{\@instsection}{}
 \newcommand{\@instinstructor}{}
 \newcommand{\@institution}{}
+\newcommand{\@titletype}{}
 \newcommand{\namespace}[1]{\renewcommand{\@namespace}{#1}}
+\newcommand{\titletype}[1]{\renewcommand{\@titletype}{#1}}
 % \newcommand{\instsection}[1]{\renewcommand{\@instsection}{#1}}
 % \newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
 % \newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
@@ -41,6 +43,7 @@
 \setlength{\headsep}{0.1in}
 
 \fancyhf{}
+\fancyhead[L]{\@titletype}
 \fancyhead[C]{\@title}
 \fancyhead[R]{\@author}%, \@institution}
 \fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}
