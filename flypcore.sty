@@ -142,6 +142,17 @@
   \end{array})
 }
 
+% lists
+\newcommand{\elitemize}{%
+    \NewList(%
+        Hang=true,Space=4pt,Space*=4pt,Hide=1000,%
+        Margin1=1.5em,Style1*=\textbullet\hskip.5em,%
+        Margin2=3.7em,Style2*=\scriptsize$\blacktriangleright$\hskip.7em,%
+        Margin3=5.9em,Style3*=$\circ$\hskip.5em,%
+        Margin4=7.8em,Style4*=$\ast$\hskip.5em%
+    )%
+}
+
 % latex utils
 \AL
 \ifcsname f@nch@setoffs\endcsname\else
