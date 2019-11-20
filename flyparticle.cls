@@ -17,7 +17,7 @@
 \RequirePackage{fullpage}
 
 % headers
-% ----------------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
 \RequirePackage{fancyhdr, lastpage}
 
 % supported header parameters:
@@ -38,8 +38,8 @@
 
 \setlength{\headheight}{15.2pt}
 \pagestyle{fancyplain}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0.8pt}
 \setlength{\headsep}{0.1in}
 
 \fancyhf{}
@@ -49,4 +49,4 @@
 \fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
-% ----------------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
