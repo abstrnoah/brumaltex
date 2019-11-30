@@ -10,7 +10,7 @@
 \newcommand{\AO}{\makeatother}
 
 % import the standard library.
-\RequirePackage{amsmath, amssymb, amsthm}
+\RequirePackage{amsmath, amssymb, amsthm, mathrsfs}
 \RequirePackage{mathtools}
 \RequirePackage{physics}
 \RequirePackage{enumerate}
@@ -78,6 +78,12 @@
 \newcommand{\pll}{\parallel}
 \newcommand{\prp}{\perp}
 
+% var symbols
+\let\oldepsilon\epsilon
+\let\oldvarepsilon\varepsilon
+\renewcommand{\epsilon}{\oldvarepsilon}
+\renewcommand{\varepsilon}{\oldepsilon}
+
 % math operators
 \DeclareMathOperator{\Span}{span}
 \DeclareMathOperator{\dom}{dom}
@@ -130,6 +136,7 @@
 \newcommand{\Q}{\sset{Q}}
 \newcommand{\R}{\sset{R}}
 \newcommand{\C}{\sset{C}}
+\newcommand{\F}{\sset{F}}
 
 % vectors
 \newcommand{\uvec}[1]{\vu*{#1}}
