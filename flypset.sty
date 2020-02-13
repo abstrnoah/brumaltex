@@ -14,16 +14,24 @@
 \newcommand{\@problemtitle}{Problem}
 \newcommand{\problemtitle}[1]{\renewcommand{\@problemtitle}{#1}}
 
-\newtheoremstyle{problem}{}{}{}{}{%%
-  \bfseries%%
-}{}{ }{%%
-  \thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}%%
-}
-\newtheoremstyle{problem*}{}{}{}{}{%%
-  \bfseries%%
-}{}{ }{%%
-  \thmname{#1}\thmnote{ #3}%%
-}
+\newtheoremstyle{problem}
+    {}
+    {}
+    {}
+    {}
+    {\bfseries}
+    {}
+    { }
+    {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{problem*}
+    {}
+    {}
+    {}
+    {}
+    {\bfseries}
+    {}
+    { }
+    {\thmname{#1}\thmnote{ #3}}
 
 \theoremstyle{problem}\newtheorem{problem}{\@problemtitle}
 \theoremstyle{problem*}\newtheorem{problem*}[problem]{\@problemtitle}
