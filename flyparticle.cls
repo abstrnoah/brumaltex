@@ -36,6 +36,8 @@
 % \newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
 % \newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
 
+\newcommand{\pageofword}{of}
+
 \setlength{\headheight}{15.2pt}
 \pagestyle{fancyplain}
 \renewcommand{\headrulewidth}{0.8pt}
@@ -48,5 +50,5 @@
 \fancyhead[R]{\@author}%, \@institution}
 \fancyfoot[L]{\@namespace}%\ (\@instsection,\ \@instinstructor)}
 \fancyfoot[C]{\@date}
-\fancyfoot[R]{\thepage\ of\ \pageref{LastPage}}
+\fancyfoot[R]{\thepage\ \pageofword\ \pageref{LastPage}}
 % ------------------------------------------------------------------------------
