@@ -27,6 +27,10 @@
 \RequirePackage{setspace}
 \RequirePackage{fancyhdr}
 
+% needspace.
+\usepackage{needspace}
+\newlength{\neededspace}\setlength{\neededspace}{0.2\textheight}
+
 % import legacy macros for compatibility.
 \RequirePackage{flyplgcy}
 
@@ -80,6 +84,7 @@
 \newcommand{\ep}{\epsilon}
 \newcommand{\pll}{\parallel}
 \newcommand{\prp}{\perp}
+\newcommand{\dummycdot}{\,\cdot\,}
 
 % var symbols
 \let\oldepsilon\epsilon
