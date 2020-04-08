@@ -20,12 +20,17 @@
 \RequirePackage[load=accepted,load=prefixed,load=abbr]{siunitx}
 \RequirePackage{graphicx}
 \RequirePackage[section]{placeins}
-\RequirePackage[small,compact]{titlesec}
+%\RequirePackage[small,compact]{titlesec}
 \RequirePackage[version=4]{mhchem}
 \RequirePackage{microtype}
 \RequirePackage{empheq}
 \RequirePackage{setspace}
 \RequirePackage{fancyhdr}
+\RequirePackage{datetime2}
+
+% datetime2
+\DTMusemodule{english}{en-NZ}
+\DTMsetstyle{en-NZ}
 
 % needspace.
 \usepackage{needspace}
@@ -168,7 +173,7 @@
 % lists
 \newcommand{\elitemize}{%
     \NewList(%
-        Hang=true,Space=4pt,Space*=4pt,Hide=1000,%
+        Hang=true,Space=3pt,Space*=3pt,Hide=1000,%
         Margin1=1.5em,Style1*=\textbullet\hskip.5em,%
         Margin2=3.7em,Style2*=\scriptsize$\blacktriangleright$\hskip.7em,%
         Margin3=5.9em,Style3*=$\circ$\hskip.5em,%

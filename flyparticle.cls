@@ -25,6 +25,7 @@
 %   (NOT UNTIL BOTHER TO LEARN CONDITIONALS:) \instsection, \instinstructor, \institution
 
 \title{} % title not mandatory, unlike article
+\date{\today}
 \newcommand{\@namespace}{}
 \newcommand{\@instsection}{}
 \newcommand{\@instinstructor}{}
