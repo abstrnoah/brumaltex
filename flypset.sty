@@ -13,6 +13,8 @@
 % custom environment naming.
 \newcommand{\@problemtitle}{Problem}
 \newcommand{\problemtitle}[1]{\renewcommand{\@problemtitle}{#1}}
+\newcommand{\@solntitle}{Solution}
+\newcommand{\solntitle}[1]{\renewcommand{\@solntitle}{#1}}
 
 \newtheoremstyle{problem}
     {}
@@ -40,7 +42,7 @@
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
 \newenvironment{soln}{%%
-  \begin{proof}[Solution]\leavevmode\newline%%
+  \begin{proof}[\@solntitle]\leavevmode\newline%%
   \renewcommand{\qedsymbol}{}%%
 }
 {%%
