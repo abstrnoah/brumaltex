@@ -42,7 +42,12 @@
 % references.
 \RequirePackage{varioref}
 \RequirePackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
+\hypersetup{
+    linktocpage,
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue
+}
 \RequirePackage[nameinlink]{cleveref}
 
 % nested environment.
@@ -51,6 +56,7 @@
 \setlength{\nesting}{\parindent}
 \newcommand{\makenested}[1]{%%
   \newenvironment{nested#1}[1][]{
+    \needspace{\neededspace}%%
     \begin{#1}[##1]\leavevmode\begin{addmargin}{\nesting}%%
   }{%%
     \end{addmargin}\end{#1}
