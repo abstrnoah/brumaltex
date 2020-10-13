@@ -81,11 +81,11 @@
 \theoremstyle{definition}
   \newtheorem{defn}{Defn}[section]
   \newtheorem*{defn*}{Defn}
-  \newtheorem{post}{Postulate}[section]
 \theoremstyle{plain}
-  \newtheorem{thm}{Thm}[section]
-  \newtheorem{prop}{Proposition}
-  \newtheorem{lemma}{Lemma}
+  \newtheorem{thm}{Theorem}[section]
+  \newtheorem{post}[thm]{Postulate}
+  \newtheorem{prop}[thm]{Proposition}
+  \newtheorem{lemma}[thm]{Lemma}
 
 
 % core macros.
@@ -129,6 +129,7 @@
 \let\grad\relax \DeclareMathOperator{\grad}{grad}
 \let\curl\relax \DeclareMathOperator{\curl}{curl}
 \let\div\relax \DeclareMathOperator{\div}{div}
+\DeclareMathOperator{\gcf}{gcf}
 \DeclareMathOperator{\lcm}{lcm}
 \DeclareMathOperator{\Abs}{abs}
 \newcommand{\D}{\partial}
@@ -167,6 +168,7 @@
 \newcommand{\R}{\sset{R}}
 \newcommand{\C}{\sset{C}}
 \newcommand{\F}{\sset{F}}
+\newcommand{\powerset}{\mathcal{P}}
 
 % vectors
 \newcommand{\uvec}[1]{\vu*{#1}}
@@ -182,13 +184,19 @@
 
 % lists
 \newcommand{\elitemize}{%
+    \setlength{\parskip}{0em}
     \NewList(%
         Hang=true,Space=3pt,Space*=3pt,Hide=1000,%
-        Margin1=1.5em,Style1*=\textbullet\hskip.5em,%
+        Margin1=1.5em,Style1*=\scriptsize$\blacktriangleright$\hskip.5em,%
         Margin2=3.7em,Style2*=\scriptsize$\blacktriangleright$\hskip.7em,%
         Margin3=5.9em,Style3*=$\circ$\hskip.5em,%
         Margin4=7.8em,Style4*=$\ast$\hskip.5em%
     )%
+}
+\newcommand{\elrmskip}{%%
+    \ListProperties(%%
+        Space=0pt,Space*=0pt%%
+    )%%
 }
 
 % latex utils
