@@ -78,14 +78,15 @@
 % \newcommand{\thmtitle}[1]{\renewcommand{\@thmtitle}{#1}}
 % \newcommand{\proptitle}[1]{\renewcommand{\@proptitle}{#1}}
 
-\theoremstyle{definition}
-  \newtheorem{defn}{Defn}[section]
-  \newtheorem*{defn*}{Defn}
 \theoremstyle{plain}
   \newtheorem{thm}{Theorem}[section]
   \newtheorem{post}[thm]{Postulate}
   \newtheorem{prop}[thm]{Proposition}
+  \newtheorem*{prop*}{Proposition}
   \newtheorem{lemma}[thm]{Lemma}
+\theoremstyle{definition}
+  \newtheorem{defn}[thm]{Defn}
+  \newtheorem*{defn*}{Defn}
 
 
 % core macros.
@@ -224,3 +225,10 @@
 \newcommand{\1}{\mathbbm{1}}
 \DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\Nat}{Nat}
+
+\newcommand{\nn}{\nonumber}
+
+\DeclareMathOperator{\coker}{coker}
+
+\let\oldleq\leq \let\leq\relax \let\leq\leqslant
+\let\oldgeq\geq \let\geq\relax \let\geq\geqslant
