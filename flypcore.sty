@@ -220,9 +220,13 @@
 \DeclareMathOperator{\ob}{ob}
 \newcommand{\category}[1]{\textsf{\textbf{#1}}}
 
-\usepackage{bbm}
+
+% bbm doesn't work with Tectonic :(
+%\usepackage{bbm}
+%\newcommand{\1}{\mathbbm{1}}
+\RequirePackage{unicode-math}
+\newcommand{\1}{𝟙}
 \usepackage{stmaryrd}
-\newcommand{\1}{\mathbbm{1}}
 \DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\Nat}{Nat}
 
