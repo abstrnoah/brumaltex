@@ -41,8 +41,8 @@
 
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
-\newenvironment{soln}{%%
-  \begin{proof}[\@solntitle]\leavevmode\newline%%
+\newenvironment{soln}[1][\@solntitle]{%%
+  \begin{proof}[#1]\leavevmode\newline%%
   \renewcommand{\qedsymbol}{}%%
 }
 {%%
