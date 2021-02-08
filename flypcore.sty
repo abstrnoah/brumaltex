@@ -39,14 +39,19 @@
 % import legacy macros for compatibility.
 \RequirePackage{flyplgcy}
 
+% colous
+\RequirePackage{xcolor}
+\definecolor{blueish}{rgb}{0.0,0.1,0.4}
+\definecolor{greenish}{rgb}{0.0,0.4,0.0}
+
 % references.
 \RequirePackage{varioref}
 \RequirePackage{hyperref}
 \hypersetup{
     linktocpage,
     colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue
+    linkcolor=blueish,
+    citecolor=greenish
 }
 \RequirePackage[nameinlink]{cleveref}
 
@@ -61,6 +66,17 @@
   }{%%
     \end{addmargin}\end{#1}
   }
+}
+
+
+%
+% Utilities
+%
+\RequirePackage{xifthen}
+% 'thisifthat'
+%   Expand #1 if #2 is not empty.
+\newcommand{\thisifthat}[2]{%%
+    \ifthenelse{\isempty{#2}}{}{#1}%%
 }
 
 % core environments.
@@ -224,8 +240,8 @@
 % bbm doesn't work with Tectonic :(
 %\usepackage{bbm}
 %\newcommand{\1}{\mathbbm{1}}
-\RequirePackage{unicode-math}
-\newcommand{\1}{𝟙}
+\RequirePackage{dsfont}
+\newcommand{\1}{\mathds{1}}
 \usepackage{stmaryrd}
 \DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\Nat}{Nat}
