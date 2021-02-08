@@ -31,8 +31,10 @@
 \newcommand{\@instinstructor}{}
 \newcommand{\@institution}{}
 \newcommand{\@titletype}{}
+\newcommand{\@subtitle}{}
 \newcommand{\namespace}[1]{\renewcommand{\@namespace}{#1}}
 \newcommand{\titletype}[1]{\renewcommand{\@titletype}{#1}}
+\newcommand{\subtitle}[1]{\renewcommand{\@subtitle}{#1}}
 % \newcommand{\instsection}[1]{\renewcommand{\@instsection}{#1}}
 % \newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
 % \newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
@@ -53,3 +55,20 @@
 \fancyfoot[C]{\@date}
 \fancyfoot[R]{\thepage\ \pageofword\ \pageref{LastPage}}
 % ------------------------------------------------------------------------------
+
+%
+% Title page
+%
+\newcommand{\maketitlepage}{%%
+    \begin{onehalfspace}
+        \newpage
+        \vspace*{3in}
+        \begin{center}\Large
+            {\LARGE\textbf{\@title}}%%
+            % TODO
+            \thisifthat{\\\textbf{\@subtitle}}{\@subtitle}%%
+            \\\@author%%
+            \\\@namespace%%
+        \end{center}%%
+    \end{onehalfspace}
+}
