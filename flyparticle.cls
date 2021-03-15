@@ -32,9 +32,11 @@
 \newcommand{\@institution}{}
 \newcommand{\@titletype}{}
 \newcommand{\@subtitle}{}
+\newcommand{\@authorOther}{}
 \newcommand{\namespace}[1]{\renewcommand{\@namespace}{#1}}
 \newcommand{\titletype}[1]{\renewcommand{\@titletype}{#1}}
 \newcommand{\subtitle}[1]{\renewcommand{\@subtitle}{#1}}
+\newcommand{\authorOther}[1]{\renewcommand{\@authorOther}{#1}}
 % \newcommand{\instsection}[1]{\renewcommand{\@instsection}{#1}}
 % \newcommand{\instinstructor}[1]{\renewcommand{\@instinstructor}{#1}}
 % \newcommand{\institution}[1]{\renewcommand{\@institution}{#1}}
@@ -59,16 +61,30 @@
 %
 % Title page
 %
-\newcommand{\maketitlepage}{%%
-    \begin{onehalfspace}
-        \newpage
-        \vspace*{3in}
-        \begin{center}\Large
-            {\LARGE\textbf{\@title}}%%
+\newcommand{\maketitletext}{%%
+    \begin{doublespace}
+        \begin{center}\large
+            {\LARGE\@title}%%
             % TODO
-            \thisifthat{\\\textbf{\@subtitle}}{\@subtitle}%%
+            %\thisifthat{\\\textbf{\@subtitle}}{\@subtitle}%%
             \\\@author%%
+            \\\@authorOther%%
             \\\@namespace%%
         \end{center}%%
-    \end{onehalfspace}
+    \end{doublespace}
 }
+
+\newcommand{\maketitlepage}{%%
+    \newpage{}
+    \vspace*{3in}
+    \maketitletext{}
+}
+
+\AL{}
+\fancypagestyle{titlepage}{
+    \renewcommand{\headrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[C]{\@date}
+    \fancyfoot[R]{\thepage\ \pageofword\ \pageref{LastPage}}
+}
+\AO{}
