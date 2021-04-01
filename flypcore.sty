@@ -76,7 +76,7 @@
 % 'thisifthat'
 %   Expand #1 if #2 is not empty.
 \newcommand{\thisifthat}[2]{%%
-    \ifthenelse{\isempty{#2}}{}{#1}%%
+    \ifthenelse{\equal{#2}{}}{}{#1}%%
 }
 
 % core environments.

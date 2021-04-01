@@ -63,28 +63,41 @@
 %
 \newcommand{\maketitletext}{%%
     \begin{doublespace}
-        \begin{center}\large
-            {\LARGE\@title}%%
-            % TODO
-            %\thisifthat{\\\textbf{\@subtitle}}{\@subtitle}%%
-            \\\@author%%
-            \\\@authorOther%%
-            \\\@namespace%%
+        \begin{center}%%
+            \LARGE%%
+                \@title%%
+            \large%%
+                \thisifthat{\\\@subtitle}{\@subtitle}%%
+                \\\@author%%
+                \thisifthat{\\\@authorOther}{\@authorOther}%%
+            \normalsize%%
+                \\\@namespace%%
         \end{center}%%
     \end{doublespace}
 }
 
 \newcommand{\maketitlepage}{%%
-    \newpage{}
-    \vspace*{3in}
-    \maketitletext{}
+    \thispagestyle{titlepage}
+    \newpage{}%%
+    \vspace*{3in}%%
+    \maketitletext{}%%
 }
 
-\AL{}
-\fancypagestyle{titlepage}{
+\renewcommand{\maketitle}{%%
+    \thispagestyle{titlepageWithContent}
+    \maketitletext{}%%
+}
+
+\fancypagestyle{titlepageWithContent}{
     \renewcommand{\headrulewidth}{0pt}
     \fancyhf{}
     \fancyfoot[C]{\@date}
     \fancyfoot[R]{\thepage\ \pageofword\ \pageref{LastPage}}
 }
-\AO{}
+
+\fancypagestyle{titlepage}{
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[C]{\@date}
+}
