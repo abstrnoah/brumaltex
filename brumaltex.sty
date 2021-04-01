@@ -201,22 +201,26 @@
   \newtheorem{definition}[theorem]{Defn}
   \newtheorem*{definition*}{Defn}
 
+\AL
 \theoremstyle{btProblem}
     \newtheorem{problem}{\@problemtitle}
     \newtheorem{subproblem}{}[problem]
 \theoremstyle{btProblem*}
     \newtheorem{problem*}[problem]{\@problemtitle}
+\AO
 
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
 % solution
 %   Solution to a problem. Like proof, but without the qedsymbol.
+\AL
 \newenvironment{solution}[1][\@btSolutionTitle]{%%
   \begin{proof}[#1]\leavevmode\newline%%
   \renewcommand{\qedsymbol}{}%%
 }{%%
   \end{proof}%%
 }
+\AO
 
 %
 % Textmode macros
@@ -361,37 +365,43 @@
 \fancyhead[R]{\@author}
 \fancyfoot[L]{\@namespace}
 \fancyfoot[C]{\@date}
-\fancyfoot[R]{\thepage\ \btPageOfWord\ \pageref{LastPage}}
 \AO
+\fancyfoot[R]{\thepage\ \btPageOfWord\ \pageref{LastPage}}
 
 %
 % Title page
 %
 % Page style for title page (no other content).
+\AL
 \fancypagestyle{btTitlePage}{
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0pt}
     \fancyhf{}
     \fancyfoot[C]{\@date}
 }
+\AO
 
 % Page style for page that has title and maybe other content.
+\AL
 \fancypagestyle{btTitlePageWithContent}{
     \renewcommand{\headrulewidth}{0pt}
     \fancyhf{}
     \fancyfoot[C]{\@date}
     \fancyfoot[R]{\thepage\ \btPageOfWord\ \pageref{LastPage}}
 }
+\AO
 
 % btMakeTitleText
 %   Print the title text without external typesetting like headers, etc.
+\AL
 \newcommand{\btMakeTitleText}{%%
     \begin{doublespace}
         \begin{center}%%
             \LARGE%%
                 \@title%%
-            \large%%
+            \Large%%
                 \btThisIfThat{\\\@subtitle}{\@subtitle}%%
+            \large%%
                 \\\@author%%
                 \btThisIfThat{\\\@authorOther}{\@authorOther}%%
             \normalsize%%
@@ -399,6 +409,7 @@
         \end{center}%%
     \end{doublespace}%%
 }
+\AO
 
 % btMakeTitlePage
 %   Create a new page, put the title on it, and fix headers for title page.
