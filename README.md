@@ -27,3 +27,8 @@ follow `camelCase`. However, the first iteration of the package didn't follow
 this convention, and we're still working on migrating over, having to wrestle
 with legacy support as well. This convention does not apply to "shorthand"
 commands.
+
+
+## TODO
+- [ ] Modularize and be able to select modules at import.
+- [ ] Bolden theorem subtitles.

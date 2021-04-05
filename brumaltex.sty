@@ -27,9 +27,11 @@
 %
 % Import packages
 %
+
 % Standard library.
 \RequirePackage{amsmath, amssymb, amsthm}
 \RequirePackage{mathtools}
+% This is literally the single most useful package.
 \RequirePackage{physics}
 
 % Fonts.
@@ -179,10 +181,10 @@
 
 \AL
 \theoremstyle{btProblem}
-    \newtheorem{problem}{\@problemtitle}
+    \newtheorem{problem}{\@btProblemTitle}
     \newtheorem{subproblem}{}[problem]
 \theoremstyle{btProblem*}
-    \newtheorem{problem*}[problem]{\@problemtitle}
+    \newtheorem{problem*}[problem]{\@btProblemTitle}
 \AO
 
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
