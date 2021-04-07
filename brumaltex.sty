@@ -37,6 +37,7 @@
 % Fonts.
 \RequirePackage{mathrsfs}
 \RequirePackage{stmaryrd}
+\RequirePackage{dsfont}
 
 % Common list packages.
 \RequirePackage{enumerate}
@@ -194,8 +195,8 @@
 \AL
 \newenvironment{solution}[1][\@btSolutionTitle]{%%
   \begin{proof}[#1]\leavevmode\newline%%
-  \renewcommand{\qedsymbol}{}%%
 }{%%
+  \renewcommand{\qedsymbol}{}%%
   \end{proof}%%
 }
 \AO
