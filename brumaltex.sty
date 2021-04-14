@@ -41,7 +41,9 @@
 
 % Common list packages.
 \RequirePackage{enumerate}
-\RequirePackage{enumitem}
+% Unloading this because conflicts with 'enumerate' package... hopefully this
+% doesn't break anything else.
+% \RequirePackage{enumitem}
 \RequirePackage[ampersand]{easylist} % Choose the "&" symbol to denote items.
 
 % Tables.
@@ -82,6 +84,9 @@
 \RequirePackage{varioref}
 \RequirePackage{hyperref}
 \RequirePackage[nameinlink]{cleveref}
+
+% Reasonable quotation interface.
+\RequirePackage{csquotes}
 
 % Reasonable margins.
 \RequirePackage{fullpage}
