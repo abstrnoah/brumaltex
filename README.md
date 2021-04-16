@@ -32,3 +32,4 @@ commands.
 ## TODO
 - [ ] Modularize and be able to select modules at import.
 - [ ] Bolden theorem subtitles.
+- [ ] Look into any compiler warnings produced by this package.
