@@ -175,16 +175,16 @@
     {\thmname{#1}\thmnote{ (#3)}}
 
 \theoremstyle{plain}
-  \newtheorem{theorem}{Theorem}[section]
-  \newtheorem{postulate}[theorem]{Postulate}
-  \newtheorem{proposition}[theorem]{Proposition}
-  \newtheorem*{proposition*}{Proposition}
-  \newtheorem{lemma}[theorem]{Lemma}
-  \newtheorem{corollary}[theorem]{Corollary}
+    \newtheorem{theorem}{Theorem}[section]
     \newtheorem*{theorem*}{Theorem}
+    \newtheorem{postulate}[theorem]{Postulate}
+    \newtheorem{proposition}[theorem]{Proposition}
+    \newtheorem*{proposition*}{Proposition}
+    \newtheorem{lemma}[theorem]{Lemma}
+    \newtheorem{corollary}[theorem]{Corollary}
 \theoremstyle{definition}
-  \newtheorem{definition}[theorem]{Definition}
-  \newtheorem*{definition*}{Definition}
+    \newtheorem{definition}[theorem]{Definition}
+    \newtheorem*{definition*}{Definition}
 
 \AL
 \theoremstyle{btProblem}
@@ -200,10 +200,10 @@
 %   Solution to a problem. Like proof, but without the qedsymbol.
 \AL
 \newenvironment{solution}[1][\@btSolutionTitle]{%%
-  \begin{proof}[#1]\leavevmode\newline%%
+    \begin{proof}[#1]\leavevmode\newline%%
 }{%%
-  \renewcommand{\qedsymbol}{}%%
-  \end{proof}%%
+    \renewcommand{\qedsymbol}{}%%
+    \end{proof}%%
 }
 \AO
 
