@@ -202,6 +202,20 @@
 % Legacy support (may be deprecated).
 \newcommand{\df}{\defn}
 
+% brLinkFootnote{url}{text} %%{2
+%   Create a link to 'url' displayed as 'text' and with a footnote that displays
+%   the actual url. We use href's '\hyper@normalise' to (hopefully) take care of
+%   escaping arbitrary characters in the url, so that the user should not have
+%   to escape them manually.
+% It is important that the url is the first argument, though with some more
+% reading I think it's possible to make this work with the url in the second
+% argument, as well as optional args. See [^1].
+\AL
+\newcommand{\brLinkFootnote@}[2]{\href{#1}{#2}\footnote{\url{#1}}}
+\DeclareRobustCommand{\brLinkFootnote}{\hyper@normalise\brLinkFootnote@}
+\AO
+
+
 % MATHMODE SHORTHAND %%{1
 
 % Short for nonumber, when you want one number for multiline equation block.
@@ -396,6 +410,8 @@
     \btMakeTitleText{}%%
 }
 
+% NOTES %%{1
+% [^1]: https://tex.stackexchange.com/questions/12855/getting-those-signs-in-the-footnote
 
 % We deviate from the default 'foldmarker' because it is not uncommon to have
 % three curly brackets in a row in TeX.
