@@ -11,9 +11,8 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{brumaltex}[2021/03/31]
 
-%
-% Utilities (that don't need any imports)
-%
+% UTILITIES (INDEPENDENT) %%{1
+
 % Short makeat commands.
 \newcommand{\AL}{\makeatletter}
 \newcommand{\AO}{\makeatother}
@@ -24,9 +23,7 @@
 %\newcommand{\swapMacros}{ ... }
 
 
-%
-% Import packages
-%
+% IMPORT %%{1
 
 % Standard library.
 \RequirePackage{amsmath, amssymb, amsthm}
@@ -98,24 +95,17 @@
 %\RequirePackage{needspace}
 %\RequirePackage[small,compact]{titlesec}
 
+% PACKAGE CONFIG %%{1
 
-%
-% Configure datetime2
-%
+% DATETIME2 %%{2
 \DTMusemodule{english}{en-NZ}
 \DTMsetstyle{en-NZ}
 
-
-%
-% Configure xcolor
-%
+% XCOLOR %%{2
 \definecolor{blueish}{rgb}{0.0,0.1,0.4}
 \definecolor{greenish}{rgb}{0.0,0.4,0.0}
 
-
-%
-% Configure references
-%
+% REFERENCES %%{2
 \hypersetup{
     linktocpage,
     colorlinks=true,
@@ -123,10 +113,9 @@
     citecolor=greenish
 }
 
-%
-% Utilities (after package imports)
-%
-% rehdr
+% UTILITIES (DEPENDENT) %%{1
+
+% rehdr %%{2
 %   Run this anywhere to reset header after possible disruption.
 % TODO: find source (some stackoverflow).
 \AL
@@ -136,16 +125,15 @@
 \newcommand{\rehdr}{\f@nch@setoffs}
 \AO
 
-% btThisIfThat
+% btThisIfThat %%{2
 %   Expand #1 if #2 is not empty.
 \newcommand{\btThisIfThat}[2]{%%
     \ifthenelse{\equal{#2}{}}{}{#1}%%
 }
 
 
-%
-% Environments
-%
+% ENVIRONMENTS %%{1
+
 % Environment name parameters.
 \AL
 \newcommand{\@btProblemTitle}{Problem}
@@ -207,19 +195,15 @@
 }
 \AO
 
-%
-% Textmode macros
-% TODO
-%
+% TEXTMODE MACROS %%{1
+
 % Default style for a "definition" term, i.e. for when you define a word.
 \newcommand{\defn}[1]{{\bfseries#1}}
 % Legacy support (may be deprecated).
 \newcommand{\df}{\defn}
 
+% MATHMODE SHORTHAND %%{1
 
-%
-% Mathmode shorthand
-%
 % Short for nonumber, when you want one number for multiline equation block.
 \newcommand{\nn}{\nonumber}
 
@@ -316,9 +300,7 @@
 \newcommand{\powerset}{\mathcal{P}}
 
 
-%
-% Headers
-%
+% HEADERS %%{1
 
 % Title parameters.
 \title{}
@@ -355,9 +337,8 @@
 \AO
 \fancyfoot[R]{\thepage\ \btPageOfWord\ \pageref{LastPage}}
 
-%
-% Title page
-%
+% TITLE PAGE %%{1
+
 % Page style for title page (no other content).
 \AL
 \fancypagestyle{btTitlePage}{
@@ -414,3 +395,8 @@
     \thispagestyle{btTitlePageWithContent}
     \btMakeTitleText{}%%
 }
+
+
+% We deviate from the default 'foldmarker' because it is not uncommon to have
+% three curly brackets in a row in TeX.
+% vim:ft=tex:fdm=marker:fmr=%%{,%%}:fen:tw=80:et:ts=4:sts=4:sw=0:
