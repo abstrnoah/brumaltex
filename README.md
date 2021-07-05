@@ -1,8 +1,10 @@
-# brumaltex
+BRUMALTEX
+=========
 
 A compilation of LaTeX packages and macros used by abstractednoah.
 
-## Notes
+NOTES
+-----
 
 The author uses the
 [`tectonic`](https://github.com/tectonic-typesetting/tectonic/) LaTeX engine,
@@ -28,8 +30,25 @@ this convention, and we're still working on migrating over, having to wrestle
 with legacy support as well. This convention does not apply to "shorthand"
 commands.
 
+OTHER GREAT PACKAGES
+--------------------
 
-## TODO
+There are a number of awesome packages that shouldn't be loaded for all
+documents but deserve mention anyway:
+
+- `parskip` - A *de facto* default at this point for my less-than-very-format
+  documents that delimits paragraphs by vertical skips rather than indents. Look
+  a lot cleaner than the default paragraph style, but not appropriate for all
+  documents, especially those that need to be conservative about whitespace.
+- `biblatex` - For bibliographies.
+- `todonotes` - For making in-margin or inline TODO notes.
+
+Another package that deserves mention is the Vim plugin
+[`vimtex`](https://github.com/lervag/vimtex): it's a fantastic plugin for
+editing LaTeX documents if you use the Vim editor.
+
+TODO
+----
 - [ ] Modularize and be able to select modules at import.
 - [ ] Bolden theorem subtitles.
 - [ ] Look into any compiler warnings produced by this package.
