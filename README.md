@@ -36,7 +36,7 @@ OTHER GREAT PACKAGES
 There are a number of awesome packages that shouldn't be loaded for all
 documents but deserve mention anyway:
 
-- `parskip` - A *de facto* default at this point for my less-than-very-format
+- `parskip` - A *de facto* default at this point for my less-than-very-formal
   documents that delimits paragraphs by vertical skips rather than indents. Look
   a lot cleaner than the default paragraph style, but not appropriate for all
   documents, especially those that need to be conservative about whitespace.
