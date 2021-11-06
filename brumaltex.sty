@@ -205,6 +205,13 @@
 }
 \AO
 
+% btProof
+\newenvironment{btProof}[1][Proof]{%%
+    \begin{proof}[#1]\leavevmode\newline%%
+}{%%
+    \end{proof}%%
+}
+
 % Set the "default" style on import to plain.
 \theoremstyle{plain}
 
