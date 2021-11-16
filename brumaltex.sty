@@ -146,26 +146,8 @@
     \newcommand{\btSolutionTitle}[1]{\renewcommand{\@btSolutionTitle}{#1}}
 \AO
 
-% Custom theorem styles.
-\newtheoremstyle{btProblem}
-    {}
-    {}
-    {}
-    {}
-    {\bfseries}
-    {.}
-    {\newline}
-    {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
-\newtheoremstyle{btProblem*}
-    {}
-    {}
-    {}
-    {}
-    {\bfseries}
-    {.}
-    {\newline}
-    {\thmname{#1}\thmnote{ (#3)}}
-
+% Custom theorems.
+\AL{}
 \theoremstyle{plain}
     \newtheorem{theorem}{Theorem}[section]
     \newtheorem*{theorem*}{Theorem}
@@ -179,18 +161,14 @@
     \newtheorem{claim}[theorem]{Claim}
     \newtheorem*{claim*}{Claim}
     \newtheorem{corollary}[theorem]{Corollary}
+    \newtheorem{problem}{\@btProblemTitle}
+    \newtheorem{subproblem}{}[problem]
+    \newtheorem{problem*}{\@btProblemTitle}
 \theoremstyle{definition}
     \newtheorem{definition}[theorem]{Definition}
     \newtheorem*{definition*}{Definition}
     \newtheorem{example}[theorem]{Example}
-
-\AL
-\theoremstyle{btProblem}
-    \newtheorem{problem}{\@btProblemTitle}
-    \newtheorem{subproblem}{}[problem]
-\theoremstyle{btProblem*}
-    \newtheorem{problem*}{\@btProblemTitle}
-\AO
+\AO{}
 
 \renewcommand{\thesubproblem}{(\alph{subproblem})}
 
