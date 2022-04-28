@@ -90,6 +90,7 @@
 \RequirePackage{fullpage}
 
 % Programming.
+\RequirePackage{xparse}
 \RequirePackage{xifthen}
 
 % Deprecated.
@@ -316,7 +317,20 @@
 \newcommand{\R}{\sset{R}}
 \let\C\relax \newcommand{\C}{\sset{C}}
 \newcommand{\F}{\sset{F}}
-\newcommand{\powerset}{\mathcal{P}}
+
+% \powerset
+% The `G` is for backward compatibility.
+\NewDocumentCommand \powerset { o g } {
+    \IfNoValueTF{#2}{
+        \mathcal{P}
+    }{
+        \IfNoValueTF{#1}{
+            \mathcal{P}\qty(#2)
+        }{
+            \mathcal{P}_{#1}\qty(#2)
+        }
+    }
+}
 
 
 % HEADERS %%{1
