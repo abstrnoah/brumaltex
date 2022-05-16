@@ -295,6 +295,10 @@
 
 % The identity map.
 \newcommand{\1}{\mathds{1}}
+% \newcommand{\0}{\mathds{0}}
+
+\newcommand{\true}{\mathtt{t}}
+\newcommand{\false}{\mathtt{f}}
 
 % Recirpocate a \frac with fewer steps.
 \newcommand{\recipr}[2]{\frac{#2}{#1}}
@@ -435,6 +439,14 @@
     \thispagestyle{btTitlePageWithContent}
     \btMakeTitleText{}%%
 }
+
+
+
+
+% Never ever break in math mode.
+\binoppenalty=\maxdimen
+\relpenalty=\maxdimen
+\sloppy{}
 
 % NOTES %%{1
 % [^1]: https://tex.stackexchange.com/questions/12855/getting-those-signs-in-the-footnote
