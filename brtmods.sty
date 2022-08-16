@@ -1,0 +1,105 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{brtmods}
+
+% MODULE SYSTEM %%{1
+
+\RequirePackage{xifthen}
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+    family=brt@kvs,
+    prefix=@brt@kvs@
+}
+
+\RequirePackage{pgffor}
+\RequirePackage{pgfkeys}
+\pgfkeys{/brt/.is family}
+\pgfkeys{/brt/modules/.is family}
+
+\ProvideDocumentCommand{\UseName}{m}{\csname #1\endcsname}
+
+% \brt@declareBoolOption[init]{key} %%{
+% Declare a boolean option using kvoption's `\DeclareBoolOption`, but also
+% declare a complementary boolean option named "no<key>".
+\ProvideDocumentCommand{\brt@declareBoolOption}{O{false} m}{
+    \DeclareBoolOption[#1]{#2}
+    \DeclareComplementaryOption{no#2}{#2}
+}%%}
+
+\ProvideDocumentCommand{\brt@mod@loadIfEnabled}{m}{
+    \UseName{if@brt@kvs@#1}
+        \pgfkeys{/brt/modules/#1}
+    \fi
+}
+
+% \brt@mod@declare{name}[dependencies][default]{code} %%{
+% Create a new module with (\long) code. You must add a hash to arguments, i.e.
+% `#n` -> `##n`. The code will be executed at most once. Dependencies should be
+% comma-separated module names. By default, <default> is false, hence the module
+% will only be loaded if the user asks for it. Set <default> to true if should
+% be loaded unless user loads its complement. The module `enabled` is reserved
+% and is defined to load the enabled modules. The module `all` is reserved and
+% is defined to load all modules.
+\pgfkeysdef{/brt/modules/all}{}
+\DeclareBoolOption{all}
+\pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{all}}}
+\ProvideDocumentCommand{\brt@mod@declare}{m O{} O{false} +m}{
+    \brt@declareBoolOption[#3]{#1}
+    \newboolean{brt@modules@#1@loaded}
+    \setboolean{brt@modules@#1@loaded}{false}
+    \pgfkeysdef{/brt/modules/#1}{
+        \typeout{Loading #1...}
+        % TODO This is dumb, we should be able to use pgfkeys' 'styles' feature
+        % to load dependencies, instead of manually calling pgfkeys here, but I
+        % can't seem to get it to work.
+        \pgfkeys{/brt/modules,#2}
+        \ifthenelse{\NOT\boolean{brt@modules@#1@loaded}}{
+            \typeout{Running #1...}
+            #4
+            \setboolean{brt@modules@#1@loaded}{true}
+            \typeout{Ran.}
+            \typeout{Loaded: #1}
+        }{
+            \typeout{Already loaded: #1}
+        }
+    }
+    \pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{#1}}}
+    \pgfkeys{/brt/modules/all/.append code={\pgfkeys{/brt/modules/#1}}}
+} %%}
+
+% \brt@mod@process %%{
+% Process all options and load any modules that have been enabled. For each
+% module, the dependencies are loaded first, then the module code. Order of
+% module loading is unpredictable unless you specify dependencies (TODO this
+% should probably be improved to separate "dependency" from "order", like
+% systemd does it).
+\ProvideDocumentCommand{\brt@mod@process}{}{
+    \typeout{Processing modules...}
+    \ProcessKeyvalOptions*
+    \pgfkeys{/brt/modules/enabled}
+    \typeout{Modules processed.}
+}
+
+
+
+\brt@mod@declare{test}[][true]{
+    \newcommand{\brtTestCommandA}{haha here's something.}
+
+    \newcommand{\brtTestCommandB}{But here's something else.}
+}
+
+\brt@mod@declare{testA}{\newcommand{\brtTestCommandD}{D.}}
+
+\brt@mod@declare{testB}[test,testA]{
+    \newcommand{\brtTestCommandC}{
+        Now we're in 2.C territory.
+
+        Paragraphs???????
+    }
+
+    \newcommand{\brtTestParams}[1]{Uh oh: ##1}
+}
+
+\brt@mod@process
+
+% vim:ft=tex:fdm=marker:fmr=%%{,%%}:fen:tw=80:et:ts=4:sts=4:sw=0:
