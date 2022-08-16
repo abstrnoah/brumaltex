@@ -5,15 +5,102 @@
 % Github: https://github.com/abstractednoah/brumaltex
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
+% TODO: Overall, module loading could be improved greatly if I learned some more
+% about actual programming in TeX, viz. loops, lists, \csname, and \expandafter.
+% In particular, we really should have a one-to-one correspondence between
+% boolean option complement pairs (i.e. <key> and no<key>) and modules.
+% Moreover, it should be possible to robustly declare dependencies between
+% modules, for instance loading one module automatically loads another however
+% no module is loaded more than once (not sure how to enforce the second
+% condition at the moment).
+
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{brumaltex2}[2022/08/13]
 
+% MODULE SYSTEM %%{1
+
+\RequirePackage{xifthen}
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+    family=brt@kvs,
+    prefix=@brt@kvs@
+}
+
+\RequirePackage{pgffor}
+\RequirePackage{pgfkeys}
+\pgfkeys{/brt/.is family}
+\pgfkeys{/brt/modules/.is family}
+
+\ProvideDocumentCommand{\UseName}{m}{\csname #1\endcsname}
+
+% \brt@declareBoolOption[init]{key} %%{
+% Declare a boolean option using kvoption's `\DeclareBoolOption`, but also
+% declare a complementary boolean option named "no<key>".
+\ProvideDocumentCommand{\brt@declareBoolOption}{O{false} m}{
+    \DeclareBoolOption[#1]{#2}
+    \DeclareComplementaryOption{no#2}{#2}
+}%%}
+
+\ProvideDocumentCommand{\brt@mod@loadIfEnabled}{m}{%%{
+    \UseName{if@brt@kvs@#1}
+        \pgfkeys{/brt/modules/#1}
+    \fi
+}%%}
+
+% \brt@mod@declare{name}[dependencies][default]{code} %%{
+% Create a new module with (\long) code. You must add a hash to arguments, i.e.
+% `#n` -> `##n`. The code will be executed at most once. Dependencies should be
+% comma-separated module names. By default, <default> is false, hence the module
+% will only be loaded if the user asks for it. Set <default> to true if should
+% be loaded unless user loads its complement. The module `enabled` is reserved
+% and is defined to load the enabled modules. The module `all` is reserved and
+% is defined to load all modules.
+\pgfkeysdef{/brt/modules/all}{}
+\DeclareBoolOption{all}
+\pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{all}}}
+\ProvideDocumentCommand{\brt@mod@declare}{m O{} O{false} +m}{
+    \brt@declareBoolOption[#3]{#1}
+    \newboolean{brt@modules@#1@loaded}
+    \setboolean{brt@modules@#1@loaded}{false}
+    \pgfkeysdef{/brt/modules/#1}{
+        \typeout{Loading #1...}
+        % TODO This is dumb, we should be able to use pgfkeys' 'styles' feature
+        % to load dependencies, instead of manually calling pgfkeys here, but I
+        % can't seem to get it to work.
+        \pgfkeys{/brt/modules,#2}
+        \ifthenelse{\NOT\boolean{brt@modules@#1@loaded}}{
+            \typeout{Running #1...}
+            #4
+            \setboolean{brt@modules@#1@loaded}{true}
+            \typeout{Ran.}
+            \typeout{Loaded: #1}
+        }{
+            \typeout{Already loaded: #1}
+        }
+    }
+    \pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{#1}}}
+    \pgfkeys{/brt/modules/all/.append code={\pgfkeys{/brt/modules/#1}}}
+} %%}
+
+% \brt@mod@process %%{
+% Process all options and load any modules that have been enabled. For each
+% module, the dependencies are loaded first, then the module code. Order of
+% module loading is unpredictable unless you specify dependencies (TODO this
+% should probably be improved to separate "dependency" from "order", like
+% systemd does it).
+\ProvideDocumentCommand{\brt@mod@process}{}{
+    \typeout{Processing modules...}
+    \ProcessKeyvalOptions*
+    \pgfkeys{/brt/modules/enabled}
+    \typeout{Modules processed.}
+}
+
 % CORE PACKAGES AND COMMANDS %%{1
 
 % Programming.
-\RequirePackage{xparse}
-\RequirePackage{xifthen}
+\RequirePackage{xparse} TODO do we really need this?
 
 % Standard maths library.
 \RequirePackage{amsmath, amssymb, amsthm}
@@ -31,9 +118,9 @@
 \RequirePackage{csquotes}
 
 % brt@thisIfThat %%{
-% Expand #1 if #2 is not empty.
+% Expand ##1 if ##2 is not empty.
 \DeclareRobustCommand{\brt@thisIfThat}[2]{%%
-    \ifthenelse{\equal{#2}{}}{}{#1}%%
+    \ifthenelse{\equal{##2}{}}{}{##1}%%
 }
 %%}
 
@@ -46,33 +133,49 @@
 \DeclareRobustCommand{\brtReloadHeader}{\f@nch@setoffs}
 %%}
 
+% MODULES grouping TODO %%{1
 
-% OPTIONS %%{1
+% \brt@declareBoolOption{usual}
+% lists, datetime, links, nomathsbreak, theorems, shorthand,
 
-\DeclareOption{lists}{%%{
+
+% \brt@declareBoolOption{units}
+% \brt@declareBoolOption{pagestyle}
+% \brt@declareBoolOption{fullpage}
+% \brt@declareBoolOption{parskip}
+
+% graphics
+% chemistry
+
+% MODULES %%{1
+
+% \brt@mod@declare{default}[%
+% ]{true}{}
+
+\brt@mod@declare{lists}{%%{
     \RequirePackage{enumerate}
 }%%}
 
-\DeclareOption{units}{%%{
+\brt@mod@declare{units}{%%{
     \RequirePackage[load=accepted,load=prefixed,load=abbr]{siunitx}
 }%%}
 
-\DeclareOption{pagestyle}{%%{
+\brt@mod@declare{pagestyle}[datetime]{%%{
     \RequirePackage{fancyhdr}
     \RequirePackage{lastpage}
     \RequirePackage{microtype}
 
     \ProvideDocumentCommand{\brtTopic}{m}{%%
-        \DeclareRobustCommand{\@brt@topic}{#1}%%
+        \DeclareRobustCommand{\@brt@topic}{##1}%%
     }
     \ProvideDocumentCommand{\brtSubtitle}{m}{%%
-        \DeclareRobustCommand{\@brt@subtitle}{#1}%%
+        \DeclareRobustCommand{\@brt@subtitle}{##1}%%
     }
     \ProvideDocumentCommand{\brtShorttitle}{m}{%%
-        \DeclareRobustCommand{\@brt@shorttitle}{#1}%%
+        \DeclareRobustCommand{\@brt@shorttitle}{##1}%%
     }
     \ProvideDocumentCommand{\brtContributors}{m}{%%
-        \DeclareRobustCommand{\@brt@contributors}{#1}%%
+        \DeclareRobustCommand{\@brt@contributors}{##1}%%
     }
 
     \title{}
@@ -160,27 +263,27 @@
     }
 }%%}
 
-\DeclareOption{fullpage}{%%{
+\brt@mod@declare{fullpage}{%%{
     \RequirePackage{fullpage}
 }%%}
 
-\DeclareOption{parskip}{%%{
+\brt@mod@declare{parskip}{%%{
     \RequirePackage{parskip}
 }%%}
 
-\DeclareOption{datetime}{%%{
+\brt@mod@declare{datetime}{%%{
     \RequirePackage{datetime2}
     \DTMusemodule{english}{en-NZ}
     \DTMsetstyle{en-NZ}
 }%%}
 
-\DeclareOption{colours}{%%{
+\brt@mod@declare{colours}{%%{
     \RequirePackage{xcolor}
     \definecolor{blueish}{rgb}{0.0,0.1,0.4}
     \definecolor{greenish}{rgb}{0.0,0.4,0.0}
 }%%}
 
-\DeclareOption{links}{%%{
+\brt@mod@declare{links}{%%{
     \RequirePackage{varioref}
     \RequirePackage{hyperref}
     \RequirePackage[nameinlink]{cleveref}
@@ -201,12 +304,12 @@
     % escape them manually. It is important that the url is the first argument,
     % though with some more effort it's probably possible to work around that
     % limitation. See [^1].
-    \newcommand{\brt@linkFootnote}[2]{\href{#1}{#2}\footnote{\url{#1}}}
+    \newcommand{\brt@linkFootnote}[2]{\href{##1}{##2}\footnote{\url{##1}}}
     \DeclareRobustCommand{\brtLinkFootnote}{\hyper@normalise\brt@linkFootnote}
     %%}
 }%%}
 
-\DeclareOption{nomathsbreak}{%%{
+\brt@mod@declare{nomathsbreak}{%%{
     % Never ever break in maths mode.
     % TODO test, this might need to go into the begin hook
     \binoppenalty=\maxdimen
@@ -214,7 +317,7 @@
     \sloppy
 }%%}
 
-\DeclareOption{theorems}{%%{
+\brt@mod@declare{theorems}{%%{
     % TODO reimplemenet configurable environment titles
     % TODO fancy sub-proof proof
 
@@ -258,20 +361,20 @@
     }
 }%%}
 
-\DeclareOption{shorthand}{%%{
+\brt@mod@declare{shorthand}{%%{
     % TODO make these commands optionally accept an argument and intelligently
     % determine whether brackets are needed.
     \ProvideDocumentCommand{\brtMaOperator}{m}{%%
-        \textnormal{\textsf{#1}}%%
+        \textnormal{\textsf{##1}}%%
     }
     \ProvideDocumentCommand{\brtMaType}{m}{%%
-        \textnormal{\textsf{\textbf{#1}}}%%
+        \textnormal{\textsf{\textbf{##1}}}%%
     }
     \ProvideDocumentCommand{\brtMaStatement}{m}{%%
-        \textnormal{\texttt{\textbf{#1}}}%%
+        \textnormal{\texttt{\textbf{##1}}}%%
     }
     \ProvideDocumentCommand{\brtMaStructure}{m}{%%
-        \textnormal{\textbb{#1}}%%
+        \textnormal{\textbb{##1}}%%
     }
 
     \NewCommandCopy{\category}{\brtMaType}
@@ -279,7 +382,7 @@
     % For when you define a new term.
     % TODO Eventually we should make this collect terms for an index (I believe
     % there's an issue where tectonic doesn't currently support indexes).
-    \providecommand{\defn}[1]{\textbf{#1}}
+    \providecommand{\defn}[1]{\textbf{##1}}
 
     % When you want only one number for multi-line equation block.
     \providecommand{\nn}{\nonumber}
@@ -314,12 +417,12 @@
     \providecommand{\Z}{\brtMaStructure{Z}}
 
     % TODO i think there's a more idiomatic way of defining surroundings
-    \providecommand{\buildset}[2]{\qty{\midqty{#1}{#2}}}
-    \providecommand{\ceil}[1]{\left\lceil#1\right\rceil}
+    \providecommand{\buildset}[2]{\qty{\midqty{##1}{##2}}}
+    \providecommand{\ceil}[1]{\left\lceil##1\right\rceil}
     \providecommand{\dummycdot}{\,\cdot\,}
-    \providecommand{\floor}[1]{\left\lfloor#1\right\rfloor}
-    \providecommand{\midqty}[2]{\left.#1\ \middle\vert\ #2\right.}
-    \providecommand{\modqty}[2]{\left.#1\middle/#2\right.}
+    \providecommand{\floor}[1]{\left\lfloor##1\right\rfloor}
+    \providecommand{\midqty}[2]{\left.##1\ \middle\vert\ ##2\right.}
+    \providecommand{\modqty}[2]{\left.##1\middle/##2\right.}
 
     \providecommand{\1}{\mathds{1}}
     \providecommand{\codom}{\brtMaOperator{codom}}
@@ -334,13 +437,17 @@
     \providecommand{\sgn}{\brtMaOperator{sgn}}
 }%%}
 
-\DeclareOption{graphics}{%%{
+\brt@mod@declare{graphics}{%%{
     \RequirePackage{graphicx}
 }%%}
 
-\DeclareOption{chemistry}{%%{
+\brt@mod@declare{chemistry}{%%{
     \RequirePackage[version=4]{mhchem}
 }%%}
+
+% PROCESS MODULES %%{1
+
+\brt@mod@process
 
 % NOTES %%{1
 
