@@ -37,51 +37,150 @@
 }
 %%}
 
+% brtReloadHeader %%{
+% Run this anywhere to reset header after possible disruption.
+% TODO: find source (some stackoverflow) and understand what's happening
+\ifcsname f@nch@setoffs\endcsname\else
+    \let\f@nch@setoffs\fancy@setoffs
+\fi
+\DeclareRobustCommand{\brtReloadHeader}{\f@nch@setoffs}
+%%}
+
+
 % OPTIONS %%{1
 
-\DeclareOption{lists}{
+\DeclareOption{lists}{%%{
     \RequirePackage{enumerate}
-}
+}%%}
 
-\DeclareOption{units}{
+\DeclareOption{units}{%%{
     \RequirePackage[load=accepted,load=prefixed,load=abbr]{siunitx}
-}
+}%%}
 
-\DeclareOption{frame}{
+\DeclareOption{pagestyle}{%%{
     \RequirePackage{fancyhdr}
     \RequirePackage{lastpage}
     \RequirePackage{microtype}
 
-    % brtReloadHeader %%{
-    % Run this anywhere to reset header after possible disruption.
-    % TODO: find source (some stackoverflow) and understand what's happening
-    \ifcsname f@nch@setoffs\endcsname\else
-        \let\f@nch@setoffs\fancy@setoffs
-    \fi
-    \DeclareRobustCommand{\brtReloadHeader}{\f@nch@setoffs}
-    %%}
+    \ProvideDocumentCommand{\brtTopic}{m}{%%
+        \DeclareRobustCommand{\@brt@topic}{#1}%%
+    }
+    \ProvideDocumentCommand{\brtSubtitle}{m}{%%
+        \DeclareRobustCommand{\@brt@subtitle}{#1}%%
+    }
+    \ProvideDocumentCommand{\brtShorttitle}{m}{%%
+        \DeclareRobustCommand{\@brt@shorttitle}{#1}%%
+    }
+    \ProvideDocumentCommand{\brtContributors}{m}{%%
+        \DeclareRobustCommand{\@brt@contributors}{#1}%%
+    }
 
-    \brt@setupFrame
-}
+    \title{}
+    \date{\today}
+    \brtTopic{}
+    \brtSubtitle{}
+    \brtShorttitle{}
+    \brtContributors{}
 
-\DeclareOption{geometry}{
+    \providecommand{\brtPageOfWord}{of}
+
+    \newlength{\brt@rulewidth}
+    \setlength{\brt@rulewidth}{0.8pt}
+
+    \DeclareRobustCommand{\brt@setFrameGeometry}{
+        \setlength{\headheight}{15.2pt}
+        \setlength{\headsep}{0.1in}
+        \renewcommand{\headrulewidth}{\brt@rulewidth}
+        \renewcommand{\footrulewidth}{\brt@rulewidth}
+    }
+
+    % Default page style.
+    \fancypagestyle{brtStylePlain}{
+        \brt@setFrameGeometry
+
+        \fancyhf{}
+        \fancyhead[C]{\@title}
+        \fancyhead[R]{\@author}
+        \fancyfoot[L]{\@brt@topic}
+        \fancyfoot[C]{\@date}
+        \fancyfoot[R]{\thepage\ \brtPageOfWord\ \pageref{LastPage}}
+    }
+
+    % Page style for title page (no other content).
+    \fancypagestyle{brtStyleTitlePage}{
+        \brt@setFrameGeometry
+        \renewcommand{\headrulewidth}{0pt}
+        \renewcommand{\footrulewidth}{0pt}
+        \fancyhf{}
+        \fancyfoot[C]{\@date}
+    }
+
+    % Page style for page that has title and maybe other content.
+    \fancypagestyle{brtStyleTitlePageWithContent}{
+        \brt@setFrameGeometry
+        \renewcommand{\headrulewidth}{0pt}
+        \fancyhf{}
+        \fancyfoot[C]{\@date}
+        \fancyfoot[R]{\thepage\ \brtPageOfWord\ \pageref{LastPage}}
+    }
+
+    % brtMakeTitleText
+    % Print the title text without external typesetting like headers, etc.
+    \ProvideDocumentCommand{\brtMakeTitleText}{%%
+        \begin{doublespace}
+            \begin{center}%%
+                \LARGE%%
+                \@title%%
+                \Large%%
+                \brt@thisIfThat{\\\@brt@subtitle}{\@brt@subtitle}%%
+                \large%%
+                \\\@author%%
+                \brt@thisIfThat{\\\@brt@contributors}{\@brt@contributors}%%
+                \normalsize%%
+                \\\@brt@topic%%
+            \end{center}%%
+        \end{doublespace}%%
+    }
+
+    % brtMakeTitlePage
+    % Create a new page, put the title on it, and fix headers for title page.
+    \ProvideDocumentCommand{\brtMakeTitlePage}{%%
+        \thispagestyle{brtStyleTitlePage}
+        \newpage{}%%
+        \vspace*{3in}%%
+        \brtMakeTitleText{}%%
+    }
+
+    % brtMakeTitle
+    % Print the title on a page with possible other content, but change headers
+    % accordingly.
+    \ProvideDocumentCommand{\brtMakeTitle}{%%
+        \thispagestyle{brtStyleTitlePageWithContent}
+        \brtMakeTitleText{}%%
+    }
+}%%}
+
+\DeclareOption{fullpage}{%%{
     \RequirePackage{fullpage}
-}
+}%%}
 
-\DeclareOption{datetime}{
+\DeclareOption{parskip}{%%{
+    \RequirePackage{parskip}
+}%%}
+
+\DeclareOption{datetime}{%%{
     \RequirePackage{datetime2}
     \DTMusemodule{english}{en-NZ}
     \DTMsetstyle{en-NZ}
-}
+}%%}
 
-\DeclareOption{colours}{
+\DeclareOption{colours}{%%{
     \RequirePackage{xcolor}
     \definecolor{blueish}{rgb}{0.0,0.1,0.4}
     \definecolor{greenish}{rgb}{0.0,0.4,0.0}
-}
+}%%}
 
-
-\DeclareOption{links}{
+\DeclareOption{links}{%%{
     \RequirePackage{varioref}
     \RequirePackage{hyperref}
     \RequirePackage[nameinlink]{cleveref}
@@ -105,45 +204,24 @@
     \newcommand{\brt@linkFootnote}[2]{\href{#1}{#2}\footnote{\url{#1}}}
     \DeclareRobustCommand{\brtLinkFootnote}{\hyper@normalise\brt@linkFootnote}
     %%}
-}
+}%%}
 
-\DeclareOption{nomathsbreak}{
+\DeclareOption{nomathsbreak}{%%{
     % Never ever break in maths mode.
     % TODO test, this might need to go into the begin hook
     \binoppenalty=\maxdimen
     \relpenalty=\maxdimen
     \sloppy
-}
+}%%}
 
-\DeclareOption{theorems}{
-    \brt@setupTheorems
-    \AtBeginDocument{
-        \theoremstyle{plain}
-    }
-}
+\DeclareOption{theorems}{%%{
+    % TODO reimplemenet configurable environment titles
+    % TODO fancy sub-proof proof
 
-\DeclareOption{shorthand}{
-    \brt@setupShorthand
-}
+    % All theorem counters, by default, are within the `theorem` counter, which is
+    % within `section`. To change counter dependency, use `\counterwithin` and
+    % friends.
 
-\DeclareOption{graphics}{
-    \RequirePackage{graphicx}
-}
-
-\DeclareOption{chemistry}{
-    \RequirePackage[version=4]{mhchem}
-}
-
-% ENVIRONMENTS %%{1
-
-% TODO reimplemenet configurable environment titles
-% TODO fancy sub-proof proof
-
-% All theorem counters, by default, are within the `theorem` counter, which is
-% within `section`. To change counter dependency, use `\counterwithin` and
-% friends.
-
-\DeclareRobustCommand{\brt@setupTheorems}{
     \DeclareRobustCommand{\@brtProblemTitle}{Problem}
 
     \theoremstyle{plain}
@@ -174,11 +252,13 @@
     \newtheorem*{remark*}{Remark}
     \newtheorem{axiom}[theorem]{Axiom}
     \newtheorem*{axiom*}{Axiom}
-}
 
-% SHORTHAND %%{1
+    \AtBeginDocument{
+        \theoremstyle{plain}
+    }
+}%%}
 
-\DeclareRobustCommand{\brt@setupShorthand}{
+\DeclareOption{shorthand}{%%{
     % TODO make these commands optionally accept an argument and intelligently
     % determine whether brackets are needed.
     \ProvideDocumentCommand{\brtMaOperator}{m}{%%
@@ -252,99 +332,15 @@
     \providecommand{\proj}{\brtMaOperator{proj}}
     \providecommand{\ran}{\brtMaOperator{ran}}
     \providecommand{\sgn}{\brtMaOperator{sgn}}
-}
+}%%}
 
-% PAGE STYLE %%{1
+\DeclareOption{graphics}{%%{
+    \RequirePackage{graphicx}
+}%%}
 
-\DeclareRobustCommand{\brt@setupStyle}{
-    \ProvideDocumentCommand{\brtTopic}{m}{%%
-        \DeclareRobustCommand{\@brt@topic}{#1}%%
-    }
-    \ProvideDocumentCommand{\brtSubtitle}{m}{%%
-        \DeclareRobustCommand{\@brt@subtitle}{#1}%%
-    }
-    \ProvideDocumentCommand{\brtShorttitle}{m}{%%
-        \DeclareRobustCommand{\@brt@shorttitle}{#1}%%
-    }
-    \ProvideDocumentCommand{\brtContributors}{m}{%%
-        \DeclareRobustCommand{\@brt@contributors}{#1}%%
-    }
-
-    \title{}
-    \date{\today}
-    \brtTopic{}
-    \brtSubtitle{}
-    \brtShorttitle{}
-    \brtContributors{}
-
-    \providecommand{\brtPageOfWord}{of}
-
-    % Default page style.
-    \fancypagestyle{brtStylePlain}{
-        \setlength{\headheight}{15.2pt}
-        \renewcommand{\headrulewidth}{0.8pt}
-        \renewcommand{\footrulewidth}{0.8pt}
-        \setlength{\headsep}{0.1in}
-
-        \fancyhf{}
-        \fancyhead[C]{\@title}
-        \fancyhead[R]{\@author}
-        \fancyfoot[L]{\@brt@topic}
-        \fancyfoot[C]{\@date}
-        \fancyfoot[R]{\thepage\ \brtPageOfWord\ \pageref{LastPage}}
-    }
-
-    % Page style for title page (no other content).
-    \fancypagestyle{brtStyleTitlePage}{
-        \renewcommand{\headrulewidth}{0pt}
-        \renewcommand{\footrulewidth}{0pt}
-        \fancyhf{}
-        \fancyfoot[C]{\@date}
-    }
-
-    % Page style for page that has title and maybe other content.
-    \fancypagestyle{brtStyleTitlePageWithContent}{
-        \renewcommand{\headrulewidth}{0pt}
-        \fancyhf{}
-        \fancyfoot[C]{\@date}
-        \fancyfoot[R]{\thepage\ \brtPageOfWord\ \pageref{LastPage}}
-    }
-
-    % brtMakeTitleText
-    % Print the title text without external typesetting like headers, etc.
-    \ProvideDocumentCommand{\brtMakeTitleText}{%%
-        \begin{doublespace}
-            \begin{center}%%
-                \LARGE%%
-                \@title%%
-                \Large%%
-                \brt@thisIfThat{\\\@brt@subtitle}{\@brt@subtitle}%%
-                \large%%
-                \\\@author%%
-                \brt@thisIfThat{\\\@brt@contributors}{\@brt@contributors}%%
-                \normalsize%%
-                \\\@brt@topic%%
-            \end{center}%%
-        \end{doublespace}%%
-    }
-
-    % brtMakeTitlePage
-    % Create a new page, put the title on it, and fix headers for title page.
-    \ProvideDocumentCommand{\brtMakeTitlePage}{%%
-        \thispagestyle{brtStyleTitlePage}
-        \newpage{}%%
-        \vspace*{3in}%%
-        \brtMakeTitleText{}%%
-    }
-
-    % brtMakeTitle
-    % Print the title on a page with possible other content, but change headers
-    % accordingly.
-    \ProvideDocumentCommand{\brtMakeTitle}{%%
-        \thispagestyle{brtStyleTitlePageWithContent}
-        \brtMakeTitleText{}%%
-    }
-}
+\DeclareOption{chemistry}{%%{
+    \RequirePackage[version=4]{mhchem}
+}%%}
 
 % NOTES %%{1
 
