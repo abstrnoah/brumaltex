@@ -1,5 +1,5 @@
 BRUMALTEX2
-=========
+==========
 
 A compilation of LaTeX packages and macros used by abstractednoah.
 
