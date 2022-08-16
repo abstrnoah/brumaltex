@@ -5,22 +5,13 @@
 % Github: https://github.com/abstractednoah/brumaltex
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
-% TODO: Overall, module loading could be improved greatly if I learned some more
-% about actual programming in TeX, viz. loops, lists, \csname, and \expandafter.
-% In particular, we really should have a one-to-one correspondence between
-% boolean option complement pairs (i.e. <key> and no<key>) and modules.
-% Moreover, it should be possible to robustly declare dependencies between
-% modules, for instance loading one module automatically loads another however
-% no module is loaded more than once (not sure how to enforce the second
-% condition at the moment).
-
-
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{brumaltex2}[2022/08/13]
 
 % MODULE SYSTEM %%{1
 
-\RequirePackage{xifthen}
+% Setup %%{
+\RequirePackage{xifthen}[2015/11/05]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
@@ -32,6 +23,8 @@
 \RequirePackage{pgfkeys}
 \pgfkeys{/brt/.is family}
 \pgfkeys{/brt/modules/.is family}
+
+%%}
 
 \ProvideDocumentCommand{\UseName}{m}{\csname #1\endcsname}
 
@@ -49,6 +42,10 @@
     \fi
 }%%}
 
+\newtest{\brt@mod@isLoadable}[1]{%%{
+    \boolean{@brt@kvs@#1} \AND \( \NOT \boolean{brt@modules@#1@loaded} \)%
+}%%}
+
 % \brt@mod@declare{name}[dependencies][default]{code} %%{
 % Create a new module with (\long) code. You must add a hash to arguments, i.e.
 % `#n` -> `##n`. The code will be executed at most once. Dependencies should be
@@ -57,6 +54,8 @@
 % be loaded unless user loads its complement. The module `enabled` is reserved
 % and is defined to load the enabled modules. The module `all` is reserved and
 % is defined to load all modules.
+% TODO improve dependency system; ideally disabling a module should disable all
+% modules that depend on it
 \pgfkeysdef{/brt/modules/all}{}
 \DeclareBoolOption{all}
 \pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{all}}}
@@ -69,15 +68,15 @@
         % TODO This is dumb, we should be able to use pgfkeys' 'styles' feature
         % to load dependencies, instead of manually calling pgfkeys here, but I
         % can't seem to get it to work.
-        \pgfkeys{/brt/modules,#2}
         \ifthenelse{\NOT\boolean{brt@modules@#1@loaded}}{
+            \pgfkeys{/brt/modules,#2}
             \typeout{Running #1...}
             #4
             \setboolean{brt@modules@#1@loaded}{true}
             \typeout{Ran.}
             \typeout{Loaded: #1}
         }{
-            \typeout{Already loaded: #1}
+            \typeout{Not loadable (disabled or already loaded): #1}
         }
     }
     \pgfkeys{/brt/modules/enabled/.append code={\brt@mod@loadIfEnabled{#1}}}
@@ -95,12 +94,12 @@
     \ProcessKeyvalOptions*
     \pgfkeys{/brt/modules/enabled}
     \typeout{Modules processed.}
-}
+} %%}
 
 % CORE PACKAGES AND COMMANDS %%{1
 
 % Programming.
-\RequirePackage{xparse} TODO do we really need this?
+\RequirePackage{xparse}
 
 % Standard maths library.
 \RequirePackage{amsmath, amssymb, amsthm}
@@ -120,7 +119,7 @@
 % brt@thisIfThat %%{
 % Expand ##1 if ##2 is not empty.
 \DeclareRobustCommand{\brt@thisIfThat}[2]{%%
-    \ifthenelse{\equal{##2}{}}{}{##1}%%
+    \ifthenelse{\equal{#2}{}}{}{#1}%%
 }
 %%}
 
@@ -133,24 +132,30 @@
 \DeclareRobustCommand{\brtReloadHeader}{\f@nch@setoffs}
 %%}
 
-% MODULES grouping TODO %%{1
-
-% \brt@declareBoolOption{usual}
-% lists, datetime, links, nomathsbreak, theorems, shorthand,
-
-
-% \brt@declareBoolOption{units}
-% \brt@declareBoolOption{pagestyle}
-% \brt@declareBoolOption{fullpage}
-% \brt@declareBoolOption{parskip}
-
-% graphics
-% chemistry
-
 % MODULES %%{1
 
-% \brt@mod@declare{default}[%
-% ]{true}{}
+% \brt@mod@declare{all}[%%{
+% (In the current version, all is automatically populated, but that may change.)
+%     default,%
+%     page,%
+%     units,%
+%     parskip,%
+%     graphics,%
+%     chemistry,
+% ]{}%%}
+
+\brt@mod@declare{default}[%%{
+    lists,%
+    links,%
+    breaklessmaths,%
+    theorems,%
+    shorthand%
+][true]{}%%}
+
+\brt@mod@declare{page}[%%{
+    pagestyle,%
+    fullpage%
+]{}%%}
 
 \brt@mod@declare{lists}{%%{
     \RequirePackage{enumerate}
@@ -164,6 +169,7 @@
     \RequirePackage{fancyhdr}
     \RequirePackage{lastpage}
     \RequirePackage{microtype}
+    \RequirePackage{setspace}
 
     \ProvideDocumentCommand{\brtTopic}{m}{%%
         \DeclareRobustCommand{\@brt@topic}{##1}%%
@@ -178,12 +184,15 @@
         \DeclareRobustCommand{\@brt@contributors}{##1}%%
     }
 
+    % TODO: There's an issue here where if some of these options are empty then
+    % line breaking errors out because "there's nothing to break".
     \title{}
+    \author{Sample Author}
     \date{\today}
-    \brtTopic{}
-    \brtSubtitle{}
-    \brtShorttitle{}
-    \brtContributors{}
+    \newcommand{\@brt@topic}{}
+    \newcommand{\@brt@subtitle}{}
+    \newcommand{\@brt@shorttitle}{}
+    \newcommand{\@brt@contributors}{}
 
     \providecommand{\brtPageOfWord}{of}
 
@@ -229,7 +238,7 @@
 
     % brtMakeTitleText
     % Print the title text without external typesetting like headers, etc.
-    \ProvideDocumentCommand{\brtMakeTitleText}{%%
+    \ProvideDocumentCommand{\brtMakeTitleText}{}{%%
         \begin{doublespace}
             \begin{center}%%
                 \LARGE%%
@@ -247,7 +256,7 @@
 
     % brtMakeTitlePage
     % Create a new page, put the title on it, and fix headers for title page.
-    \ProvideDocumentCommand{\brtMakeTitlePage}{%%
+    \ProvideDocumentCommand{\brtMakeTitlePage}{}{%%
         \thispagestyle{brtStyleTitlePage}
         \newpage{}%%
         \vspace*{3in}%%
@@ -257,10 +266,12 @@
     % brtMakeTitle
     % Print the title on a page with possible other content, but change headers
     % accordingly.
-    \ProvideDocumentCommand{\brtMakeTitle}{%%
+    \ProvideDocumentCommand{\brtMakeTitle}{}{%%
         \thispagestyle{brtStyleTitlePageWithContent}
         \brtMakeTitleText{}%%
     }
+
+    \AtBeginDocument{\pagestyle{brtStylePlain}}
 }%%}
 
 \brt@mod@declare{fullpage}{%%{
@@ -283,7 +294,7 @@
     \definecolor{greenish}{rgb}{0.0,0.4,0.0}
 }%%}
 
-\brt@mod@declare{links}{%%{
+\brt@mod@declare{links}[colours]{%%{
     \RequirePackage{varioref}
     \RequirePackage{hyperref}
     \RequirePackage[nameinlink]{cleveref}
@@ -309,7 +320,7 @@
     %%}
 }%%}
 
-\brt@mod@declare{nomathsbreak}{%%{
+\brt@mod@declare{breaklessmaths}{%%{
     % Never ever break in maths mode.
     % TODO test, this might need to go into the begin hook
     \binoppenalty=\maxdimen
@@ -365,7 +376,7 @@
     % TODO make these commands optionally accept an argument and intelligently
     % determine whether brackets are needed.
     \ProvideDocumentCommand{\brtMaOperator}{m}{%%
-        \textnormal{\textsf{##1}}%%
+        \mathsf{##1}%%
     }
     \ProvideDocumentCommand{\brtMaType}{m}{%%
         \textnormal{\textsf{\textbf{##1}}}%%
@@ -374,7 +385,7 @@
         \textnormal{\texttt{\textbf{##1}}}%%
     }
     \ProvideDocumentCommand{\brtMaStructure}{m}{%%
-        \textnormal{\textbb{##1}}%%
+        \mathbb{##1}%%
     }
 
     \NewCommandCopy{\category}{\brtMaType}
