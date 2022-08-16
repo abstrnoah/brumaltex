@@ -1,54 +1,30 @@
-BRUMALTEX
+BRUMALTEX2
 =========
 
 A compilation of LaTeX packages and macros used by abstractednoah.
 
-NOTES
------
-
 The author uses the
 [`tectonic`](https://github.com/tectonic-typesetting/tectonic/) LaTeX engine,
-which aims to replicate the behavior of XeLaTeX and require only the TeXLive
-distribution. Any packages that brumaltex requires but that tectonic doesn't
-support (none at the moment) will be shipped with this package.
+which is able to provide all of this package's dependencies as of this writing.
 
-The `develop` branch of this repository may be experimental, but `master` has
-been tested with `tectonic`. Please post to Issues if you find a bug! If you fix
-a bug or augment the package, consider submitting a PR.
+Version 2 of this package (file `brumaltex2.sty`) is modular, and the modules
+are controlled via the option mechanism of `\usepackage`. If a module is named
+`name`, then it can be enabled by adding the `name` option and disabled by
+prefixing name by `no`, i.e. `noname`. A package can have dependencies, and if a
+package is loaded then its dependencies are loaded first. No module is loaded
+more than once.
 
-For simplicity, the brumaltex package is shipped as a standalone file (in the
-sense that its only current dependencies are provided by `tectonic`, see above).
-This makes sharing documents that use the package easy (just include this file
-alongside your tex file). But it makes it difficult to only use a single feature
-of the package without using all the features. For instance, your headers will
-be formatted automatically if you use brumaltex. It is a TODO to make this
-package modularly configurable on import.
+This is a personal package, hence quite ___unstable___ and lacking in
+documentation. You'll have to dive into the code to see the different module
+definitions (under the section `MODULES %%{1`). There is one module that is
+loaded by default, called `default`; you can see the source for which modules
+are loaded by `default`. In order to not load `default`, you must specify the
+`nodefault` option. I have tried to make the default modules relatively
+unobtrusive. In particular, things that modify style/geometry in a substantial
+way are grouped into the `page` module and not loaded by default.
 
-We have attempted to prefix most names introduced in this package by `bt` and
-follow `camelCase`. However, the first iteration of the package didn't follow
-this convention, and we're still working on migrating over, having to wrestle
-with legacy support as well. This convention does not apply to "shorthand"
-commands.
-
-OTHER GREAT PACKAGES
---------------------
-
-There are a number of awesome packages that shouldn't be loaded for all
-documents but deserve mention anyway:
-
-- `parskip` - A *de facto* default at this point for my less-than-very-formal
-  documents that delimits paragraphs by vertical skips rather than indents. Look
-  a lot cleaner than the default paragraph style, but not appropriate for all
-  documents, especially those that need to be conservative about whitespace.
-- `biblatex` - For bibliographies.
-- `todonotes` - For making in-margin or inline TODO notes.
-
-Another package that deserves mention is the Vim plugin
-[`vimtex`](https://github.com/lervag/vimtex): it's a fantastic plugin for
-editing LaTeX documents if you use the Vim editor.
-
-TODO
-----
-- [ ] Modularize and be able to select modules at import.
-- [ ] Bolden theorem subtitles.
-- [ ] Look into any compiler warnings produced by this package.
+The current version of the module system is not ideal. In particular, one cannot
+disable a module if it is the dependency of another enabled module, without
+disabling the latter. Maybe a better system would be, if a module is disabled,
+then all modules that depend on it are also disabled. Anyway, I haven't gotten
+around to implementing this.
