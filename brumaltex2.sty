@@ -165,10 +165,13 @@
     \RequirePackage[load=accepted,load=prefixed,load=abbr]{siunitx}
 }%%}
 
+\brt@mod@declare{microtype}{%%{
+    \RequirePackage{microtype}
+}%%}
+
 \brt@mod@declare{pagestyle}[datetime]{%%{
     \RequirePackage{fancyhdr}
     \RequirePackage{lastpage}
-    \RequirePackage{microtype}
     \RequirePackage{setspace}
 
     \ProvideDocumentCommand{\brtTopic}{m}{%%
