@@ -6,7 +6,7 @@
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex2}[2022/08/13]
+\ProvidesPackage{brumaltex2}[2022/09/16]
 
 % MODULE SYSTEM %%{1
 
@@ -281,9 +281,12 @@
     \RequirePackage{fullpage}
 }%%}
 
-\brt@mod@declare{parskip}{%%{
-    \RequirePackage{parskip}
+\brt@mod@declare{bottomfoot}{%%{
     \RequirePackage[bottom]{footmisc} % Fixes footnote position.
+}%%}
+
+\brt@mod@declare{parskip}[bottomfoot]{%%{
+    \RequirePackage{parskip}
 }%%}
 
 \brt@mod@declare{datetime}{%%{
