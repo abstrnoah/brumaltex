@@ -376,25 +376,43 @@
     \newtheorem{axiom}[theorem]{Axiom}
     \newtheorem*{axiom*}{Axiom}
 
-    \NewCommandCopy{\proofOld}{\proof}
-    \NewCommandCopy{\endproofOld}{\endproof}
-    \renewenvironment{proof}{%
-        \begin{proofOld}%
-        \renewenvironment{proof}{%
-            \begin{proofOld}%
-            \renewenvironment{proof}{%
-                \begin{proofOld}%
-                \renewcommand{\qedsymbol}{$\blacksquare$}%
-            }{%
-                \end{proofOld}%
-            }%
-            \renewcommand{\qedsymbol}{$\boxtimes$}%
-        }{%
-            \end{proofOld}%
-        }%
+    % TODO This is absolutely terrible. Hard-coded recursion. Disgusting. But
+    % thanks to TeX's brilliance, more efficient to do this than literally
+    % anything else. Anyway what we should really do is have a single definition
+    % that increments a counter every time we descend into another proof, and
+    % then dispatch off of that. We'll need an array of qed symbols or
+    % something similar for that to work.
+    \NewCommandCopy{\proofBasic}{\proof}
+    \NewCommandCopy{\endproofBasic}{\endproof}
+    \newenvironment{proofC}[1][Proof]{%
+        \begin{proofBasic}[#1]%
+        \renewcommand{\qedsymbol}{\(\blacksquare\)}%
     }{%
-        \end{proofOld}%
+        \end{proofBasic}%
     }
+    \newenvironment{proofB}[1][Proof]{%
+        \begin{proofBasic}[#1]%
+        \let\proof\relax
+        \let\endproof\relax
+        \NewCommandCopy{\proof}{\proofC}
+        \NewCommandCopy{\endproof}{\endproofC}
+        \renewcommand{\qedsymbol}{\(\boxtimes\)}%
+    }{%
+        \end{proofBasic}%
+    }
+    \newenvironment{proofA}[1][Proof]{%
+        \begin{proofBasic}[#1]%
+        \let\proof\relax
+        \let\endproof\relax
+        \NewCommandCopy{\proof}{\proofB}
+        \NewCommandCopy{\endproof}{\endproofB}
+    }{%
+        \end{proofBasic}%
+    }
+    \let\proof\relax
+    \let\endproof\relax
+    \NewCommandCopy{\proof}{\proofA}
+    \NewCommandCopy{\endproof}{\endproofA}
 
     \AtBeginDocument{
         \theoremstyle{plain}
