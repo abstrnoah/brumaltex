@@ -6,7 +6,7 @@
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex2}[2022/09/16]
+\ProvidesPackage{brumaltex2}[2022/09/18]
 
 % MODULE SYSTEM %%{1
 
@@ -375,6 +375,26 @@
     \newtheorem*{remark*}{Remark}
     \newtheorem{axiom}[theorem]{Axiom}
     \newtheorem*{axiom*}{Axiom}
+
+    \NewCommandCopy{\proofOld}{\proof}
+    \NewCommandCopy{\endproofOld}{\endproof}
+    \renewenvironment{proof}{%
+        \begin{proofOld}%
+        \renewenvironment{proof}{%
+            \begin{proofOld}%
+            \renewenvironment{proof}{%
+                \begin{proofOld}%
+                \renewcommand{\qedsymbol}{$\blacksquare$}%
+            }{%
+                \end{proofOld}%
+            }%
+            \renewcommand{\qedsymbol}{$\boxtimes$}%
+        }{%
+            \end{proofOld}%
+        }%
+    }{%
+        \end{proofOld}%
+    }
 
     \AtBeginDocument{
         \theoremstyle{plain}
