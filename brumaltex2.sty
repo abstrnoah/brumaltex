@@ -419,6 +419,12 @@
     \AtBeginDocument{
         \theoremstyle{plain}
     }
+
+    \newenvironment{brtProofSketch}{%
+        \begin{proof}[Sketch]%
+    }{%
+        \end{proof}
+    }
 }%%}
 
 \brt@mod@declare{shorthand}{%%{
