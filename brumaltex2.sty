@@ -6,7 +6,7 @@
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex2}[2022/09/19]
+\ProvidesPackage{brumaltex2}[2022/12/01]
 
 % MODULE SYSTEM %%{1
 
@@ -510,6 +510,10 @@
 
 \brt@mod@declare{chemistry}{%%{
     \RequirePackage[version=4]{mhchem}
+}%%}
+
+\brt@mod@declare{tikzcd}{%%{
+    \RequirePackage{tikz-cd}
 }%%}
 
 % PROCESS MODULES %%{1
