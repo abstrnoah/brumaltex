@@ -431,7 +431,7 @@
     % TODO make these commands optionally accept an argument and intelligently
     % determine whether brackets are needed.
     \ProvideDocumentCommand{\brtMaOperator}{m}{%%
-        \mathsf{##1}%%
+        \ensuremath{\mathsf{##1}}%%
     }
     \ProvideDocumentCommand{\brtMaType}{m}{%%
         \textnormal{\textsf{\textbf{##1}}}%%
@@ -440,7 +440,7 @@
         \textnormal{\texttt{\textbf{##1}}}%%
     }
     \ProvideDocumentCommand{\brtMaStructure}{m}{%%
-        \mathbb{##1}%%
+        \ensuremath{\mathbb{##1}}%%
     }
 
     \NewCommandCopy{\category}{\brtMaType}
