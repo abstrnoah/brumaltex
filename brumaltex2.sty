@@ -6,7 +6,7 @@
 % Author: Noah D. Ortiz <abstractednoah@brumal.org>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex2}[2022/12/01]
+\ProvidesPackage{brumaltex2}[2023/01/12]
 
 % MODULE SYSTEM %%{1
 
@@ -364,8 +364,9 @@
     \newtheorem{corollary}[theorem]{Corollary}
     \newtheorem*{corollary*}{Corollary}
     \newtheorem{problem}{\@brtProblemTitle}
-    \newtheorem{subproblem}{Part}[problem]
     \newtheorem*{problem*}{\@brtProblemTitle}
+    \newtheorem{subproblem}{Part}[problem]
+    \newtheorem*{subproblem*}{Part}
     \newtheorem{want}[theorem]{Want}
     \newtheorem*{want*}{Want}
 
