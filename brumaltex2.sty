@@ -428,11 +428,25 @@
     }
 }%%}
 
-\brt@mod@declare{shorthand}{%%{
+\brt@mod@declare{underscore}{%%{
+    \RequirePackage{underscore}
+
+    \let\brtUnderscoreOld\textunderscore
+    \newcommand{\brtUnderscoreToMath}{%%
+        \renewcommand{\textunderscore}{\ensuremath{\mathunderscore}}%%
+    }
+    \newcommand{\brtUnderscoreToText}{%%
+        \renewcommand{\textunderscore}{\brtUnderscoreOld}%%
+    }
+}%%}
+
+\brt@mod@declare{shorthand}[underscore]{%%{
     % TODO make these commands optionally accept an argument and intelligently
     % determine whether brackets are needed.
     \ProvideDocumentCommand{\brtMaOperator}{m}{%%
-        \ensuremath{\mathsf{##1}}%%
+        \brtUnderscoreToMath%%
+        \textsf{##1}%%
+        \brtUnderscoreToText%%
     }
     \ProvideDocumentCommand{\brtMaType}{m}{%%
         \textnormal{\textsf{\textbf{##1}}}%%
