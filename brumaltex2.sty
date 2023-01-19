@@ -432,6 +432,25 @@
     }{%
         \end{proof}
     }
+
+    \RequirePackage[ampersand]{easylist}
+    \theoremstyle{definition}
+    \newtheorem{brt@algo}{Algorithm}
+    \newtheorem*{brt@algo*}{Algorithm}
+    \newenvironment{brtAlgo}[1][]{%
+        \begin{brt@algo}[##1]\leavevmode%
+            \begin{easylist}[enumerate]%
+    }{%
+        \end{easylist}%
+        \end{brt@algo}%
+    }
+    \newenvironment{brtAlgo*}[1][]{%
+        \begin{brt@algo*}[##1]\leavevmode%
+            \begin{easylist}[enumerate]%
+    }{%
+        \end{easylist}%
+        \end{brt@algo*}%
+    }
 }%%}
 
 \brt@mod@declare{underscore}{%%{
