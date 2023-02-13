@@ -435,21 +435,25 @@
 
     \RequirePackage[ampersand]{easylist}
     \theoremstyle{definition}
-    \newtheorem{brt@algo}{Algorithm}
-    \newtheorem*{brt@algo*}{Algorithm}
-    \newenvironment{brtAlgo}[1][]{%
-        \begin{brt@algo}[##1]\leavevmode%
+    \newtheorem{brt@algorithm}{Algorithm}
+    \newtheorem*{brt@algorithm*}{Algorithm}
+    \newenvironment{algorithm}[1]{%
+        \begin{brt@algorithm}[##1]\leavevmode%
             \begin{easylist}[enumerate]%
     }{%
         \end{easylist}%
-        \end{brt@algo}%
+        \end{brt@algorithm}%
     }
-    \newenvironment{brtAlgo*}[1][]{%
-        \begin{brt@algo*}[##1]\leavevmode%
-            \begin{easylist}[enumerate]%
+    \newenvironment{algorithm*}[1]{%
+        \begin{brt@algorithm*}[##1]\leavevmode%
+            \begin{easylist}%
+                \ListProperties(%
+                    Hide=10000,Style*=\(\gg\) ,Mark=.,%
+                    Hang=true,Progressive=1em,Space=0.2em,Space*=0.2em%
+                )
     }{%
         \end{easylist}%
-        \end{brt@algo*}%
+        \end{brt@algorithm*}%
     }
 }%%}
 
