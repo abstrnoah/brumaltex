@@ -62,8 +62,8 @@ called. Obviously this comes at a performance cost, but I don't care. Some day I
 might make it better. But if you really care about performance, you should just
 use [functional] or [expl3].
 
-A consequence of this implementation is what we call "abstract datatypes"
-are actually just an [expl3] constants, so you can manipulate them as you wish
+A consequence of this implementation is that what we call "abstract datatypes"
+are actually just [expl3] constants, so you can manipulate them as you wish
 with the appropriate [functional] or [expl3] utilities.
 
 Naming conventions:
@@ -72,6 +72,13 @@ Naming conventions:
   following CamelCase.
 * The `shorthands` module aims to be convenient for me (the author) and has no
   formal naming conventions. It probably redefines your favourite macros.
+
+## fun
+
+This module provides some utilities that make functional programming more
+convenient. Main features include:
+* A `let` binding mechanism.
+* Anonymous functions.
 
 ## fmtype
 
@@ -117,31 +124,12 @@ By default, `x.@fmt` is equal to `T.@fmt`, which the user may override.
 
 ## datatypes
 
-For more details about these data types, see functional's documentation. The
-goal of these wrappers is to make the interface actually functional. That is,
-functions do not act on variables (they actually do, just not from the
-perspective of the user), so the user doesn't have to juggle resources. This
-comes at a performance cost, but the author doesn't care.
+Datatypes:
+* `str`
+* `obj`
 
-The idea is that the _coder_ only ever works with _token lists_, but that
-functions should pass around instances of abstract datatypes. To contend with
-this, we provide functions `\brt{Str,List,Obj}Make` which takes a token list and
-returns an abstract instance of the given type. If one really wishes to bind a
-variable, we provide a `\brtLet` mechanism for local bindings via property list.
-
-The rest of the functions deal
-exclusively with the abstract instances.
-
-## str
-
-
-## list
-
-## obj
-
-# scratch
-* objects are addressable by name
-
+For each datatype `D`, we provide the interface:
+* `\brtDMake` - token list to instance
 
 
 [functional]: https://ctan.org/pkg/functional
