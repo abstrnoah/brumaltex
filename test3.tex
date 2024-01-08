@@ -1,8 +1,18 @@
 \documentclass{article}
 
 \usepackage{brumaltex3}
+\Functional{tracing=true}
 
 \begin{document}
 
+    Hi
+
+    % \brtIntMake{5}
+
+    % \fbox{testbop}
+
+    \brtStrMake{bar}
+
+    \fbox{\strUse{\brtStrConcat{\brtStrMake{test}}{\brtStrMake{bop}}}}
 
 \end{document}

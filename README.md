@@ -8,9 +8,8 @@ With each version, I try to make it increasingly useful to people who aren't me
 said, it is a personal package and, as such, quite ___unstable___,
 insufficiently documented, and probably forever.
 
-The author uses the
-[tectonic](https://github.com/tectonic-typesetting/tectonic/) LaTeX engine,
-which is able to provide all of this package's dependencies as of this writing.
+The author uses the [tectonic] LaTeX engine, which is able to provide all of
+this package's dependencies as of this writing.
 
 In general, the major versions below are _not_ cross-compatible. In fact, I tend
 to increment the version number when I scrap everything and start over, so they
@@ -42,10 +41,30 @@ around to implementing this.
 
 # v3
 
-The main goal of Version 3 is to provide a primitive "formattable types" system.
-Towards that end, it also provides several data types, which are wrappers around
-[functional](https://ctan.org/pkg/functional) data types which, in turn, wraps
-[expl3](https://www.ctan.org/pkg/expl3).
+The main goal of Version 3 is to provide a "formattable types" system, whereby
+the user classify their mathematical objects and specify how the objects are
+formatted based on the object's type.
+
+For a saner programming experience, we make use of the [functional] package
+which, in turn, wraps [expl3]. Despite its name, [functional] does not provide a
+truly functional interface, as it requires the user to manage resource
+allocation. However, [functional] does solve the problem of expansion order (no
+small feat). That is, [functional] makes it possible to define functions whose
+arguments are evaluated before the function is executed.
+
+To solve the resource allocation problem without wanting to implement
+`malloc` in LaTeX, we take a very dumb approach: Each datatype `T`
+provides a `\brtTMake` function which takes a "literal" (a token-list
+representation of the datatype), constructs an instance of the datatype, binds
+it to a fresh constant, and passes the constant along. We make zero effort to
+reuse resources, simply incrementing a counter every time a constructor is
+called. Obviously this comes at a performance cost, but I don't care. Some day I
+might make it better. But if you really care about performance, you should just
+use [functional] or [expl3].
+
+A consequence of this implementation is what we call "abstract datatypes"
+are actually just an [expl3] constants, so you can manipulate them as you wish
+with the appropriate [functional] or [expl3] utilities.
 
 Naming conventions:
 * Except in the `shorthands` module, for each module `mod`, user-facing macros
@@ -116,11 +135,15 @@ exclusively with the abstract instances.
 ## str
 
 
-
 ## list
 
 ## obj
 
-
-## scratch
+# scratch
 * objects are addressable by name
+
+
+
+[functional]: https://ctan.org/pkg/functional
+[tectonic]: https://github.com/tectonic-typesetting/tectonic/
+[expl3]: https://www.ctan.org/pkg/expl3

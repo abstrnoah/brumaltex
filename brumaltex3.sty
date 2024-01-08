@@ -1,0 +1,54 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{brumaltex3}[2024/01/06]
+\ProvidesExplPackage{brumaltex3}{2024-01-07}{}{}
+
+\RequirePackage{functional}[2023-01-07]
+\Functional{scoping=true}
+
+% the quantity of objects allocated by makers
+\int_new:N \g__brt_heap_size
+
+% { } -> a new unique csname
+\prgNewFunction \__brt_heap_alloc { }
+    {
+        \tlSet \lTmpaTl { \expName { c__brt_heap_ \int_use:N \g__brt_heap_size } }
+        \int_gincr:N \g__brt_heap_size
+        \prgReturn { \tlUse \lTmpaTl }
+    }
+
+% #1 = constant constructor; #2 = value; -> newly made constant
+\prgNewFunction \__brt_make { M m }
+    {
+        \tlSet \lTmpaTl { \__brt_heap_alloc }
+        #1 { \tlUse \lTmpaTl } { #2 }
+        \prgReturn { \tlUse \lTmpaTl }
+    }
+
+% #1 = name; #2 = arg spec ; #3 = code; -> void
+% Use \prgNewFunction unless it is necessary to dynamically evaluate #1, since
+% this wrapper comes at a performance cost.
+\prgNewFunction \__brt_fun_new:Mmn { M m n }
+    { \prgNewFunction #1 { #2 } { #3 } }
+
+% functions are commands
+% function literals are anonymous function expressions together with arg spec
+% #1 = arg spec (per functional.sty); #2 = code; -> newly made function
+\prgNewFunction \brtFunMake { m n }
+    {
+        \tlSet \lTmpaTl { \__brt_heap_alloc }
+        \__brt_fun_new:Mmn { \tlUse \lTmpaTl } { #1 } { #2 }
+        \prgReturn { \tlUse \lTmpaTl }
+    }
+
+% integers are integer literals
+\prgNewFunction \brtIntMake { e } { #1 }
+
+% strings are variables, string literals are token lists
+\prgNewFunction \brtStrMake { m }
+    { \prgReturn { \__brt_make { \exp_not:n { \strConst } } { #1 } } }
+
+\prgNewFunction \brtStrConcat { M M }
+    {
+        \strConcat \lTmpaStr #1 #2
+        \prgReturn { \brtStrMake { \strUse \lTmpaStr } }
+    }
