@@ -8,47 +8,112 @@
 % the quantity of objects allocated by makers
 \int_new:N \g__brt_heap_size
 
-% { } -> a new unique csname
-\prgNewFunction \__brt_heap_alloc { }
-    {
-        \tlSet \lTmpaTl { \expName { c__brt_heap_ \int_use:N \g__brt_heap_size } }
-        \int_gincr:N \g__brt_heap_size
-        \prgReturn { \tlUse \lTmpaTl }
-    }
+% {} -> a new unique csname
+\prgNewFunction \__brt_heap_alloc {}
+    {\tlSet \lTmpaTl {\expName {c__brt_heap_ \int_use:N \g__brt_heap_size}}
+     \int_gincr:N \g__brt_heap_size
+     \prgReturn {\tlUse \lTmpaTl}}
 
-% #1 = constant constructor; #2 = value; -> newly made constant
-\prgNewFunction \__brt_make { M m }
-    {
-        \tlSet \lTmpaTl { \__brt_heap_alloc }
-        #1 { \tlUse \lTmpaTl } { #2 }
-        \prgReturn { \tlUse \lTmpaTl }
-    }
+% #1 = constant constructor; #2 = value; -> new constant
+\prgNewFunction \__brt_make {Nm}
+    {\tlSet \lTmpaTl {\__brt_heap_alloc}
+     #1 {\tlUse \lTmpaTl} {#2}
+     \prgReturn {\tlUse \lTmpaTl}}
 
-% #1 = name; #2 = arg spec ; #3 = code; -> void
-% Use \prgNewFunction unless it is necessary to dynamically evaluate #1, since
-% this wrapper comes at a performance cost.
-\prgNewFunction \__brt_fun_new:Mmn { M m n }
-    { \prgNewFunction #1 { #2 } { #3 } }
+% \brtPFunCons #1=name:csname {#2=args:clist} {#3=code} -> void
+% Make a function that takes one formal parameter which is a keyval list.
+% The code must use \prgReturn to return.
+% Inside the code, the macro \brtArgGet  may be used to access arguments.
+% All argument values are token lists.
+% NOTE: #2 does literally nothing, for now.
+\propClearNew \l__args
+\prgNewFunction \brtArgGet {m} {\propVarItem \l__args {#1}}
+\prgNewFunction \brtPFunCons {Mmn}
+    {\prgNewFunction #1 {m}
+        {\propSetFromKeyval \l__args {##1} #3}}
 
-% functions are commands
-% function literals are anonymous function expressions together with arg spec
-% #1 = arg spec (per functional.sty); #2 = code; -> newly made function
-\prgNewFunction \brtFunMake { m n }
-    {
-        \tlSet \lTmpaTl { \__brt_heap_alloc }
-        \__brt_fun_new:Mmn { \tlUse \lTmpaTl } { #1 } { #2 }
-        \prgReturn { \tlUse \lTmpaTl }
-    }
+% the quantity of objects with id
+\int_new:N \g__brt_universe_size
 
-% integers are integer literals
-\prgNewFunction \brtIntMake { e } { #1 }
+% \__brt_id_alloc -> new unique id string
+\strClearNew \l__id
+\prgNewFunction \__brt_id_alloc {}
+    {\strSet \l__id {\evalWhole {brt Id \intUse \g__brt_universe_size}}
+     \int_gincr:N \g__brt_universe_size
+     \prgReturn {\strUse \l__id}}
 
-% strings are variables, string literals are token lists
-\prgNewFunction \brtStrMake { m }
-    { \prgReturn { \__brt_make { \exp_not:n { \strConst } } { #1 } } }
+% \brtObjCons {#2=args:keyvals} -> new object
+% If args does not provide @type=, then the object's @type is set to \brtTypeT.
+% The object is automatically given an @id=, which overrides args.@id.
+% The @id= also serves as a name.
+% TODO Handle primitives.
+\propClearNew \l__args
+\strClearNew \l__id
+\tlClearNew \l__obj_p
+\prgNewFunction \brtObjCons {m}
+    {\propSetFromKeyval \l__args {\evalWhole {#1}}
+     \strSet \l__id {\__brt_id_alloc}
+     \propPutIfNew \l__args {@type} {\brtTypeT}
+     \propPut \l__args {@id} {\strUse \l__id}
+     \tlSet \l__obj_p {\__brt_make \propConstFromKeyval {\propToKeyval \l__args}}
+     \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
+     \prgReturn {\tlUse \l__obj_p}}
 
-\prgNewFunction \brtStrConcat { M M }
-    {
-        \strConcat \lTmpaStr #1 #2
-        \prgReturn { \brtStrMake { \strUse \lTmpaStr } }
-    }
+% \brtObjElim #1=obj:obj {#2=key:str} -> value
+% TODO support attribute paths
+\prgNewFunction \brtObjElim {Mm}
+    {\prgReturn {\propVarItem #1 {#2}}}
+
+% The \brtObjNamed maps names to objects, not necessarily injectively.
+% For each object, its @id= is a valid name for the object.
+% \brtObjName {#1=name:str} #2=obj:obj -> void
+\prgNewFunction \brtObjName {mM}
+    {\tlConst {\expName {c__brt_obj_named_ #1}} #2}
+
+% \brtObjNamed {#1=name:str} -> object named "name"
+\prgNewFunction \brtObjNamed {m}
+    {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
+
+% primitive type type (default formatter)
+\propConstFromKeyval \c__brt_obj_named_TypeII {@id=TypeII}
+\brtObjName {Type} {\brtObjCons {@type = \c__brt_obj_named_TypeII}}
+
+% primitive integer type (formats to expl3 integer)
+\brtObjName {Int} {\brtObjCons {@type = \brtObjNamed {Type}}}
+\prgNewFunction \brtIntCons {m}
+    {\prgReturn
+        {\brtObjCons
+            {@type = \brtObjNamed {Int},
+             @value = {\__brt_make \intConst {#1}}}}}
+
+% primitive string type (formats to expl3 string)
+\brtObjName {Str} {\brtObjCons {@type = \brtObjNamed {Type}}}
+\prgNewFunction \brtStrCons {m}
+    {\prgReturn
+        {\brtObjCons
+            {@type = \brtObjNamed {Str},
+             @value = {\__brt_make \strConst {#1}}}}}
+
+% \brtObjFmt #1=obj:obj {#2=fmtr:fun} -> void
+% Set the formatter for the object.
+\prgNewFunction \__brt_obj_fmt_get_p {M}
+    {\prgReturn {\expName {g__brt_obj_fmt_ \brtObjElim #1 {@id}}}}
+\prgNewFunction \brtObjFmt {Mn}
+    {\tlSet {\__brt_obj_fmt_get_p #1} {#2}}
+
+% \brtObjFmtd #1=obj:obj -> formatted object
+\tlClearNew \l__fmt_p
+\tlClearNew \l__fmt_code
+\prgNewFunction \brtObjFmtd {M}
+    {\tlSet \l__fmt_p {\__brt_obj_fmt_get_p #1}
+     \tlVarIfEmptyTF {\tlUse \l__fmt_p}
+        {\tlSetEq \l__fmt_p {\__brt_obj_fmt_get_p {\brtObjElim #1 {@type}}}
+         \tlVarIfEmptyTF {\tlUse \l__fmt_p}
+            {\tlSet \l__fmt_code {TODO~at~brtObjFmtd}}
+            {\tlSetEq \l__fmt_code {\tlUse \l__fmt_p}}}
+        {\tlSetEq \l__fmt_code {\tlUse \l__fmt_p}}
+     \prgReturn {\prgRunOneArgCode {#1} {\tlUse \l__fmt_code}}}
+
+% \brtObjFmt {\brtObjNamed {Type}} {\prgReturn {\tlToStr {\propToKeyval #1}}}
+
+% \brtStrConcat

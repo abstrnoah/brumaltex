@@ -104,7 +104,7 @@ An __object__ is just a property list.
 
 __Reserved properties__ are:
 * `@type=` - The string name of the object's type.
-* `@name=` - The string name of the instance, which _must_ be unique.
+* `@id=` - A unique identifier of the instance.
 * `@fmt=` - A user-defined function of one argument that receives an object and
   formats it.
     * It is up to the user to ensure that the assumptions of this function are
