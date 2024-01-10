@@ -5,6 +5,14 @@
 \RequirePackage{functional}[2023-01-07]
 \Functional{scoping=true}
 
+\prgNewFunction \prgNewFunction:Mnn {Mnn}
+    {\prgNewFunction #1 {#2} {#3}}
+
+% Delete a function which has been previously defined by \prgNewFunction.
+\prgNewFunction \__brt_fun_del {M}
+    {\cs_undefine:N #1
+     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 : w}}
+
 % the quantity of objects allocated by makers
 \int_new:N \g__brt_heap_size
 
@@ -20,17 +28,17 @@
      #1 {\tlUse \lTmpaTl} {#2}
      \prgReturn {\tlUse \lTmpaTl}}
 
-% \brtPFunCons #1=name:csname {#2=args:clist} {#3=code} -> void
+% \brtPFunCons #1=name:csname {#2=code} -> void
 % Make a function that takes one formal parameter which is a keyval list.
 % The code must use \prgReturn to return.
 % Inside the code, the macro \brtArgGet  may be used to access arguments.
 % All argument values are token lists.
-% NOTE: #2 does literally nothing, for now.
 \propClearNew \l__args
 \prgNewFunction \brtArgGet {m} {\propVarItem \l__args {#1}}
-\prgNewFunction \brtPFunCons {Mmn}
+\prgNewFunction \brtPFunCons {Mn}
     {\prgNewFunction #1 {m}
-        {\propSetFromKeyval \l__args {##1} #3}}
+        {\propSetFromKeyval \l__args {##1}
+         #2}}
 
 % the quantity of objects with id
 \int_new:N \g__brt_universe_size
@@ -75,8 +83,8 @@
     {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
 
 % primitive type type (default formatter)
-\propConstFromKeyval \c__brt_obj_named_TypeII {@id=TypeII}
-\brtObjName {Type} {\brtObjCons {@type = \c__brt_obj_named_TypeII}}
+\propConstFromKeyval \brtTypeT {@id=Type}
+\brtObjName {Type} {\brtTypeT}
 
 % primitive integer type (formats to expl3 integer)
 \brtObjName {Int} {\brtObjCons {@type = \brtObjNamed {Type}}}
@@ -94,26 +102,18 @@
             {@type = \brtObjNamed {Str},
              @value = {\__brt_make \strConst {#1}}}}}
 
-% \brtObjFmt #1=obj:obj {#2=fmtr:fun} -> void
+% \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
 % Set the formatter for the object.
-\prgNewFunction \__brt_obj_fmt_get_p {M}
-    {\prgReturn {\expName {g__brt_obj_fmt_ \brtObjElim #1 {@id}}}}
-\prgNewFunction \brtObjFmt {Mn}
-    {\tlSet {\__brt_obj_fmt_get_p #1} {#2}}
+\prgNewFunction \__brt_obj_fmt_p {M}
+    {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim #1 {@id}}}}}
+\prgNewFunction \brtObjFmtSet {Mn}
+    {\__brt_fun_del {\__brt_obj_fmt_p #1}
+     \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
 
-% \brtObjFmtd #1=obj:obj -> formatted object
-\tlClearNew \l__fmt_p
-\tlClearNew \l__fmt_code
-\prgNewFunction \brtObjFmtd {M}
-    {\tlSet \l__fmt_p {\__brt_obj_fmt_get_p #1}
-     \tlVarIfEmptyTF {\tlUse \l__fmt_p}
-        {\tlSetEq \l__fmt_p {\__brt_obj_fmt_get_p {\brtObjElim #1 {@type}}}
-         \tlVarIfEmptyTF {\tlUse \l__fmt_p}
-            {\tlSet \l__fmt_code {TODO~at~brtObjFmtd}}
-            {\tlSetEq \l__fmt_code {\tlUse \l__fmt_p}}}
-        {\tlSetEq \l__fmt_code {\tlUse \l__fmt_p}}
-     \prgReturn {\prgRunOneArgCode {#1} {\tlUse \l__fmt_code}}}
+% \brtObjFmt #1=obj:obj -> formatted object
+\prgNewFunction \brtObjFmt {M}
+    {\prgReturn {\evalWhole {{\__brt_obj_fmt_p #1} #1}}}
 
-% \brtObjFmt {\brtObjNamed {Type}} {\prgReturn {\tlToStr {\propToKeyval #1}}}
+\brtObjFmtSet {\brtObjNamed {Type}} {\prgReturn {\tlToStr {\propToKeyval #1}}}
 
 % \brtStrConcat

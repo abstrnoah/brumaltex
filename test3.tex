@@ -1,15 +1,35 @@
 \documentclass{article}
 
+\usepackage{functional}
 \usepackage{brumaltex3}
 \Functional{tracing=true}
 
+\renewcommand{\familydefault}{\ttdefault}
+
 \begin{document}
+
+    \tiny
 
     .
 
-    \tlToStr{\propToKeyval {\brtObjNamed {Int}}}
+    % \tlToStr{\propToKeyval {\brtObjNamed {Type}}}
 
-    \tlToStr{\propToKeyval {\brtIntCons {3}}}
+    % \tlToStr{\brtObjElim {\brtObjNamed {Type}} {@id}}
+
+    \ExplSyntaxOn
+    % \tlToStr {\__brt_obj_fmt_Type {\brtObjNamed {Type}}}
+    \tlToStr {\evalWhole {{\__brt_obj_fmt_p \brtTypeT} \brtTypeT}}
+    \ExplSyntaxOff
+
+    % \brtObjFmt {\brtObjNamed {Type}}
+
+    % \tlToStr{\propToKeyval {\brtObjNamed {Int}}}
+
+    % \tlToStr{\propToKeyval {\brtIntCons {3}}}
+
+    % \ExplSyntaxOn
+    % \tlToStr {\__brt_obj_fmt_get_p {\brtObjNamed {Type}}}
+    % \ExplSyntaxOff
 
     % \brtObjFmtd {\brtObjNamed {Type}}
 
