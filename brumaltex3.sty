@@ -5,8 +5,13 @@
 \RequirePackage{functional}[2023-01-07]
 \Functional{scoping=true}
 
+% Create a new function after manipulating the first argument (name).
 \prgNewFunction \prgNewFunction:Mnn {Mnn}
     {\prgNewFunction #1 {#2} {#3}}
+
+% Evaluate the argument, discarding the result, adding nothing to input stream.
+\prgNewFunction \brtVoid {m}
+    {}
 
 % Delete a function which has been previously defined by \prgNewFunction.
 \prgNewFunction \__brt_fun_del {M}
@@ -28,18 +33,6 @@
      #1 {\tlUse \lTmpaTl} {#2}
      \prgReturn {\tlUse \lTmpaTl}}
 
-% \brtPFunCons #1=name:csname {#2=code} -> void
-% Make a function that takes one formal parameter which is a keyval list.
-% The code must use \prgReturn to return.
-% Inside the code, the macro \brtArgGet  may be used to access arguments.
-% All argument values are token lists.
-\propClearNew \l__args
-\prgNewFunction \brtArgGet {m} {\propVarItem \l__args {#1}}
-\prgNewFunction \brtPFunCons {Mn}
-    {\prgNewFunction #1 {m}
-        {\propSetFromKeyval \l__args {##1}
-         #2}}
-
 % the quantity of objects with id
 \int_new:N \g__brt_universe_size
 
@@ -52,9 +45,10 @@
 
 % \brtObjCons {#2=args:keyvals} -> new object
 % If args does not provide @type=, then the object's @type is set to \brtTypeT.
-% The object is automatically given an @id=, which overrides args.@id.
+% The object is automatically given an @id=, which overrides any args.@id.
 % The @id= also serves as a name.
-% TODO Handle primitives.
+% If @name= is provided, then it is assigned as a name.
+% The object's formatter is set to the type's default formatter.
 \propClearNew \l__args
 \strClearNew \l__id
 \tlClearNew \l__obj_p
@@ -65,6 +59,9 @@
      \propPut \l__args {@id} {\strUse \l__id}
      \tlSet \l__obj_p {\__brt_make \propConstFromKeyval {\propToKeyval \l__args}}
      \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
+     \propGetT \l__args {@name} \lTmpaTl
+        {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
+     \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {\tlUse \l__obj_p} {@type}}
      \prgReturn {\tlUse \l__obj_p}}
 
 % \brtObjElim #1=obj:obj {#2=key:str} -> value
@@ -72,35 +69,19 @@
 \prgNewFunction \brtObjElim {Mm}
     {\prgReturn {\propVarItem #1 {#2}}}
 
-% The \brtObjNamed maps names to objects, not necessarily injectively.
-% For each object, its @id= is a valid name for the object.
 % \brtObjName {#1=name:str} #2=obj:obj -> void
+% A priori, names can be arbitrary token lists.
+% However, it is recommended that names be valid csnames (without using
+% \csname...\endcsname etc.) so that wrappers can construct convenient macros
+% around object names.
 \prgNewFunction \brtObjName {mM}
     {\tlConst {\expName {c__brt_obj_named_ #1}} #2}
 
 % \brtObjNamed {#1=name:str} -> object named "name"
+% Maps names to objects, not necessarily injectively.
+% An object's @id= also serves as a name.
 \prgNewFunction \brtObjNamed {m}
     {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
-
-% primitive type type (default formatter)
-\propConstFromKeyval \brtTypeT {@id=Type}
-\brtObjName {Type} {\brtTypeT}
-
-% primitive integer type (formats to expl3 integer)
-\brtObjName {Int} {\brtObjCons {@type = \brtObjNamed {Type}}}
-\prgNewFunction \brtIntCons {m}
-    {\prgReturn
-        {\brtObjCons
-            {@type = \brtObjNamed {Int},
-             @value = {\__brt_make \intConst {#1}}}}}
-
-% primitive string type (formats to expl3 string)
-\brtObjName {Str} {\brtObjCons {@type = \brtObjNamed {Type}}}
-\prgNewFunction \brtStrCons {m}
-    {\prgReturn
-        {\brtObjCons
-            {@type = \brtObjNamed {Str},
-             @value = {\__brt_make \strConst {#1}}}}}
 
 % \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
 % Set the formatter for the object.
@@ -110,10 +91,58 @@
     {\__brt_fun_del {\__brt_obj_fmt_p #1}
      \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
 
+% \brtTypeFmtSet #1=obj:Type -> void
+% Set the formatter for the type, i.e. the default formatter for all inhabitants
+% of this type.
+\prgNewFunction \__brt_type_fmt_p {M}
+    {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim #1 {@id}}}}}
+\prgNewFunction \brtTypeFmtSet {Mn}
+    {\__brt_fun_del {\__brt_type_fmt_p #1}
+     \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
+
 % \brtObjFmt #1=obj:obj -> formatted object
 \prgNewFunction \brtObjFmt {M}
-    {\prgReturn {\evalWhole {{\__brt_obj_fmt_p #1} #1}}}
+    {\prgReturn {\evalWhole {\__brt_obj_fmt_p #1 #1}}}
 
-\brtObjFmtSet {\brtObjNamed {Type}} {\prgReturn {\tlToStr {\propToKeyval #1}}}
+% \brtObjFmtLike #1=obj:obj #2=type:Type -> void
+% Set the formatter for obj to the default formatter of type.
+% This is by ref, i.e. if type's default formatter changes, then so does obj.
+\prgNewFunction \brtObjFmtLike {MM}
+    {\brtObjFmtSet #1 {\prgReturn {\evalWhole {\__brt_type_fmt_p #2 ##1}}}}
 
-% \brtStrConcat
+% \brtObjShow #1=obj:obj -> string serialisation of object
+\prgNewFunction \brtObjShow {M}
+    {\prgReturn {\tlToStr {\propToKeyval #1}}}
+
+% primitive type type (default formatter)
+% We have to create it by-hand to bootstrap the universe.
+\propConstFromKeyval \brtTypeT {@id = Type, @name = Type}
+\brtObjName {Type} {\brtTypeT}
+\brtObjFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
+\brtTypeFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
+
+% \brtObjPrimElim #1=obj:primitive -> primitive value
+\prgNewFunction \brtObjPrimElim {M}
+    {\prgReturn {\brtObjElim #1 {@value}}}
+
+% primitive integer type (eliminates to expl3 integer, formats to arabic)
+\brtTypeFmtSet
+    {\brtObjCons {@type = \brtTypeT, @name = Int}}
+    {\prgReturn {\int_to_arabic:n {\brtObjPrimElim #1}}}
+\prgNewFunction \brtIntCons {m}
+    {\prgReturn
+        {\brtObjCons
+            {@type = \brtObjNamed {Int},
+             @value = {\__brt_make \intConst {#1}}}}}
+
+% primitive string type (eliminates and formats to expl3 string)
+\brtTypeFmtSet
+    {\brtObjCons {@type = \brtTypeT, @name = Str}}
+    {\prgReturn {\brtObjPrimElim #1}}
+\prgNewFunction \brtStrCons {m}
+    {\prgReturn
+        {\brtObjCons
+            {@type = \brtObjNamed {Str},
+             @value = {\__brt_make \strConst {#1}}}}}
+
+% \brtStrConcat % TODO

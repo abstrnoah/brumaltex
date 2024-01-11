@@ -41,7 +41,7 @@ around to implementing this.
 
 # v3
 
-The main goal of Version 3 is to provide a "formattable types" system, whereby
+The main goal of Version 3 is to provide a "formattable objects" system, whereby
 the user classify their mathematical objects and specify how the objects are
 formatted based on the object's type.
 
@@ -52,85 +52,123 @@ allocation. However, [functional] does solve the problem of expansion order (no
 small feat). That is, [functional] makes it possible to define functions whose
 arguments are evaluated before the function is executed.
 
-To solve the resource allocation problem without wanting to implement
-`malloc` in LaTeX, we take a very dumb approach: Each datatype `T`
-provides a `\brtTMake` function which takes a "literal" (a token-list
-representation of the datatype), constructs an instance of the datatype, binds
-it to a fresh constant, and passes the constant along. We make zero effort to
-reuse resources, simply incrementing a counter every time a constructor is
-called. Obviously this comes at a performance cost, but I don't care. Some day I
-might make it better. But if you really care about performance, you should just
-use [functional] or [expl3].
+To solve the resource allocation problem without wanting to implement `malloc`
+in LaTeX, we take a very dumb approach: Each new object is assigned to a new
+constant, simply incrementing a counter with each allocation. We make zero
+effort to reuse resources. Obviously this comes at a performance cost, but I
+don't care. Some day I might make it better. But if you really care about
+performance, you should just use [functional] or [expl3].
 
-A consequence of this implementation is that what we call "abstract datatypes"
-are actually just [expl3] constants, so you can manipulate them as you wish
-with the appropriate [functional] or [expl3] utilities.
+A consequence of our implementation is that our "objects" are actually just
+[expl3] property lists, so you can technically manipulate them with [expl3] and
+friends.
 
 Naming conventions:
-* Except in the `shorthands` module, for each module `mod`, user-facing macros
-  of that module have the prefix `\brtMod...`, with the rest of the name
-  following CamelCase.
+* Except in the `shorthands` module, macros begin with the prefix `\brt...`,
+  followed by CamelCase, usually of the form `\brtTypeVerb`.
 * The `shorthands` module aims to be convenient for me (the author) and has no
   formal naming conventions. It probably redefines your favourite macros.
 
-## fun
+## obj
 
-This module provides some utilities that make functional programming more
-convenient. Main features include:
-* A `let` binding mechanism.
-* Anonymous functions.
+The "objects" module wraps [functional] with the goals of (1) supporting a
+uniform datatype library (i.e. all objects are the same kind of thing and can
+be manipulated via a simple interface) and (2) providing a convenient formatting
+system.
 
-## fmtype
+Goal (1) is a necessity for any sane programming language. Goal (2) aims to
+vastly improve the typesetting experience for large projects with many
+mathematical objects of various types. The hope is that the package makes it
+easeir to typeset your favourite mathemematical objects consistently and with
+ease.
 
-The `fmtype` module is an attempt to implement a primitive system of formattable
-types. I'm not going to attempt to implement a full-fledged system of checked,
-algebraic types. The system will not enforce type safety. Maybe it shouldn't
-even be called a type system. The main goal is flexible, consistent, and easy
-formatting of mathematical objects.
+The main functions are documented below (for some more, see the source code,
+where I attempt to maintain reasonably good docstrings ;).
 
-Here's the idea: The user may declare a universe of _objects_, each of which has
-a _type_. Objects are simply _property lists_. The user may specify
-_formatters_, which are functions that take objects and typeset them. The
-formatter for the distinguished object `type` takes highest precedent, but can
-be overridden by a given type's formatter, which can in turn be overridden by a
-given instance's formatter. Formatters may make use of an object's raw property
-list or other formatters.
+Some important things to keep in mind before diving in:
+* Objects are "abstract" and _cannot_ be used directly in your document. They
+  can, however, be passed to a function that takes an object. Most of the
+  functions, except constructors and formatters, return abstract objects and
+  take them as input.
+* Objects are essentially property lists. They have properties like
+  `field=value`. They can be contsructed from other objects, e.g. have a
+  property `friend=\Fred`. Except for _primitive_ objects (integers, strings,
+  etc.), the property values should be abstract objects and _not_ their string
+  representation.
+* To actually "see" an object, format it with `\brtObjFmt`. See also
+  `\brtObjShow`.
+* At this time, the canonical way to _retreive_ an object is by "name". See
+  `\brtObjNamed`.
 
-Normative terms:
-* "_Must_" means that behaviour is undefined if the condition is not met.
-* There are no other normative terms; what do you think this is, an RFC?
+### `\brtObjNamed`
 
-An __object__ is just a property list.
+```latex
+\brtObjNamed {MyNamedObject}
+```
 
-__Reserved properties__ are:
-* `@type=` - The string name of the object's type.
-* `@id=` - A unique identifier of the instance.
-* `@fmt=` - A user-defined function of one argument that receives an object and
-  formats it.
-    * It is up to the user to ensure that the assumptions of this function are
-      met by the instances passed to it. The package provides zero mechanisms
-      for checking that instances have certain properties.
+Return the object named `MyNamedObject`.
 
-There is always an object called `@name=type`. By default, `type.@fmt` is a
-formatter that simply prints an object's underlying property list verbatim, but
-it may be overridden.
+All objects have one or more string names. When an object is created, it is
+given an `@id`, which probably isn't very useful to the user. The user may
+assign more names via `\brtObjName`.
 
-A __type__ `T` is an object of `@type=type`. By default, `T.@fmt` is equal to
-`type.@fmt`, which the user may override.
+### `\brtObjName`
 
-An __instance__ `x` of a type `T` is an object with `@type=T` and possibly other
-properties, the sanity of which the package provides no mechanism for checking.
-By default, `x.@fmt` is equal to `T.@fmt`, which the user may override.
+```latex
+\brtObjName {MyNamedObject} {\CrazyObjectBob}
+```
 
-## datatypes
+Assign a name to an object.
 
-Datatypes:
-* `str`
-* `obj`
+It is an error to assign a name that has already been assigned.
 
-For each datatype `D`, we provide the interface:
-* `\brtDMake` - token list to instance
+### `\brtObjCons`
 
+```latex
+\brtObjCons {@name = Name, @type = \brtObjNamed {MyType}, ...}
+```
+
+Construct a new object from a comma-separated key-value list and return it.
+
+Spaces around commas and equal signs are ignored. Keys must be strings. Reserved
+keys start with `@`, so your custom keys should not start with `@`. Values can
+be arbitrary token lists, but will most often be be other objects (retrieved by
+name).
+
+The object is automatically given an `@id=` property (which overrides any `@id=`
+property passed to the function).
+
+If `@name=` is provided, then the object is given that name. You can give it
+more names later via `\brtObjName`.
+
+if `@type=` is not provided, then the object is given the `Type` type.
+
+Since this function returns an abstract object, you probably don't want to call
+this function without passing the result to another function, such as to
+`\brtObjFmtSet`. If you just want to call the function without passing the
+result somewhere, wrap it in `\brtVoid` so that the dangling result doesn't
+cause an error. E.g. `\brtVoid {\brtObjCons {...}}`.
+
+### `\brtObjElim`
+
+```latex
+\brtObjElim {key} \MyObject
+```
+
+Retrieve the value associated with `key` in `\MyObject`.
+
+### ...
+
+TODO document the rest
+
+## easymac
+
+TODO
+
+A system for wrapping macros around formatted objects so you don't have to type
+`\brtObjFmt {\brtObjNamed {...}}` repeatedly in-document.
+
+---
 
 [functional]: https://ctan.org/pkg/functional
 [tectonic]: https://github.com/tectonic-typesetting/tectonic/

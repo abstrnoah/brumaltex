@@ -6,22 +6,29 @@
 
 \renewcommand{\familydefault}{\ttdefault}
 
+\brtObjName {testStr} {\brtStrCons {hehe}}
+\brtObjName {testInt} {\brtIntCons {42}}
+
 \begin{document}
 
     \tiny
 
-    .
+    ..
 
     % \tlToStr{\propToKeyval {\brtObjNamed {Type}}}
 
     % \tlToStr{\brtObjElim {\brtObjNamed {Type}} {@id}}
 
     \ExplSyntaxOn
-    % \tlToStr {\__brt_obj_fmt_Type {\brtObjNamed {Type}}}
-    \tlToStr {\evalWhole {{\__brt_obj_fmt_p \brtTypeT} \brtTypeT}}
+    % % \tlToStr {\__brt_obj_fmt_Type {\brtObjNamed {Type}}}
+    % \prgDo{\evalWhole{\__brt_obj_fmt_p \brtTypeT \brtTypeT}}
+    % % \tlToStr {\__brt_obj_fmt_p \brtTypeT}
     \ExplSyntaxOff
 
+    % \brtObjFmt {\brtTypeT}
     % \brtObjFmt {\brtObjNamed {Type}}
+
+    % \tlToStr {\propToKeyval {\brtObjNamed {Int}}}
 
     % \tlToStr{\propToKeyval {\brtObjNamed {Int}}}
 
@@ -31,6 +38,14 @@
     % \tlToStr {\__brt_obj_fmt_get_p {\brtObjNamed {Type}}}
     % \ExplSyntaxOff
 
-    % \brtObjFmtd {\brtObjNamed {Type}}
+    \brtObjFmt {\brtObjNamed {Type}}
+
+    \brtObjFmt {\brtObjNamed {Str}}
+
+    \brtObjFmt {\brtObjNamed {Int}}
+
+    \brtObjFmt {\brtObjNamed {testInt}}
+
+    \brtObjFmt {\brtObjNamed {testStr}}
 
 \end{document}
