@@ -42,7 +42,7 @@ around to implementing this.
 # v3
 
 The main goal of Version 3 is to provide a "formattable objects" system, whereby
-the user classify their mathematical objects and specify how the objects are
+the user may classify their mathematical objects and specify how the objects are
 formatted based on the object's type.
 
 For a saner programming experience, we make use of the [functional] package
