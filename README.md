@@ -64,9 +64,9 @@ A consequence of our implementation is that our "objects" are actually just
 friends.
 
 Naming conventions:
-* Except in the `shorthands` module, macros begin with the prefix `\brt...`,
+* Except in the `shorthand` module, macros begin with the prefix `\brt...`,
   followed by CamelCase, usually of the form `\brtTypeVerb`.
-* The `shorthands` module aims to be convenient for me (the author) and has no
+* The `shorthand` module aims to be convenient for me (the author) and has no
   formal naming conventions. It probably redefines your favourite macros.
 
 ## obj

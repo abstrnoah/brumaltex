@@ -5,7 +5,18 @@
 \RequirePackage{functional}[2023-01-07]
 \Functional{scoping=true}
 
-\RequirePackage{xparse}[2023-10-10]
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+\RequirePackage{physics}
+\RequirePackage{csquotes}
+\RequirePackage{mathrsfs}
+\RequirePackage{stmaryrd}
+\RequirePackage{dsfont}
+\RequirePackage{bm}
+
+% \RequirePackage{xparse}[2023-10-10] % TODO
 
 % Create a new function after manipulating the first argument (name).
 \prgNewFunction \prgNewFunction:Mnn {Mnn}
@@ -45,130 +56,163 @@
      \int_gincr:N \g__brt_universe_size
      \prgReturn {\strUse \l__id}}
 
-% \brtObjCons {#2=args:keyvals} -> new object
-% If args does not provide @type=, then the object's @type is set to \brtTypeT.
-% The object is automatically given an @id=, which overrides any args.@id.
-% The @id= also serves as a name.
-% If @name= is provided, then it is assigned as a name.
-% The object's formatter is set to the type's default formatter.
-\propClearNew \l__args
-\strClearNew \l__id
-\tlClearNew \l__obj_p
-\prgNewFunction \brtObjCons {m}
-    {\propSetFromKeyval \l__args {\evalWhole {#1}}
-     \strSet \l__id {\__brt_id_alloc}
-     \propPutIfNew \l__args {@type} {\brtTypeT}
-     \propPut \l__args {@id} {\strUse \l__id}
-     \tlSet \l__obj_p {\__brt_make \propConstFromKeyval {\propToKeyval \l__args}}
-     \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
-     \propGetT \l__args {@name} \lTmpaTl
-        {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
-     \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
-     \prgReturn {\tlUse \l__obj_p}}
+\DeclareOption {obj} {
+    % \brtObjCons {#2=args:keyvals} -> new object
+    % If args does not provide @type=, then the object's @type is set to \brtTypeT.
+    % The object is automatically given an @id=, which overrides any args.@id.
+    % The @id= also serves as a name.
+    % If @name= is provided, then it is assigned as a name.
+    % The object's formatter is set to the type's default formatter.
+    \propClearNew \l__args
+    \strClearNew \l__id
+    \tlClearNew \l__obj_p
+    \prgNewFunction \brtObjCons {m}
+        {\propSetFromKeyval \l__args {\evalWhole {#1}}
+         \strSet \l__id {\__brt_id_alloc}
+         \propPutIfNew \l__args {@type} {\brtTypeT}
+         \propPut \l__args {@id} {\strUse \l__id}
+         \tlSet \l__obj_p {\__brt_make \propConstFromKeyval {\propToKeyval \l__args}}
+         \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
+         \propGetT \l__args {@name} \lTmpaTl
+            {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
+         \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
+         \prgReturn {\tlUse \l__obj_p}}
 
-% \brtObjElim {#1=key:str} #2=obj:obj -> value
-% TODO support attribute paths
-\prgNewFunction \brtObjElim {mM}
-    {\prgReturn {\propVarItem #2 {#1}}}
+    % \brtObjElim {#1=key:str} #2=obj:obj -> value
+    % TODO support attribute paths
+    \prgNewFunction \brtObjElim {mM}
+        {\prgReturn {\propVarItem #2 {#1}}}
 
-% \brtObjName {#1=name:str} #2=obj:obj -> void
-% A priori, names can be arbitrary token lists.
-% However, it is recommended that names be valid csnames (without using
-% \csname...\endcsname etc.) so that wrappers can construct convenient macros
-% around object names.
-\prgNewFunction \brtObjName {mM}
-    {\tlConst {\expName {c__brt_obj_named_ #1}} #2}
+    % \brtObjName {#1=name:str} #2=obj:obj -> void
+    % A priori, names can be arbitrary token lists.
+    % However, it is recommended that names be valid csnames (without using
+    % \csname...\endcsname etc.) so that wrappers can construct convenient macros
+    % around object names.
+    \prgNewFunction \brtObjName {mM}
+        {\tlConst {\expName {c__brt_obj_named_ #1}} #2}
 
-% \brtObjNamed {#1=name:str} -> object named "name"
-% Maps names to objects, not necessarily injectively.
-% An object's @id= also serves as a name.
-\prgNewFunction \brtObjNamed {m}
-    {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
+    % \brtObjNamed {#1=name:str} -> object named "name"
+    % Maps names to objects, not necessarily injectively.
+    % An object's @id= also serves as a name.
+    \prgNewFunction \brtObjNamed {m}
+        {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
 
-% \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
-% Set the formatter for the object.
-\prgNewFunction \__brt_obj_fmt_p {M}
-    {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
-\prgNewFunction \brtObjFmtSet {Mn}
-    {\__brt_fun_del {\__brt_obj_fmt_p #1}
-     \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
+    % \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
+    % Set the formatter for the object.
+    \prgNewFunction \__brt_obj_fmt_p {M}
+        {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
+    \prgNewFunction \brtObjFmtSet {Mn}
+        {\__brt_fun_del {\__brt_obj_fmt_p #1}
+         \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
 
-% \brtTypeFmtSet #1=obj:Type -> void
-% Set the formatter for the type, i.e. the default formatter for all inhabitants
-% of this type.
-\prgNewFunction \__brt_type_fmt_p {M}
-    {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
-\prgNewFunction \brtTypeFmtSet {Mn}
-    {\__brt_fun_del {\__brt_type_fmt_p #1}
-     \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
+    % \brtTypeFmtSet #1=obj:Type -> void
+    % Set the formatter for the type, i.e. the default formatter for all inhabitants
+    % of this type.
+    \prgNewFunction \__brt_type_fmt_p {M}
+        {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
+    \prgNewFunction \brtTypeFmtSet {Mn}
+        {\__brt_fun_del {\__brt_type_fmt_p #1}
+         \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
 
-% \brtObjFmt #1=obj:obj -> formatted object
-\prgNewFunction \brtObjFmt {M}
-    {\prgReturn {\evalWhole {\__brt_obj_fmt_p #1 #1}}}
+    % \brtObjFmt #1=obj:obj -> formatted object
+    \prgNewFunction \brtObjFmt {M}
+        {\prgReturn {\evalWhole {\__brt_obj_fmt_p #1 #1}}}
 
-% \brtObjFmtLike #1=obj:obj #2=type:Type -> void
-% Set the formatter for obj to the default formatter of type.
-% This is by ref, i.e. if type's default formatter changes, then so does obj.
-\prgNewFunction \brtObjFmtLike {MM}
-    {\brtObjFmtSet #1 {\prgReturn {\evalWhole {\__brt_type_fmt_p #2 ##1}}}}
+    % \brtObjFmtLike #1=obj:obj #2=type:Type -> void
+    % Set the formatter for obj to the default formatter of type.
+    % This is by ref, i.e. if type's default formatter changes, then so does obj.
+    \prgNewFunction \brtObjFmtLike {MM}
+        {\brtObjFmtSet #1 {\prgReturn {\evalWhole {\__brt_type_fmt_p #2 ##1}}}}
 
-% \brtObjShow #1=obj:obj -> string serialisation of object
-\prgNewFunction \brtObjShow {M}
-    {\prgReturn {\tlToStr {\propToKeyval #1}}}
+    % \brtObjShow #1=obj:obj -> string serialisation of object
+    \prgNewFunction \brtObjShow {M}
+        {\prgReturn {\tlToStr {\propToKeyval #1}}}
 
-% primitive type type (default formatter)
-% We have to create it by-hand to bootstrap the universe.
-\propConstFromKeyval \brtTypeT {@id = Type, @name = Type}
-\brtObjName {Type} {\brtTypeT}
-\brtObjFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
-\brtTypeFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
+    % primitive type type (default formatter)
+    % We have to create it by-hand to bootstrap the universe.
+    \propConstFromKeyval \brtTypeT {@id = Type, @name = Type}
+    \brtObjName {Type} {\brtTypeT}
+    \brtObjFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
+    \brtTypeFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
 
-% \brtObjPrimElim #1=obj:primitive -> primitive value
-\prgNewFunction \brtObjPrimElim {M}
-    {\prgReturn {\brtObjElim {@value} #1}}
+    % \brtObjPrimElim #1=obj:primitive -> primitive value
+    \prgNewFunction \brtObjPrimElim {M}
+        {\prgReturn {\brtObjElim {@value} #1}}
 
-% primitive integer type (eliminates to expl3 integer, formats to arabic)
-\brtTypeFmtSet
-    {\brtObjCons {@type = \brtTypeT, @name = Int}}
-    {\prgReturn {\int_to_arabic:n {\brtObjPrimElim #1}}}
-\prgNewFunction \brtIntCons {m}
-    {\prgReturn
-        {\brtObjCons
-            {@type = \brtObjNamed {Int},
-             @value = {\__brt_make \intConst {#1}}}}}
-
-% primitive string type (eliminates and formats to expl3 string)
-\brtTypeFmtSet
-    {\brtObjCons {@type = \brtTypeT, @name = Str}}
-    {\prgReturn {\brtObjPrimElim #1}}
-\prgNewFunction \brtStrCons {m}
-    {\prgReturn
-        {\brtObjCons
-            {@type = \brtObjNamed {Str},
-             @value = {\__brt_make \strConst {#1}}}}}
-
-% \brtEzObj #1=\csname #2=obj -> void
-% Create two macros, \csname and \csnameO (the O stands for "abstract Object").
-% \csname returns the object formatted, i.e. \brtObjFmt {#2}.
-% \csnameO returns the abstract object, i.e. just #2.
-\prgNewFunction \brtEzObj {MM}
-    {\prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
-     \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
-
-% \brtEzType #1=csname #2=type #3=code -> void
-% Create two constructors for `type`, called \csname and \csnameO.
-% The constructor \csname returns a formatted object.
-% The consturctor \csnameO returns an abstract object.
-% The constructor `code` receives a single argument (probably a key-val list)
-% and must return a key-val list that will be passed to \brtObjCons.
-% The `code` does not need to add @type=; that is appended automatically.
-% (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
-% causes an incromprehensible error.)
-\prgNewFunction \brtEzType {MMn}
-    {\prgNewFunction #1 {m}
+    % primitive integer type (eliminates to expl3 integer, formats to arabic)
+    \brtTypeFmtSet
+        {\brtObjCons {@type = \brtTypeT, @name = Int}}
+        {\prgReturn {\int_to_arabic:n {\brtObjPrimElim #1}}}
+    \prgNewFunction \brtIntCons {m}
         {\prgReturn
-            {\brtObjFmt
+            {\brtObjCons
+                {@type = \brtObjNamed {Int},
+                 @value = {\__brt_make \intConst {#1}}}}}
+
+    % primitive string type (eliminates and formats to expl3 string)
+    \brtTypeFmtSet
+        {\brtObjCons {@type = \brtTypeT, @name = Str}}
+        {\prgReturn {\brtObjPrimElim #1}}
+    \prgNewFunction \brtStrCons {m}
+        {\prgReturn
+            {\brtObjCons
+                {@type = \brtObjNamed {Str},
+                 @value = {\__brt_make \strConst {#1}}}}}
+
+    % \brtEzObj #1=\csname #2=obj -> void
+    % Create two macros, \csname and \csnameO (the O stands for "abstract Object").
+    % \csname returns the object formatted, i.e. \brtObjFmt {#2}.
+    % \csnameO returns the abstract object, i.e. just #2.
+    \prgNewFunction \brtEzObj {MM}
+        {\prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
+         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
+
+    % \brtEzType #1=csname #2=type #3=code -> void
+    % Create two constructors for `type`, called \csname and \csnameO.
+    % The constructor \csname returns a formatted object.
+    % The consturctor \csnameO returns an abstract object.
+    % The constructor `code` receives a single argument (probably a key-val list)
+    % and must return a key-val list that will be passed to \brtObjCons.
+    % The `code` does not need to add @type=; that is appended automatically.
+    % (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
+    % causes an incromprehensible error.)
+    \prgNewFunction \brtEzType {MMn}
+        {\prgNewFunction #1 {m}
+            {\prgReturn
+                {\brtObjFmt
+                    {\brtObjCons {#3, @type = #2}}}}
+         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {m}
+            {\prgReturn
                 {\brtObjCons {#3, @type = #2}}}}
-     \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {m}
-        {\prgReturn
-            {\brtObjCons {#3, @type = #2}}}}
+}
+
+\DeclareOption {neverbreakmath} {
+    % never ever break in maths mode
+    \binoppenalty=\maxdimen
+    \relpenalty=\maxdimen
+    \sloppy
+}
+
+\DeclareOption {ref} {
+    \RequirePackage{hyperref}
+    \RequirePackage[nameinlink]{cleverref}
+}
+
+\DeclareOption {biblatex} {
+    \RequirePackage[backend=bibtex,style=alphabetic,url=false,maxbibnames=4]{biblatex}
+    % The user should use \addbibresource after loading this package.
+}
+
+\DeclareOption {environments} {
+    % TODO
+}
+
+\DeclareOption {nestedproofs} {
+    % TODO
+}
+
+\DeclareOption {shorthand} {
+    % TODO
+}
+
+\ProcessOptions\relax
