@@ -1,7 +1,7 @@
 \documentclass{article}
 
 \usepackage{functional}
-\usepackage[obj,nestedproofs]{brumaltex3}
+\usepackage[obj,nestedproofs,environments]{brumaltex3}
 
 % \brtQedSet
 %     {\(\square\),
@@ -83,8 +83,21 @@
                         \end{proof}
                     \end{proof}
                 \end{proof}
+                \begin{proof}[PfD]
+                    D
+                    \begin{proof}
+                        E
+                        \begin{proof}
+                            F
+                        \end{proof}
+                    \end{proof}
+                \end{proof}
             \end{proof}
         \end{proof}
     \end{proof}
+
+    \begin{theorem}
+        Super accurate fact tmtmtm
+    \end{theorem}
 
 \end{document}
