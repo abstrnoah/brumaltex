@@ -3,7 +3,13 @@
 \usepackage{functional}
 \usepackage[obj,nestedproofs]{brumaltex3}
 
-\brtQedSet {\(\square\),\(\boxtimes\),\(\blacksquare\),\(\checkmark\),QED}
+\brtQedSet
+    {\(\square\),
+     \(\boxtimes\),
+     \(\blacksquare\),
+     \(\checkmark\),
+     \texttt{\small QED},
+     \textsf{\tiny QED}}
 
 \usepackage{physics}
 
@@ -24,16 +30,24 @@
 
 \begin{document}
 
+    \NatA
+    \NatB
+    \brtTypeFmtSet {\brtObjNamed {Nat}} {\prgReturn {haha}}
+    \NatA
+    \NatB
+
     \Functional{tracing=true}
-    .
     \ExplSyntaxOn
     % \brtIfTF {\intCompare {1} = {2}} {\prgReturn{True}} {\prgReturn{False}}
-    \seqItemTF \g__brt_proof_qed_symbols {9} {\prgReturn{(#1)}}
-        % {\prgReturn {}}
-        {\brtIndexError {\g__brt_proof_qed_symbols} {9}}
+    % \seqItemTF \g__brt_proof_qed_symbols {0} {\prgReturn{(#1)}}
+        % % {\prgReturn {}}
+        % {\brtIndexError {\g__brt_proof_qed_symbols} {0}}
+    % \brtSeqItem \g__brt_proof_qed_symbols {4}
+    % \brtSeqItem \g__brt_proof_qed_symbols {2}
+    \brtCallAnon {x} {(#1)}
+    \brtCallAnon {x} {(#1)}
     \ExplSyntaxOff
-    .
-    \Functional{tracing=false}
+    % \Functional{tracing=false}
 
     \begin{proof}
         A
@@ -41,7 +55,26 @@
             B
             \begin{proof}
                 C
-                \begin{proof}
+                \begin{proof}[PfD]
+                    D
+                    \begin{proof}
+                        E
+                        \begin{proof}
+                            F
+                        \end{proof}
+                    \end{proof}
+                \end{proof}
+            \end{proof}
+        \end{proof}
+    \end{proof}
+
+    \begin{proof}
+        A
+        \begin{proof}
+            B
+            \begin{proof}
+                C
+                \begin{proof}[PfD]
                     D
                     \begin{proof}
                         E

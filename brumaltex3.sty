@@ -29,12 +29,18 @@
     {}
 
 % Delete a function which has been previously defined by \prgNewFunction.
-\prgNewFunction \__brt_fun_del {M}
+\prgNewFunction \__brt_fun_del:M {M}
     {\cs_undefine:N #1
      \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 :w}}
 
+% (Why we need a second version I don't understand.)
+\prgNewFunction \__brt_fun_del:N {N}
+    {\cs_undefine:N #1
+     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 :w}}
+
+% \prgNewFunction \__brt_anon:m {m} {}
 \prgNewFunction \brtCallAnon {mn}
-    {\__brt_fun_del \__brt_anon:m
+    {\__brt_fun_del:N \__brt_anon:m
      \prgNewFunction \__brt_anon:m {m} {#2}
      \prgReturn {\__brt_anon:m {#1}}}
 
@@ -69,15 +75,21 @@
      #1 {\tlUse \lTmpaTl} {#2}
      \prgReturn {\tlUse \lTmpaTl}}
 
-% \seqItemTF #1=seq {#2=index based at 1} {#3=true code} {#4=false code}
+% \brtSeqItemTF #1=seq {#2=index based at 1} {#3=true code} {#4=false code}
 % True code takes one argument, the retrieved item.
-\prgNewFunction \seqItemTF {Mmnn}
+% False code takes no arguments.
+\prgNewFunction \brtSeqItemTF {Mmnn}
     {\prgReturn
         {\brtIfTF
             {\intCompare {#2} > {\seqVarCount #1}
              || \intCompare {#2} < {1}}
             {\prgReturn {\prgDo {#4}}}
             {\prgReturn {\brtCallAnon {\seqVarItem #1 {#2}} {#3}}}}}
+
+% Rerieve an item from the sequence.
+% If the index is out of bounds, then issue an error.
+\prgNewFunction \brtSeqItem {Mm}
+    {\prgReturn{\brtSeqItemTF #1 {#2} {\prgReturn {##1}} {\brtIndexError {#1} {#2}}}}
 
 \DeclareOption {obj} {
     % the quantity of objects with id
@@ -135,7 +147,7 @@
     \prgNewFunction \__brt_obj_fmt_p {M}
         {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
     \prgNewFunction \brtObjFmtSet {Mn}
-        {\__brt_fun_del {\__brt_obj_fmt_p #1}
+        {\__brt_fun_del:M {\__brt_obj_fmt_p #1}
          \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
 
     % \brtTypeFmtSet #1=obj:Type -> void
@@ -144,7 +156,7 @@
     \prgNewFunction \__brt_type_fmt_p {M}
         {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
     \prgNewFunction \brtTypeFmtSet {Mn}
-        {\__brt_fun_del {\__brt_type_fmt_p #1}
+        {\__brt_fun_del:M {\__brt_type_fmt_p #1}
          \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
 
     % \brtObjFmt #1=obj:obj -> formatted object
@@ -260,7 +272,7 @@
          \begin{proofOld}[#1]
          % TODO check if we have enough symbols
          \__brt_renew_qed
-             {\seqVarItem \g__brt_proof_qed_symbols
+             {\brtSeqItem \g__brt_proof_qed_symbols
                  {\intUse \g__brt_proof_nesting_level}}}
         {\end{proofOld}
          \intDecr \g__brt_proof_nesting_level}
