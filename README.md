@@ -161,12 +161,40 @@ Retrieve the value associated with `key` in `\MyObject`.
 
 TODO document the rest
 
-## easymac
+## ezmac
 
-TODO
+For a sane programming experience, it is helpful to have clear separation
+between different types and between different functions, i.e. to avoid
+overloading symbols. However, it would be unreasonable to force an
+author to typeset their document with this level of verbosity. This module aims
+to wrap the programming-friendly `obj` module in a way that is friendly to
+typesetting. This module allows you to create a single macro for each type. The
+macro is overloaded with all the functionality that the author may want
+in-document. It provides several default instances of the type and allows the
+author to construct a new instance on-the-fly if needed.
 
-A system for wrapping macros around formatted objects so you don't have to type
-`\brtObjFmt {\brtObjNamed {...}}` repeatedly in-document.
+```latex
+\brtEzmCons \MyType { = \variantA, ' = \variantB, '' = \variantC, ...}
+```
+
+Creates a macro `\MyType`. When it is called in the top-level, then it has the
+following behaviour:
+
+```latex
+\MyType{...} % -> construct and return an object of type \MyType
+\MyType % -> \brtObjFmt {\variantA}
+\MyType' % -> \brtObjFmt {\variantB}
+\MyType'' % -> \brtObjFmt {\variantC}
+```
+
+When it is called in the argument of an ezmac-defined macro, then it
+automagically returns an abstract object (instead of a formatted object like
+above). E.g. the following two lines produce the same result:
+
+```latex
+\MyOtherType{foo=\MyType,...} 
+\MyOtherType{foo=\variantA,...} 
+```
 
 ---
 
