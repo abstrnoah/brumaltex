@@ -1,9 +1,13 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{brumaltex3}[2024/01/07]
+
+% \RequirePackage{expl3}[2023/12/08] % Not yet available on tectonic.
 \ProvidesExplPackage{brumaltex3}{2024-01-07}{}{}
 
-\RequirePackage{functional}[2023-01-07]
+\RequirePackage{functional}[2023-01-07] % Not yet available on tectonic.
 \Functional{scoping=true}
+
+\RequirePackage{xparse}[2023-10-10]
 
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
@@ -16,8 +20,6 @@
 \RequirePackage{dsfont}
 \RequirePackage{bm}
 
-% \RequirePackage{xparse}[2023-10-10] % TODO
-
 % Create a new function after manipulating the first argument (name).
 \prgNewFunction \prgNewFunction:Mnn {Mnn}
     {\prgNewFunction #1 {#2} {#3}}
@@ -29,15 +31,36 @@
 % Delete a function which has been previously defined by \prgNewFunction.
 \prgNewFunction \__brt_fun_del {M}
     {\cs_undefine:N #1
-     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 : w}}
+     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 :w}}
 
-% the quantity of objects allocated by makers
-\int_new:N \g__brt_heap_size
+\prgNewFunction \brtCallAnon {mn}
+    {\__brt_fun_del \__brt_anon:m
+     \prgNewFunction \__brt_anon:m {m} {#2}
+     \prgReturn {\__brt_anon:m {#1}}}
+
+% #1 = object being indexed
+\msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
+\prgNewFunction \brtIndexError {nm}
+    {\msg_error:nnnn {brumaltex3} {brtIndexError} {#1} {#2}}
+
+\cs_new:Npn \NewCommandCopy:cc {\exp_args:Ncc \NewCommandCopy}
+
+% Copy the second environment into the first.
+\prgNewFunction \brt_env_set_eq {mm}
+    {\prgReturn
+        {\NewCommandCopy:cc {#1} {#2}
+         \NewCommandCopy:cc {end#1} {end#2}}}
+
+\prgNewFunction \brtIfTF {enn}
+    {\bool_if:nTF {#1} {#2} {#3}}
+
+% the quantity of objects on the "heap" (lol)
+\intNew \g__brt_heap_size
 
 % {} -> a new unique csname
 \prgNewFunction \__brt_heap_alloc {}
     {\tlSet \lTmpaTl {\expName {c__brt_heap_ \int_use:N \g__brt_heap_size}}
-     \int_gincr:N \g__brt_heap_size
+     \intIncr \g__brt_heap_size
      \prgReturn {\tlUse \lTmpaTl}}
 
 % #1 = constant constructor; #2 = value; -> new constant
@@ -46,17 +69,27 @@
      #1 {\tlUse \lTmpaTl} {#2}
      \prgReturn {\tlUse \lTmpaTl}}
 
-% the quantity of objects with id
-\int_new:N \g__brt_universe_size
-
-% \__brt_id_alloc -> new unique id string
-\strClearNew \l__id
-\prgNewFunction \__brt_id_alloc {}
-    {\strSet \l__id {\evalWhole {brt Id \intUse \g__brt_universe_size}}
-     \int_gincr:N \g__brt_universe_size
-     \prgReturn {\strUse \l__id}}
+% \seqItemTF #1=seq {#2=index based at 1} {#3=true code} {#4=false code}
+% True code takes one argument, the retrieved item.
+\prgNewFunction \seqItemTF {Mmnn}
+    {\prgReturn
+        {\brtIfTF
+            {\intCompare {#2} > {\seqVarCount #1}
+             || \intCompare {#2} < {1}}
+            {\prgReturn {\prgDo {#4}}}
+            {\prgReturn {\brtCallAnon {\seqVarItem #1 {#2}} {#3}}}}}
 
 \DeclareOption {obj} {
+    % the quantity of objects with id
+    \intNew \g__brt_universe_size
+
+    % \__brt_id_alloc -> new unique id string
+    \strClearNew \l__id
+    \prgNewFunction \__brt_id_alloc {}
+        {\strSet \l__id {\evalWhole {brt Id \intUse \g__brt_universe_size}}
+         \intIncr \g__brt_universe_size
+         \prgReturn {\strUse \l__id}}
+
     % \brtObjCons {#2=args:keyvals} -> new object
     % If args does not provide @type=, then the object's @type is set to \brtTypeT.
     % The object is automatically given an @id=, which overrides any args.@id.
@@ -186,7 +219,7 @@
                 {\brtObjCons {#3, @type = #2}}}}
 }
 
-\DeclareOption {neverbreakmath} {
+\DeclareOption {breaklessmaths} {
     % never ever break in maths mode
     \binoppenalty=\maxdimen
     \relpenalty=\maxdimen
@@ -208,7 +241,29 @@
 }
 
 \DeclareOption {nestedproofs} {
-    % TODO
+    \brt_env_set_eq {proofOld} {proof}
+    \intZeroNew \g__brt_proof_nesting_level
+    \seqClearNew \g__brt_proof_qed_symbols
+
+    % \brtQedSet {#1=comma-delimited list of qed symbols} -> void
+    % Set the QED symbols for nested proofs.
+    % The left-most symbol is used for the top-level proof whilst the right-most
+    % symbol is used for the deepest level proofs.
+    \prgNewFunction \brtQedSet {m}
+        {\seqSetFromClist \g__brt_proof_qed_symbols {#1}}
+
+    \prgNewFunction \__brt_renew_qed {m}
+        {\prgReturn {\renewcommand \qedsymbol {#1}}}
+
+    \RenewDocumentEnvironment {proof} {O{Proof}}
+        {\intIncr \g__brt_proof_nesting_level % top-most qed will be index 1
+         \begin{proofOld}[#1]
+         % TODO check if we have enough symbols
+         \__brt_renew_qed
+             {\seqVarItem \g__brt_proof_qed_symbols
+                 {\intUse \g__brt_proof_nesting_level}}}
+        {\end{proofOld}
+         \intDecr \g__brt_proof_nesting_level}
 }
 
 \DeclareOption {shorthand} {

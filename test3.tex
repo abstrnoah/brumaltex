@@ -1,12 +1,13 @@
 \documentclass{article}
 
 \usepackage{functional}
-\usepackage[obj]{brumaltex3}
-\Functional{tracing=true}
+\usepackage[obj,nestedproofs]{brumaltex3}
+
+\brtQedSet {\(\square\),\(\boxtimes\),\(\blacksquare\),\(\checkmark\),QED}
 
 \usepackage{physics}
 
-\renewcommand{\familydefault}{\ttdefault}
+% \renewcommand{\familydefault}{\ttdefault}
 
 \brtObjName {testStr} {\brtStrCons {hehe}}
 \brtObjName {testInt} {\brtIntCons {42}}
@@ -21,47 +22,36 @@
 \brtEzObj \NatA {\NatO {m}}
 \brtEzObj \NatB {\NatO {n}}
 
-% \brtEzType
-
 \begin{document}
 
-    \tiny
-
-    ..
-
-    % \tlToStr{\propToKeyval {\brtObjNamed {Type}}}
-
-    % \tlToStr{\brtObjElim {@id} {\brtObjNamed {Type}}}
-
+    \Functional{tracing=true}
+    .
     \ExplSyntaxOn
-    % % \tlToStr {\__brt_obj_fmt_Type {\brtObjNamed {Type}}}
-    % \prgDo{\evalWhole{\__brt_obj_fmt_p \brtTypeT \brtTypeT}}
-    % % \tlToStr {\__brt_obj_fmt_p \brtTypeT}
+    % \brtIfTF {\intCompare {1} = {2}} {\prgReturn{True}} {\prgReturn{False}}
+    \seqItemTF \g__brt_proof_qed_symbols {9} {\prgReturn{(#1)}}
+        % {\prgReturn {}}
+        {\brtIndexError {\g__brt_proof_qed_symbols} {9}}
     \ExplSyntaxOff
+    .
+    \Functional{tracing=false}
 
-    % \brtObjFmt {\brtTypeT}
-    % \brtObjFmt {\brtObjNamed {Type}}
-
-    % \tlToStr {\propToKeyval {\brtObjNamed {Int}}}
-
-    % \tlToStr{\propToKeyval {\brtObjNamed {Int}}}
-
-    % \tlToStr{\propToKeyval {\brtIntCons {3}}}
-
-    % \ExplSyntaxOn
-    % \tlToStr {\__brt_obj_fmt_get_p {\brtObjNamed {Type}}}
-    % \ExplSyntaxOff
-
-    % \brtObjFmt {\brtObjNamed {Type}}
-
-    % \brtObjFmt {\brtObjNamed {Str}}
-
-    % \brtObjFmt {\brtObjNamed {Int}}
-
-    \begin{math}
-        \NatA + \NatB
-    \end{math} 
-
-
+    \begin{proof}
+        A
+        \begin{proof}
+            B
+            \begin{proof}
+                C
+                \begin{proof}
+                    D
+                    \begin{proof}
+                        E
+                        \begin{proof}
+                            F
+                        \end{proof}
+                    \end{proof}
+                \end{proof}
+            \end{proof}
+        \end{proof}
+    \end{proof}
 
 \end{document}
