@@ -5,6 +5,8 @@
 \RequirePackage{functional}[2023-01-07]
 \Functional{scoping=true}
 
+\RequirePackage{xparse}[2023-10-10]
+
 % Create a new function after manipulating the first argument (name).
 \prgNewFunction \prgNewFunction:Mnn {Mnn}
     {\prgNewFunction #1 {#2} {#3}}
@@ -61,13 +63,13 @@
      \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
      \propGetT \l__args {@name} \lTmpaTl
         {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
-     \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {\tlUse \l__obj_p} {@type}}
+     \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
      \prgReturn {\tlUse \l__obj_p}}
 
-% \brtObjElim #1=obj:obj {#2=key:str} -> value
+% \brtObjElim {#1=key:str} #2=obj:obj -> value
 % TODO support attribute paths
-\prgNewFunction \brtObjElim {Mm}
-    {\prgReturn {\propVarItem #1 {#2}}}
+\prgNewFunction \brtObjElim {mM}
+    {\prgReturn {\propVarItem #2 {#1}}}
 
 % \brtObjName {#1=name:str} #2=obj:obj -> void
 % A priori, names can be arbitrary token lists.
@@ -86,7 +88,7 @@
 % \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
 % Set the formatter for the object.
 \prgNewFunction \__brt_obj_fmt_p {M}
-    {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim #1 {@id}}}}}
+    {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
 \prgNewFunction \brtObjFmtSet {Mn}
     {\__brt_fun_del {\__brt_obj_fmt_p #1}
      \prgNewFunction:Mnn {\__brt_obj_fmt_p #1} {M} {#2}}
@@ -95,7 +97,7 @@
 % Set the formatter for the type, i.e. the default formatter for all inhabitants
 % of this type.
 \prgNewFunction \__brt_type_fmt_p {M}
-    {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim #1 {@id}}}}}
+    {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
 \prgNewFunction \brtTypeFmtSet {Mn}
     {\__brt_fun_del {\__brt_type_fmt_p #1}
      \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
@@ -123,7 +125,7 @@
 
 % \brtObjPrimElim #1=obj:primitive -> primitive value
 \prgNewFunction \brtObjPrimElim {M}
-    {\prgReturn {\brtObjElim #1 {@value}}}
+    {\prgReturn {\brtObjElim {@value} #1}}
 
 % primitive integer type (eliminates to expl3 integer, formats to arabic)
 \brtTypeFmtSet
@@ -145,4 +147,28 @@
             {@type = \brtObjNamed {Str},
              @value = {\__brt_make \strConst {#1}}}}}
 
-% \brtStrConcat % TODO
+% \brtEzObj #1=\csname #2=obj -> void
+% Create two macros, \csname and \csnameO (the O stands for "abstract Object").
+% \csname returns the object formatted, i.e. \brtObjFmt {#2}.
+% \csnameO returns the abstract object, i.e. just #2.
+\prgNewFunction \brtEzObj {MM}
+    {\prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
+     \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
+
+% \brtEzType #1=csname #2=type #3=code -> void
+% Create two constructors for `type`, called \csname and \csnameO.
+% The constructor \csname returns a formatted object.
+% The consturctor \csnameO returns an abstract object.
+% The constructor `code` receives a single argument (probably a key-val list)
+% and must return a key-val list that will be passed to \brtObjCons.
+% The `code` does not need to add @type=; that is appended automatically.
+% (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
+% causes an incromprehensible error.)
+\prgNewFunction \brtEzType {MMn}
+    {\prgNewFunction #1 {m}
+        {\prgReturn
+            {\brtObjFmt
+                {\brtObjCons {#3, @type = #2}}}}
+     \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {m}
+        {\prgReturn
+            {\brtObjCons {#3, @type = #2}}}}

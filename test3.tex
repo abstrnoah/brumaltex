@@ -4,10 +4,24 @@
 \usepackage{brumaltex3}
 \Functional{tracing=true}
 
+\usepackage{physics}
+
 \renewcommand{\familydefault}{\ttdefault}
 
 \brtObjName {testStr} {\brtStrCons {hehe}}
 \brtObjName {testInt} {\brtIntCons {42}}
+
+\brtEzObj \TestInt {\brtObjNamed {testInt}}
+
+\brtEzType \Nat {\brtObjCons {@name = Nat}}
+    {symbol = #1}
+\brtTypeFmtSet
+    {\brtObjNamed {Nat}}
+    {\prgReturn {\brtObjElim {symbol} #1}}
+\brtEzObj \NatA {\NatO {m}}
+\brtEzObj \NatB {\NatO {n}}
+
+% \brtEzType
 
 \begin{document}
 
@@ -17,7 +31,7 @@
 
     % \tlToStr{\propToKeyval {\brtObjNamed {Type}}}
 
-    % \tlToStr{\brtObjElim {\brtObjNamed {Type}} {@id}}
+    % \tlToStr{\brtObjElim {@id} {\brtObjNamed {Type}}}
 
     \ExplSyntaxOn
     % % \tlToStr {\__brt_obj_fmt_Type {\brtObjNamed {Type}}}
@@ -38,14 +52,16 @@
     % \tlToStr {\__brt_obj_fmt_get_p {\brtObjNamed {Type}}}
     % \ExplSyntaxOff
 
-    \brtObjFmt {\brtObjNamed {Type}}
+    % \brtObjFmt {\brtObjNamed {Type}}
 
-    \brtObjFmt {\brtObjNamed {Str}}
+    % \brtObjFmt {\brtObjNamed {Str}}
 
-    \brtObjFmt {\brtObjNamed {Int}}
+    % \brtObjFmt {\brtObjNamed {Int}}
 
-    \brtObjFmt {\brtObjNamed {testInt}}
+    \begin{math}
+        \NatA + \NatB
+    \end{math} 
 
-    \brtObjFmt {\brtObjNamed {testStr}}
+
 
 \end{document}
