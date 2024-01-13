@@ -1,0 +1,78 @@
+\documentclass{article}
+
+\usepackage[longhand]{brumaltex3}
+
+\Functional{tracing=true}
+
+\begin{document}
+
+    A \brtLHDefine{longhand} is a hand that is longer than
+    \brtLHPredefine{average}.
+
+    \begin{gather}
+        \brtLHProjectOp ,
+        \brtLHProjectOp(X)
+        \\
+        \brtLHRestrictOp ,
+        \brtLHRestrictOp(\frac P Q)
+        \\
+        \brtLHLengthOp ,
+        \brtLHLengthOp(Y)
+    \end{gather}
+
+    \begin{gather}
+        \brtLHImageSet {f} {S}
+        \\
+        \brtLHInverseMap {f} ,
+        \brtLHInverseSet {f} {S}
+        \\
+        \brtLHCartesianPower {\omega} {3}
+        \\
+        \brtLHRestrict {G} {X}
+    \end{gather}
+
+    \begin{gather}
+        \brtLHMidQty {x^2} {x}
+        \\
+        \brtLHSetCons {x \in \qty{1,2,3}} {x^2}
+        \\
+        \brtLHDivQty {X} {\sim}
+        \\
+        \brtLHFamilyCons {i \in I} {F(i)}
+        \\
+        \brtLHIndexedFamily {i} {#1 \in I} {F(#1)}
+        \\
+        \brtLHIndexedSet {i} {#1 \in I} {F(#1)}
+    \end{gather}
+
+    \begin{gather}
+        Y \brtLHFrom X
+        \\
+        P \brtLHLogicalImplies Q
+        \\
+        P \brtLHLogicalIff Q
+    \end{gather}
+
+    \begin{gather}
+        F(\brtLHDummyCdot)
+        \\
+        F_{\brtLHAnonParamSymbol}
+    \end{gather}
+
+    \begin{gather}
+        q
+        \brtLHSeqConcatSymbol
+        r
+        \brtLHSeqConcatSymbol
+        s
+    \end{gather}
+
+    \begin{gather}
+        A
+        \brtLHUnionSymbol B
+        \brtLHIntersectSymbol C
+        \brtLHCoproductSymbol D
+        \brtLHProductSymbol D
+    \end{gather}
+
+\end{document}

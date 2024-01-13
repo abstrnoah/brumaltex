@@ -303,7 +303,94 @@
          \textsf{\tiny QED}}
 }
 
+\DeclareOption {longhand} {
+    % Useful macros for document authors that have long names prefixed by
+    % `\brtLH...` which can be bound to the author's custom shorthands.
+    % Although I try to tailor this module to a general audience, it undoubtably
+    % makes opinionated choices about mathematical notation.
+    
+    % Text mode
+
+    % TODO Build an index of terms defined by \brtLHDefine.
+    \providecommand \brtLHDefine {\textbf}
+    \providecommand \brtLHPredefine {\emph}
+
+    % Math mode
+
+    % Needed inside of ExplSyntax.
+    \providecommand \brtLHMaSubscript [2] {#1 \c_math_subscript_token {#2}}
+
+    \providecommand \brtLHOperatorFmt [1] {\textsf {\upshape #1}}
+
+    % \brtLHOperatorCons {csname} {symbol}
+    \ProvideDocumentCommand \brtLHOperatorCons {mm}
+        {\DeclareDocumentCommand {#1} {d()}
+            {\brtLHOperatorFmt {#2}
+             \IfValueT {##1} {\qty(##1)}}}
+
+    \brtLHOperatorCons \brtLHProjectOp {proj}
+    \brtLHOperatorCons \brtLHRestrictOp {res}
+    \brtLHOperatorCons \brtLHDomainOp {dom}
+    \brtLHOperatorCons \brtLHCodomainOp {codom}
+    \brtLHOperatorCons \brtLHKernelOp {ker}
+    \brtLHOperatorCons \brtLHCokernelOp {coker}
+    \brtLHOperatorCons \brtLHImageOp {image}
+    \brtLHOperatorCons \brtLHLimitOp {lim}
+    \brtLHOperatorCons \brtLHDegreeOp {deg}
+    \brtLHOperatorCons \brtLHSignOp {sgn}
+    \brtLHOperatorCons \brtLHLengthOp {length}
+
+    \providecommand \brtLHImageSet [2] {#1 \qty[#2]}
+    \providecommand \brtLHInverseMap [1] {{#1}^{-1}}
+    \providecommand \brtLHInverseSet [2] {\brtLHInverseMap {#1} \qty[#2]}
+
+    \providecommand \brtLHCartesianPower [2] {{}^{#2}{#1}}
+
+    \providecommand \brtLHRestrict [2] {#1 \restriction #2}
+
+    \providecommand \brtLHMidQty [2] {\left.#1\ \middle\vert\ #2\right.}
+    \providecommand \brtLHDivQty [2] {\left.#1\middle/#2\right.}
+    \providecommand \brtLHSetCons [2] {\qty{\brtLHMidQty {#2} {#1}}}
+    \providecommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
+
+    % \brtLHIndexedFamily {index} {input expression} {output expression}
+    \ProvideDocumentCommand \brtLHIndexedFamily {mmm}
+        {\brtLHFamilyCons
+            {\brtCallAnon {#1} {\prgReturn {#2}}}
+            {\brtCallAnon {#1} {\prgReturn {#3}}}}
+
+    % \brtLHIndexedSet {index} {input expression} {output expression}
+    \ProvideDocumentCommand \brtLHIndexedSet {mmm}
+        {\brtLHSetCons
+            {\brtCallAnon {#1} {\prgReturn {#2}}}
+            {\brtCallAnon {#1} {\prgReturn {#3}}}}
+
+    \providecommand \brtLHFrom {\leftarrow}
+    \providecommand \brtLHLogicalImplies {\Rightarrow}
+    \providecommand \brtLHLogicalIff {\Leftrightarrow}
+
+    \providecommand \brtLHDummyCdot {\,\cdot\,}
+    \providecommand \brtLHAnonParamSymbol {\bullet}
+
+    \providecommand \brtLHSeqConcatSymbol {{}^\frown}
+
+    \providecommand \brtLHUnionSymbol {\bigcup}
+    \providecommand \brtLHIntersectSymbol {\bigcap}
+    \providecommand \brtLHCoproductSymbol {\bigsqcup}
+    \providecommand \brtLHProductSymbol {\bigsqcap}
+}
+
 \DeclareOption {shorthand} {
+    % My shorthands.
+
+    \providecommand \define {\brtLHDefine}
+    \providecommand \predefine {\brtLHPredefine}
+
+    \brt_cs_swap:NN \epsilon \varepsilon
+    \brt_cs_swap:NN \phi \varphi
+    \brt_cs_swap:NN \leq \leqslant
+    \brt_cs_swap:NN \geq \geqslant
+
     % TODO
 }
 
