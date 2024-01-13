@@ -49,12 +49,23 @@
     {\msg_error:nnnn {brumaltex3} {brtIndexError} {#1} {#2}}
 
 \cs_new:Npn \NewCommandCopy:cc {\exp_args:Ncc \NewCommandCopy}
+\cs_new:Npn \NewCommandCopy:cn {\exp_args:Nc \NewCommandCopy}
 
 % Copy the second environment into the first.
 \prgNewFunction \brt_env_set_eq:mm {mm}
     {\prgReturn
         {\NewCommandCopy:cc {#1} {#2}
          \NewCommandCopy:cc {end#1} {end#2}}}
+
+\prgNewFunction \brt_cs_gset_eq:NN {NN}
+    {\cs_gset_eq:cN {\cs_to_str:N #1 Old} #1
+     \cs_gset_eq:NN #1 #2}
+\cs_new:Npn \brt_cs_gset_eq:Nc {\exp_args:NNc \brt_cs_gset_eq:NN}
+
+% Swap the commands, saving `...Old` versions.
+\prgNewFunction \brt_cs_gswap:NN {NN}
+    {\brt_cs_gset_eq:NN #1 #2
+     \brt_cs_gset_eq:Nc #2 {\cs_to_str:N #1 Old}}
 
 \prgNewFunction \brt_if:eTF {enn}
     {\bool_if:nTF {#1} {#2} {#3}}
@@ -262,7 +273,7 @@
     \newtheorem*{remark*}{Remark}
     \newtheorem{question}{Question}
     \newtheorem{conjecture}{Conjecture}
-    
+
     \AtEndOfPackage {
         \theoremstyle {plain}
     }
@@ -308,14 +319,14 @@
     % `\brtLH...` which can be bound to the author's custom shorthands.
     % Although I try to tailor this module to a general audience, it undoubtably
     % makes opinionated choices about mathematical notation.
-    
+
     % Text mode
 
     % TODO Build an index of terms defined by \brtLHDefine.
     \providecommand \brtLHDefine {\textbf}
     \providecommand \brtLHPredefine {\emph}
 
-    % Math mode
+    % Maths mode
 
     % Needed inside of ExplSyntax.
     \providecommand \brtLHMaSubscript [2] {#1 \c_math_subscript_token {#2}}
@@ -381,17 +392,67 @@
 }
 
 \DeclareOption {shorthand} {
-    % My shorthands.
+    % The package author's shorthands. Beware.
+
+    % TODO Setup a more robust depedency system (again).
+    \ExecuteOptions{longhand}
+
+    % Text mode
 
     \providecommand \define {\brtLHDefine}
     \providecommand \predefine {\brtLHPredefine}
 
-    \brt_cs_swap:NN \epsilon \varepsilon
-    \brt_cs_swap:NN \phi \varphi
-    \brt_cs_swap:NN \leq \leqslant
-    \brt_cs_swap:NN \geq \geqslant
+    % Maths mode
 
-    % TODO
+    \brt_cs_gswap:NN \epsilon \varepsilon
+    \brt_cs_gswap:NN \phi \varphi
+    \brt_cs_gset_eq:NN \leq \leqslant
+    \brt_cs_gset_eq:NN \geq \geqslant
+
+    \providecommand \project {\brtLHProjectOp}
+    \providecommand \proj {\brtLHProjectOp}
+    \providecommand \restrict {\brtLHRestrictOp}
+    \providecommand \res {\brtLHRestrictOp}
+    \providecommand \domain {\brtLHDomainOp}
+    \providecommand \dom {\brtLHDomainOp}
+    \providecommand \codomin {\brtLHCodomainOp}
+    \providecommand \codom {\brtLHCodomainOp}
+    \providecommand \ker {\brtLHKernelOp}
+    \providecommand \coker {\brtLHCokernelOp}
+    \providecommand \image {\brtLHImageOp}
+    \providecommand \limit {\brtLHLimitOp}
+    \providecommand \lim {\brtLHLimitOp}
+    \providecommand \deg {\brtLHDegreeOp}
+    \providecommand \sgn {\brtLHSignOp}
+    \providecommand \length {\brtLHLengthOp}
+    \providecommand \len {\brtLHLengthOp}
+
+    \providecommand \imageset {\brtLHImageSet}
+    \providecommand \inversemap {\brtLHInverseMap}
+    \providecommand \inverseset {\brtLHInverseSet}
+
+    \providecommand \cartpow {\brtLHCartesianPower}
+
+    \providecommand \buildset {\brtLHSetCons}
+    \providecommand \buildfamily  {\brtLHFamilyCons}
+
+    \providecommand \idxedset {\brtLHIndexedSet}
+    \providecommand \idxedfamily  {\brtLHIndexedFamily}
+
+    \providecommand \from {\brtLHFrom}
+    \providecommand \limplies {\brtLHLogicalImplies}
+    \providecommand \liff {\brtLHLogicalIff}
+
+    \providecommand \dummycdot {\brtLHDummyCdot}
+
+    \providecommand \concat {\brtLHSeqConcatSymbol}
+
+    \providecommand \union {\brtLHUnionSymbol}
+    \providecommand \intersect {\brtLHIntersectSymbol}
+    \providecommand \coproduct {\brtLHCoproductSymbol}
+    \providecommand \product {\brtLHProductSymbol}
+    \providecommand \coprod {\brtLHCoproductSymbol}
+    \providecommand \prod {\brtLHProductSymbol}
 }
 
 \ProcessOptions\relax
