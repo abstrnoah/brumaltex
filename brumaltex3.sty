@@ -20,6 +20,11 @@
 \RequirePackage{dsfont}
 \RequirePackage{bm}
 
+\cs_new:Npn \brtWithTracing #1
+    {\Functional{tracing=true}
+     #1
+     \Functional{tracing=false}}
+
 % Create a new function after manipulating the first argument (name).
 \prgNewFunction \prgNewFunction:Mnn {Mnn}
     {\prgNewFunction #1 {#2} {#3}}
@@ -217,31 +222,39 @@
                 {@type = \brtObjNamed {Str},
                  @value = {\__brt_make:Nm \strConst {#1}}}}}
 
-    % \brtEzObj #1=\csname #2=obj -> void
+    % \brtSetupObj #1=\csname #2=obj -> void
     % Create two macros, \csname and \csnameO (the O stands for "abstract Object").
     % \csname returns the object formatted, i.e. \brtObjFmt {#2}.
     % \csnameO returns the abstract object, i.e. just #2.
-    \prgNewFunction \brtEzObj {MM}
+    \prgNewFunction \brtSetupObj {MM}
         {\prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
          \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
 
-    % \brtEzType #1=csname #2=type #3=code -> void
-    % Create two constructors for `type`, called \csname and \csnameO.
+    % \brtSetupType #1=csname #2=type #3=cons:fun #4=fmt:fun -> void
+    % Create two constructors (`cons`) for `type`, called \csname and \csnameO,
+    % and sets the formatter for the type to `fmt`.
     % The constructor \csname returns a formatted object.
     % The consturctor \csnameO returns an abstract object.
-    % The constructor `code` receives a single argument (probably a key-val list)
-    % and must return a key-val list that will be passed to \brtObjCons.
-    % The `code` does not need to add @type=; that is appended automatically.
+    % Also create a macros \csnameT,\csnameTO which yields the type itself.
+    % The constructor `cons` anonymous function receives a single argument
+    % (probably a key-val list) and must return a key-val list that will be
+    % passed to \brtObjCons.
+    % The `cons` does not need to add @type=; that is appended automatically.
     % (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
     % causes an incromprehensible error.)
-    \prgNewFunction \brtEzType {MMn}
-        {\prgNewFunction #1 {m}
+    \prgNewFunction \brtSetupType {MMnn}
+        {\prgNewFunction:Mnn {\expName {\cs_to_str:N #1 T}} {}
+            {\prgReturn {\brtObjFmt {#2}}}
+         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 TO}} {}
+            {\prgReturn {#2}}
+         \prgNewFunction #1 {m}
             {\prgReturn
                 {\brtObjFmt
                     {\brtObjCons {#3, @type = #2}}}}
          \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {m}
             {\prgReturn
-                {\brtObjCons {#3, @type = #2}}}}
+                {\brtObjCons {#3, @type = #2}}}
+         \brtTypeFmtSet #2 {#4}}
 }
 
 \DeclareOption {breaklessmaths} {

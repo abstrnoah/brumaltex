@@ -2,59 +2,38 @@
 
 \usepackage{functional}
 \usepackage[obj,longhand]{brumaltex3}
-\Functional{tracing=true}
-
-% \brtQedSet
-%     {\(\square\),
-%      \(\boxtimes\),
-%      \(\blacksquare\),
-%      \(\checkmark\),
-%      \texttt{\small QED},
-%      \textsf{\tiny QED}}
 
 \usepackage{physics}
 
-\brtEzType \Nat {\brtObjCons {@name = Nat}}
-    {symbol = #1}
-\brtTypeFmtSet
-    {\brtObjNamed {Nat}}
-    {\brtObjElim {symbol} #1}
-\brtEzObj \NatA {\NatO {m}}
-\brtEzObj \NatB {\NatO {n}}
+\brtSetupType \Foo
+    {\brtObjCons {@name = Foo}}
+    {#1}
+    {\brtObjShow {#1}}
 
-\brtEzType \Kitten {\brtObjCons {@name = Kitten}}
-    {ears = #1}
-\brtTypeFmtSet
-    {\brtObjNamed {Kitten}}
-    {This~kitten~has~\brtObjElim {ears} #1~many~ears}
-\brtEzObj \KittenA {\KittenO {2}}
-\brtEzObj \KittenB {\KittenO {3}}
+\brtSetupObj \FooA {\FooO {bar = \BearAO, symbol = :D}}
+\brtSetupObj \FooB {\FooO {bar = \BearAO, symbol = :P}}
 
+\brtSetupType \Bear
+    {\brtObjCons {@name = Bar}}
+    {#1}
+    % {\brtObjElim {symbol} {\brtObjElim {foo} #1}}
+    {\brtObjShow {#1}}
 
-
+\brtSetupObj \BearA {\BearO {foo = \FooAO}}
 
 \begin{document}
 
-    \KittenB
+    .
 
-    \NatA
-    \NatB
-    \brtTypeFmtSet {\brtObjNamed {Nat}} {waht}
-    \NatA
-    \NatB
+    \FooT
 
-    % \Functional{tracing=true}
-    \ExplSyntaxOn
-    % \brtIfTF {\intCompare {1} = {2}} {\prgReturn{True}} {\prgReturn{False}}
-    % \seqItemTF \g__brt_proof_qed_symbols {0} {\prgReturn{(#1)}}
-        % % {\prgReturn {}}
-        % {\brtIndexError {\g__brt_proof_qed_symbols} {0}}
-    % \brtSeqItem \g__brt_proof_qed_symbols {4}
-    % \brtSeqItem \g__brt_proof_qed_symbols {2}
-    \brtCallAnon {x} {(#1)}
-    \brtCallAnon {x} {(#1)}
-    \ExplSyntaxOff
-    % \Functional{tracing=false}
+    \FooA
+
+    \BearT
+
+    \BearA
+
+    ---
 
     \begin{proof}
         A
@@ -74,7 +53,6 @@
             \end{proof}
         \end{proof}
     \end{proof}
-
     \begin{proof}
         A
         \begin{proof}
@@ -102,11 +80,5 @@
             \end{proof}
         \end{proof}
     \end{proof}
-
-    % \begin{theorem}
-    %     Super accurate fact tmtmtm
-    % \end{theorem}
-
-    \(\qty (\frac 1 2)\)
 
 \end{document}
