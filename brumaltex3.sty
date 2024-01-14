@@ -40,7 +40,7 @@
 
 \prgNewFunction \brtCallAnon {mn}
     {\__brt_fun_del:N \__brt_anon:m
-     \prgNewFunction \__brt_anon:m {m} {#2}
+     \prgNewFunction \__brt_anon:m {m} {\prgReturn {#2}}
      \prgReturn {\__brt_anon:m {#1}}}
 
 % #1 = object being indexed
@@ -68,7 +68,7 @@
      \brt_cs_gset_eq:Nc #2 {\cs_to_str:N #1 Old}}
 
 \prgNewFunction \brt_if:eTF {enn}
-    {\bool_if:nTF {#1} {#2} {#3}}
+    {\bool_if:nTF {#1} {\prgReturn {#2}} {\prgReturn {#3}}}
 
 % the quantity of objects on the "heap" (lol)
 \intNew \g__brt_heap_size
@@ -93,13 +93,16 @@
         {\brt_if:eTF
             {\intCompare {#2} > {\seqVarCount #1}
              || \intCompare {#2} < {1}}
-            {\prgReturn {\prgDo {#4}}}
-            {\prgReturn {\brtCallAnon {\seqVarItem #1 {#2}} {#3}}}}}
+            {#4}
+            {\brtCallAnon {\seqVarItem #1 {#2}} {#3}}}}
 
 % Rerieve an item from the sequence.
 % If the index is out of bounds, then issue an error.
 \prgNewFunction \brt_seq_item:Mm {Mm}
-    {\prgReturn{\brt_seq_item:MmTF #1 {#2} {\prgReturn {##1}} {\__brt_index_error:nm {#1} {#2}}}}
+    {\prgReturn
+        {\brt_seq_item:MmTF #1 {#2}
+            {##1}
+            {\prgDo {\__brt_index_error:nm {#1} {#2}}}}}
 
 \DeclareOption {obj} {
     % the quantity of objects with id
@@ -158,7 +161,7 @@
         {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
     \prgNewFunction \brtObjFmtSet {Mn}
         {\__brt_fun_del:M {\__brt_obj_fmt_p: #1}
-         \prgNewFunction:Mnn {\__brt_obj_fmt_p: #1} {M} {#2}}
+         \prgNewFunction:Mnn {\__brt_obj_fmt_p: #1} {M} {\prgReturn {#2}}}
 
     % \brtTypeFmtSet #1=obj:Type -> void
     % Set the formatter for the type, i.e. the default formatter for all inhabitants
@@ -167,7 +170,7 @@
         {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
     \prgNewFunction \brtTypeFmtSet {Mn}
         {\__brt_fun_del:M {\__brt_type_fmt_p #1}
-         \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {#2}}
+         \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {\prgReturn {#2}}}
 
     % \brtObjFmt #1=obj:obj -> formatted object
     \prgNewFunction \brtObjFmt {M}
@@ -177,7 +180,7 @@
     % Set the formatter for obj to the default formatter of type.
     % This is by ref, i.e. if type's default formatter changes, then so does obj.
     \prgNewFunction \brtObjFmtLike {MM}
-        {\brtObjFmtSet #1 {\prgReturn {\evalWhole {\__brt_type_fmt_p #2 ##1}}}}
+        {\brtObjFmtSet #1 {\evalWhole {\__brt_type_fmt_p #2 ##1}}}
 
     % \brtObjShow #1=obj:obj -> string serialisation of object
     \prgNewFunction \brtObjShow {M}
@@ -187,8 +190,8 @@
     % We have to create it by-hand to bootstrap the universe.
     \propConstFromKeyval \brtTypeT {@id = Type, @name = Type}
     \brtObjName {Type} {\brtTypeT}
-    \brtObjFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
-    \brtTypeFmtSet {\brtTypeT} {\prgReturn {\brtObjShow #1}}
+    \brtObjFmtSet {\brtTypeT} {\brtObjShow #1}
+    \brtTypeFmtSet {\brtTypeT} {\brtObjShow #1}
 
     % \brtObjPrimElim #1=obj:primitive -> primitive value
     \prgNewFunction \brtObjPrimElim {M}
@@ -197,7 +200,7 @@
     % primitive integer type (eliminates to expl3 integer, formats to arabic)
     \brtTypeFmtSet
         {\brtObjCons {@type = \brtTypeT, @name = Int}}
-        {\prgReturn {\int_to_arabic:n {\brtObjPrimElim #1}}}
+        {\int_to_arabic:n {\brtObjPrimElim #1}}
     \prgNewFunction \brtIntCons {m}
         {\prgReturn
             {\brtObjCons
@@ -207,7 +210,7 @@
     % primitive string type (eliminates and formats to expl3 string)
     \brtTypeFmtSet
         {\brtObjCons {@type = \brtTypeT, @name = Str}}
-        {\prgReturn {\brtObjPrimElim #1}}
+        {\brtObjPrimElim #1}
     \prgNewFunction \brtStrCons {m}
         {\prgReturn
             {\brtObjCons
@@ -366,14 +369,14 @@
     % \brtLHIndexedFamily {index} {input expression} {output expression}
     \ProvideDocumentCommand \brtLHIndexedFamily {mmm}
         {\brtLHFamilyCons
-            {\brtCallAnon {#1} {\prgReturn {#2}}}
-            {\brtCallAnon {#1} {\prgReturn {#3}}}}
+            {\brtCallAnon {#1} {#2}}
+            {\brtCallAnon {#1} {#3}}}
 
     % \brtLHIndexedSet {index} {input expression} {output expression}
     \ProvideDocumentCommand \brtLHIndexedSet {mmm}
         {\brtLHSetCons
-            {\brtCallAnon {#1} {\prgReturn {#2}}}
-            {\brtCallAnon {#1} {\prgReturn {#3}}}}
+            {\brtCallAnon {#1} {#2}}
+            {\brtCallAnon {#1} {#3}}}
 
     \providecommand \brtLHFrom {\leftarrow}
     \providecommand \brtLHLogicalImplies {\Rightarrow}

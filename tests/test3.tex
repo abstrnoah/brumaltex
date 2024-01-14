@@ -1,7 +1,8 @@
 \documentclass{article}
 
 \usepackage{functional}
-\usepackage[obj,nestedproofs,environments]{brumaltex3}
+\usepackage[obj,longhand]{brumaltex3}
+\Functional{tracing=true}
 
 % \brtQedSet
 %     {\(\square\),
@@ -13,26 +14,32 @@
 
 \usepackage{physics}
 
-% \renewcommand{\familydefault}{\ttdefault}
-
-\brtObjName {testStr} {\brtStrCons {hehe}}
-\brtObjName {testInt} {\brtIntCons {42}}
-
-\brtEzObj \TestInt {\brtObjNamed {testInt}}
-
 \brtEzType \Nat {\brtObjCons {@name = Nat}}
     {symbol = #1}
 \brtTypeFmtSet
     {\brtObjNamed {Nat}}
-    {\prgReturn {\brtObjElim {symbol} #1}}
+    {\brtObjElim {symbol} #1}
 \brtEzObj \NatA {\NatO {m}}
 \brtEzObj \NatB {\NatO {n}}
 
+\brtEzType \Kitten {\brtObjCons {@name = Kitten}}
+    {ears = #1}
+\brtTypeFmtSet
+    {\brtObjNamed {Kitten}}
+    {This~kitten~has~\brtObjElim {ears} #1~many~ears}
+\brtEzObj \KittenA {\KittenO {2}}
+\brtEzObj \KittenB {\KittenO {3}}
+
+
+
+
 \begin{document}
+
+    \KittenB
 
     \NatA
     \NatB
-    \brtTypeFmtSet {\brtObjNamed {Nat}} {\prgReturn {haha}}
+    \brtTypeFmtSet {\brtObjNamed {Nat}} {waht}
     \NatA
     \NatB
 
@@ -96,9 +103,9 @@
         \end{proof}
     \end{proof}
 
-    \begin{theorem}
-        Super accurate fact tmtmtm
-    \end{theorem}
+    % \begin{theorem}
+    %     Super accurate fact tmtmtm
+    % \end{theorem}
 
     \(\qty (\frac 1 2)\)
 
