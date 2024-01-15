@@ -227,7 +227,8 @@
     % \csname returns the object formatted, i.e. \brtObjFmt {#2}.
     % \csnameO returns the abstract object, i.e. just #2.
     \prgNewFunction \brtSetupObj {MM}
-        {\prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
+        {\brtObjName {\cs_to_str:N #1} #2
+         \prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
          \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
 
     % \brtSetupType #1=csname #2=type #3=cons:fun #4=fmt:fun -> void
@@ -243,7 +244,8 @@
     % (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
     % causes an incromprehensible error.)
     \prgNewFunction \brtSetupType {MMnn}
-        {\prgNewFunction:Mnn {\expName {\cs_to_str:N #1 T}} {}
+        {\brtObjName {\cs_to_str:N #1} #2
+         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 T}} {}
             {\prgReturn {\brtObjFmt {#2}}}
          \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 TO}} {}
             {\prgReturn {#2}}
