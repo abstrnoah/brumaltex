@@ -269,6 +269,25 @@
          \brtTypeFmtSet #2 {#4}}
 }
 
+\DeclareOption {latex3-issue1090-workaround} {
+    % See <https://github.com/latex3/latex3/issues/1090>
+    \cs_gset_protected:Npn \peek_analysis_map_inline:n #1
+      {
+        \group_align_safe_begin: % <-- added
+        \int_gincr:N \g__kernel_prg_map_int
+        \cs_set_protected:cpn
+          { __tl_analysis_map_ \int_use:N \g__kernel_prg_map_int :nnN }
+          ##1##2##3
+          {
+            \group_end:
+            #1
+            \__tl_peek_analysis_loop:NNn
+              \prg_break_point:Nn \peek_analysis_map_break: { \group_align_safe_end: } % <-- added
+          }
+        \__tl_peek_analysis_loop:NNn ? ? ?
+      }
+}
+
 \DeclareOption {breaklessmaths} {
     % never ever break in maths mode
     \binoppenalty=\maxdimen
