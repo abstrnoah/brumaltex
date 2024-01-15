@@ -277,13 +277,17 @@
 }
 
 \DeclareOption {ref} {
-    \RequirePackage{hyperref}
-    \RequirePackage[nameinlink]{cleverref}
+    \AtEndOfPackage {
+        \RequirePackage{hyperref}
+        \RequirePackage[nameinlink]{cleveref}
+    }
 }
 
 \DeclareOption {biblatex} {
-    \RequirePackage[backend=bibtex,style=alphabetic,url=false,maxbibnames=4]{biblatex}
-    % The user should use \addbibresource after loading this package.
+    \AtEndOfPackage {
+        \RequirePackage[backend=bibtex,style=alphabetic,url=false,maxbibnames=4]{biblatex}
+        % The user should use \addbibresource after loading this module.
+    }
 }
 
 \DeclareOption {environments} {
