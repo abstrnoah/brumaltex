@@ -1,7 +1,7 @@
 \documentclass{article}
 
 \usepackage{functional}
-\Functional{tracing=true}
+% \Functional{tracing=true}
 \usepackage[obj,longhand]{brumaltex3}
 
 \usepackage{physics}
@@ -22,19 +22,25 @@
 
 \brtSetupObj \BearA {\BearO {foo = \FooAO}}
 
+\brtSetupObj \BeeB {\brtObjCons {bear = \BearAO}}
+
 \begin{document}
 
-    ..
+    \tiny
+    \tt
 
-    \FooT
+    FooA:\FooA
 
-    \FooA
+    BearA:\BearA
 
-    \BearT
+        \makeatother
+    \brtWithTracing{
+        \brtObjShow
+        {\brtObjElim {bear/foo/bar/foo} \BeeBO}
+    }
 
-    \BearA
-
-    \brtObjFmt {\brtObjNamed {BearA}}
+    \brtObjElim {bear/foo/bar/foo/@id} \BeeBO
+        \makeatletter
 
     ---
 

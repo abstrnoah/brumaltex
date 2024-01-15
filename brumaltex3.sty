@@ -141,10 +141,17 @@
          \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
          \prgReturn {\tlUse \l__obj_p}}
 
-    % \brtObjElim {#1=key:str} #2=obj:obj -> value
-    % TODO support attribute paths
+    % \brtObjElim {#1=attribute/path/separated/by/slash} #2=obj:obj -> value
+    \tlClearNew \l__obj_p
+    \seqClearNew \l__keys
     \prgNewFunction \brtObjElim {mM}
-        {\prgReturn {\propVarItem #2 {#1}}}
+        {\seqSetSplit \l__keys {/} {#1}
+         \tlSet \l__obj_p {#2}
+         \Functional{scoping=false} % TODO Sus.
+         \seqVarMapInline \l__keys
+            {\tlSet \l__obj_p {\propVarItem {\tlUse \l__obj_p} {##1}}}
+         \Functional{scoping=true}
+         \prgReturn {\tlUse \l__obj_p}}
 
     % \brtObjName {#1=name:str} #2=obj:obj -> void
     % A priori, names can be arbitrary token lists.
@@ -233,7 +240,7 @@
     \prgNewFunction \brtSetupObj {MM}
         {\brtObjName {\cs_to_str:N #1} #2
          \prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
-         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {} {\prgReturn {#2}}}
+         \cs_gset_eq:cN {\cs_to_str:N #1 O} #2}
 
     % \brtSetupType #1=csname #2=type #3=cons:fun #4=fmt:fun -> void
     % Create two constructors (`cons`) for `type`, called \csname and \csnameO,
@@ -251,8 +258,7 @@
         {\brtObjName {\cs_to_str:N #1} #2
          \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 T}} {}
             {\prgReturn {\brtObjFmt {#2}}}
-         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 TO}} {}
-            {\prgReturn {#2}}
+         \cs_gset_eq:cN {\cs_to_str:N #1 TO} #2
          \prgNewFunction #1 {m}
             {\prgReturn
                 {\brtObjFmt
