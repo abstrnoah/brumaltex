@@ -354,8 +354,9 @@
             {\brtLHOperatorFmt {#2}
              \IfValueT {##1} {\qty(##1)}}}
 
-    \brtLHOperatorCons \brtLHProjectOp {proj}
-    \brtLHOperatorCons \brtLHRestrictOp {res}
+    \providecommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
+    \providecommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
+
     \brtLHOperatorCons \brtLHDomainOp {dom}
     \brtLHOperatorCons \brtLHCodomainOp {codom}
     \brtLHOperatorCons \brtLHKernelOp {ker}
@@ -424,10 +425,11 @@
     \brt_cs_gset_eq:NN \leq \leqslant
     \brt_cs_gset_eq:NN \geq \geqslant
 
-    \providecommand \project {\brtLHProjectOp}
-    \providecommand \proj {\brtLHProjectOp}
-    \providecommand \restrict {\brtLHRestrictOp}
-    \providecommand \res {\brtLHRestrictOp}
+    \providecommand \project {\brtLHProjectSymbol}
+    \providecommand \proj {\brtLHProjectSymbol}
+    \providecommand \restrict {\brtLHRestrictSymbol}
+    \providecommand \res {\brtLHRestrictSymbol}
+
     \providecommand \domain {\brtLHDomainOp}
     \providecommand \dom {\brtLHDomainOp}
     \providecommand \codomin {\brtLHCodomainOp}
