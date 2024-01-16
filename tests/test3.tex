@@ -29,18 +29,7 @@
     \tiny
     \tt
 
-    FooA:\FooA
-
-    BearA:\BearA
-
-        \makeatother
-    \brtWithTracing{
-        \brtObjShow
-        {\brtObjElim {bear/foo/bar/foo} \BeeBO}
-    }
-
-    \brtObjElim {bear/foo/bar/foo/@id} \BeeBO
-        \makeatletter
+    \tlToStr {\brtKeyvalsElimAppend {in = \BeeBO} {out = in/bear}}
 
     ---
 

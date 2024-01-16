@@ -278,6 +278,17 @@
             {\prgReturn
                 {\brtObjCons {#3, @type = #2}}}
          \brtTypeFmtSet #2 {#4}}
+
+    % \brtKeyvalsElimAppend {#1=keyvals} {#2=keyvals to extract}
+    % Global because scoping=false workaround doesn't work for some reason. TODO
+    \propClearNew \g__args
+    \propClearNew \l__spec
+    \prgNewFunction \brtKeyvalsElimAppend {nn}
+        {\propSetFromKeyval \g__args {\evalWhole {#1}}
+         \propSetFromKeyval \l__spec {\evalWhole {#2}}
+         \propVarMapInline \l__spec
+            {\propPut \g__args {##1} {\brtObjElim {##2} \g__args}}
+         \prgReturn {\propToKeyval \g__args}}
 }
 
 \DeclareOption {latex3-issue1090-workaround} {
