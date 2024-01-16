@@ -45,7 +45,14 @@
 
 \prgNewFunction \brtCallAnon {mn}
     {\__brt_fun_del:N \__brt_anon:m
+     % Do we really need \prgReturn? ... Yes.
      \prgNewFunction \__brt_anon:m {m} {\prgReturn {#2}}
+     \prgReturn {\__brt_anon:m {#1}}}
+
+% Imperative version, where #2 MUST use \prgReturn.
+\prgNewFunction \brtCallAnonImp {mn}
+    {\__brt_fun_del:N \__brt_anon:m
+     \prgNewFunction \__brt_anon:m {m} {#2}
      \prgReturn {\__brt_anon:m {#1}}}
 
 % #1 = object being indexed
@@ -129,7 +136,11 @@
     \propClearNew \l__args
     \strClearNew \l__id
     \tlClearNew \l__obj_p
-    \prgNewFunction \brtObjCons {m}
+    % We use an 'n'-type argument and \evalWhole it so that the entire argument
+    % is evaluated; with 'm'-type argument only the leading function would be
+    % evaluated and the rest would be dangling in the input stream.
+    % (TODO Make a version of \prgNewFunction that does this automatically.)
+    \prgNewFunction \brtObjCons {n}
         {\propSetFromKeyval \l__args {\evalWhole {#1}}
          \strSet \l__id {\__brt_id_alloc:}
          \propPutIfNew \l__args {@type} {\brtTypeT}
