@@ -155,7 +155,7 @@
          \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
          \propGetT \l__args {@name} \lTmpaTl
              {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
-         \brtObjFmtLike {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
+         \brtObjFmtSetLikeType {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
          \prgReturn {\tlUse \l__obj_p}}
 
     % \brtObjElim {#1=attribute/path/separated/by/slash} #2=obj:obj -> value
@@ -195,25 +195,25 @@
     % \brtTypeFmtSet #1=obj:Type -> void
     % Set the formatter for the type, i.e. the default formatter for all inhabitants
     % of this type.
-    \prgNewFunction \__brt_type_fmt_p {M}
+    \prgNewFunction \__brt_type_fmt_p: {M}
         {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
     \prgNewFunction \brtTypeFmtSet {Mn}
-        {\__brt_fun_del:M {\__brt_type_fmt_p #1}
-         \prgNewFunction:Mnn {\__brt_type_fmt_p #1} {M} {\prgReturn {#2}}}
+        {\__brt_fun_del:M {\__brt_type_fmt_p: #1}
+         \prgNewFunction:Mnn {\__brt_type_fmt_p: #1} {M} {\prgReturn {#2}}}
 
     % \brtObjFmt #1=obj:obj -> formatted object
     \prgNewFunction \brtObjFmt {M}
         {\prgReturn {\evalWhole {\__brt_obj_fmt_p: #1 #1}}}
 
-    % \brtObjFmtLike #1=obj:obj #2=type:Type -> void
+    % \brtObjFmtSetLikeType #1=obj:obj #2=type:Type -> void
     % Set the formatter for obj to the default formatter of type.
     % This is by ref, i.e. if type's default formatter changes, then so does obj.
-    \prgNewFunction \brtObjFmtLike {MM}
-        {\brtObjFmtSet #1 {\evalWhole {\__brt_type_fmt_p #2 ##1}}}
+    \prgNewFunction \brtObjFmtSetLikeType {MM}
+        {\brtObjFmtSet #1 {\evalWhole {\__brt_type_fmt_p: #2 ##1}}}
 
-    % \brtTypeFmtGet #1=type:Type -> formatter for type
-    \prgNewFunction \brtTypeFmtGet {M}
-        {\prgReturn {\__brt_type_fmt_p #1}}
+    % \brtObjFmtLikeType #1=type #2=obj -> format obj with type's formatter
+    \prgNewFunction \brtObjFmtLikeType {MM}
+        {\prgReturn {\evalWhole {\__brt_type_fmt_p: #1 #2}}}
 
     % \brtObjShow #1=obj:obj -> string serialisation of object
     \prgNewFunction \brtObjShow {M}
