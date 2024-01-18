@@ -61,6 +61,11 @@
      \prgNewFunction \__brt_anon:m {m} {#2}
      \prgReturn {\__brt_anon:m {#1}}}
 
+\providecommand \__brt_anon:n {}
+\NewDocumentCommand \brtCallAnonLgcy {mm}
+    {\renewcommand \__brt_anon:n [1] {#2}
+     \__brt_anon:n {#1}}
+
 % #1 = object being indexed
 \msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
 \prgNewFunction \__brt_index_error:nm {nm}
@@ -413,9 +418,10 @@
 
     % \brtLHOperatorCons {csname} {symbol}
     \ProvideDocumentCommand \brtLHOperatorCons {mm}
-        {\DeclareDocumentCommand {#1} {d()}
+        {\DeclareDocumentCommand {#1} {d() g}
             {\brtLHOperatorFmt {#2}
-             \IfValueT {##1} {\qty(##1)}}}
+             \IfValueT {##1} {\qty(##1)}
+             \IfValueT {##2} {\qty(##2)}}}
 
     \providecommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
     \providecommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
@@ -446,14 +452,14 @@
     % \brtLHIndexedFamily {index} {input expression} {output expression}
     \ProvideDocumentCommand \brtLHIndexedFamily {mmm}
         {\brtLHFamilyCons
-            {\brtCallAnon {#1} {#2}}
-            {\brtCallAnon {#1} {#3}}}
+            {\brtCallAnonLgcy {#1} {#2}}
+            {\brtCallAnonLgcy {#1} {#3}}}
 
     % \brtLHIndexedSet {index} {input expression} {output expression}
     \ProvideDocumentCommand \brtLHIndexedSet {mmm}
         {\brtLHSetCons
-            {\brtCallAnon {#1} {#2}}
-            {\brtCallAnon {#1} {#3}}}
+            {\brtCallAnonLgcy {#1} {#2}}
+            {\brtCallAnonLgcy {#1} {#3}}}
 
     \providecommand \brtLHFrom {\leftarrow}
     \providecommand \brtLHLogicalImplies {\Rightarrow}
