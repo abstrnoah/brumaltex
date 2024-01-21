@@ -245,25 +245,25 @@
     % Text mode
 
     % TODO Build an index of terms defined by \brtLHDefine.
-    \providecommand \brtLHDefine {\textbf}
-    \providecommand \brtLHPredefine {\emph}
+    \newcommand \brtLHDefine {\textbf}
+    \newcommand \brtLHPredefine {\emph}
 
     % Maths mode
 
     % Needed inside of ExplSyntax.
-    \providecommand \brtLHMaSubscript [2] {#1 \c_math_subscript_token {#2}}
+    \newcommand \brtLHMaSubscript [2] {#1 \c_math_subscript_token {#2}}
 
-    \providecommand \brtLHOperatorFmt [1] {\textsf {\upshape #1}}
+    \newcommand \brtLHOperatorFmt [1] {\textsf {\upshape #1}}
 
     % \brtLHOperatorCons {csname} {symbol}
-    \ProvideDocumentCommand \brtLHOperatorCons {mm}
-        {\DeclareDocumentCommand {#1} {d() g}
+    \NewDocumentCommand \brtLHOperatorCons {mm}
+        {\NewDocumentCommand {#1} {d() g}
             {\brtLHOperatorFmt {#2}
              \IfValueT {##1} {\qty(##1)}
              \IfValueT {##2} {\qty(##2)}}}
 
-    \providecommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
-    \providecommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
+    \newcommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
+    \newcommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
 
     \brtLHOperatorCons \brtLHDomainOp {dom}
     \brtLHOperatorCons \brtLHCodomainOp {codom}
@@ -275,25 +275,25 @@
     \brtLHOperatorCons \brtLHSignOp {sgn}
     \brtLHOperatorCons \brtLHLengthOp {length}
 
-    \providecommand \brtLHImageSet [2] {#1 \qty[#2]}
-    \providecommand \brtLHInverseMap [1] {{#1}^{-1}}
-    \providecommand \brtLHInverseSet [2] {\brtLHInverseMap {#1} \qty[#2]}
+    \newcommand \brtLHImageSet [2] {#1 \qty[#2]}
+    \newcommand \brtLHInverseMap [1] {{#1}^{-1}}
+    \newcommand \brtLHInverseSet [2] {\brtLHInverseMap {#1} \qty[#2]}
 
-    \providecommand \brtLHCartesianPower [2] {{}^{#2}{#1}}
+    \newcommand \brtLHCartesianPower [2] {{}^{#2}{#1}}
 
-    \providecommand \brtLHRestrict [2] {#1 \restriction #2}
+    \newcommand \brtLHRestrict [2] {#1 \restriction #2}
 
-    \providecommand \brtLHMidQty [2] {\left.#1\ \middle\vert\ #2\right.}
-    \providecommand \brtLHDivQty [2] {\left.#1\middle/#2\right.}
+    \newcommand \brtLHMidQty [2] {\left.#1\ \middle\vert\ #2\right.}
+    \newcommand \brtLHDivQty [2] {\left.#1\middle/#2\right.}
 
     % \brtLHSetCons {element expression} {set specification}
-    \providecommand \brtLHSetCons [2] {\qty{\brtLHMidQty {#1} {#2}}}
+    \newcommand \brtLHSetCons [2] {\qty{\brtLHMidQty {#1} {#2}}}
 
     % \brtLHFamilyCons {input expression} {output expression}
-    \providecommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
+    \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
 
     % \brtLHIndexedFamily {index} {input expression} {output expression}
-    \ProvideDocumentCommand \brtLHIndexedFamily {mmm}
+    \NewDocumentCommand \brtLHIndexedFamily {mmm}
         {\brtLHFamilyCons
             {\brt_anon:nn {#1} {#2}}
             {\brt_anon:nn {#1} {#3}}}
@@ -304,19 +304,19 @@
             {\brt_anon:nn {#1} {#2}}
             {\brt_anon:nn {#1} {#3}}}
 
-    \providecommand \brtLHFrom {\leftarrow}
-    \providecommand \brtLHLogicalImplies {\Rightarrow}
-    \providecommand \brtLHLogicalIff {\Leftrightarrow}
+    \newcommand \brtLHFrom {\leftarrow}
+    \newcommand \brtLHLogicalImplies {\Rightarrow}
+    \newcommand \brtLHLogicalIff {\Leftrightarrow}
 
-    \providecommand \brtLHDummyCdot {\,\cdot\,}
-    \providecommand \brtLHAnonParamSymbol {\bullet}
+    \newcommand \brtLHDummyCdot {\,\cdot\,}
+    \newcommand \brtLHAnonParamSymbol {\bullet}
 
-    \providecommand \brtLHSeqConcatSymbol {{}^\frown}
+    \newcommand \brtLHSeqConcatSymbol {{}^\frown}
 
-    \providecommand \brtLHUnionSymbol {\bigcup}
-    \providecommand \brtLHIntersectSymbol {\bigcap}
-    \providecommand \brtLHCoproductSymbol {\bigsqcup}
-    \providecommand \brtLHProductSymbol {\bigsqcap}
+    \newcommand \brtLHUnionSymbol {\bigcup}
+    \newcommand \brtLHIntersectSymbol {\bigcap}
+    \newcommand \brtLHCoproductSymbol {\bigsqcup}
+    \newcommand \brtLHProductSymbol {\bigsqcap}
 }
 
 \brt_declare_module:nnn {shorthand} {requires = longhand} {
@@ -324,64 +324,64 @@
 
     % Text mode
 
-    \providecommand \define {\brtLHDefine}
-    \providecommand \predefine {\brtLHPredefine}
+    \cs_gset:Npn \define {\brtLHDefine}
+    \cs_gset:Npn \predefine {\brtLHPredefine}
 
     % Maths mode
 
     % when you only want one number for a multi-line equation block
-    \providecommand \nn {\nonumber}
+    \cs_gset:Npn \nn {\nonumber}
 
     \brt_cs_gswap:NN \epsilon \varepsilon
     \brt_cs_gswap:NN \phi \varphi
     \brt_cs_gset_save_old:NN \leq \leqslant
     \brt_cs_gset_save_old:NN \geq \geqslant
 
-    \providecommand \project {\brtLHProjectSymbol}
-    \providecommand \proj {\brtLHProjectSymbol}
-    \providecommand \restrict {\brtLHRestrictSymbol}
-    \providecommand \res {\brtLHRestrictSymbol}
+    \cs_gset:Npn \project {\brtLHProjectSymbol}
+    \cs_gset:Npn \proj {\brtLHProjectSymbol}
+    \cs_gset:Npn \restrict {\brtLHRestrictSymbol}
+    \cs_gset:Npn \res {\brtLHRestrictSymbol}
 
-    \providecommand \domain {\brtLHDomainOp}
-    \providecommand \dom {\brtLHDomainOp}
-    \providecommand \codomin {\brtLHCodomainOp}
-    \providecommand \codom {\brtLHCodomainOp}
-    \providecommand \ker {\brtLHKernelOp}
-    \providecommand \coker {\brtLHCokernelOp}
-    \providecommand \image {\brtLHImageOp}
-    \providecommand \limit {\brtLHLimitOp}
-    \providecommand \lim {\brtLHLimitOp}
-    \providecommand \deg {\brtLHDegreeOp}
-    \providecommand \sgn {\brtLHSignOp}
-    \providecommand \length {\brtLHLengthOp}
-    \providecommand \len {\brtLHLengthOp}
+    \cs_gset:Npn \domain {\brtLHDomainOp}
+    \cs_gset:Npn \dom {\brtLHDomainOp}
+    \cs_gset:Npn \codomin {\brtLHCodomainOp}
+    \cs_gset:Npn \codom {\brtLHCodomainOp}
+    \cs_gset:Npn \ker {\brtLHKernelOp}
+    \cs_gset:Npn \coker {\brtLHCokernelOp}
+    \cs_gset:Npn \image {\brtLHImageOp}
+    \cs_gset:Npn \limit {\brtLHLimitOp}
+    \cs_gset:Npn \lim {\brtLHLimitOp}
+    \cs_gset:Npn \deg {\brtLHDegreeOp}
+    \cs_gset:Npn \sgn {\brtLHSignOp}
+    \cs_gset:Npn \length {\brtLHLengthOp}
+    \cs_gset:Npn \len {\brtLHLengthOp}
 
-    \providecommand \imageset {\brtLHImageSet}
-    \providecommand \inversemap {\brtLHInverseMap}
-    \providecommand \inverseset {\brtLHInverseSet}
+    \cs_gset:Npn \imageset {\brtLHImageSet}
+    \cs_gset:Npn \inversemap {\brtLHInverseMap}
+    \cs_gset:Npn \inverseset {\brtLHInverseSet}
 
-    \providecommand \cartpow {\brtLHCartesianPower}
+    \cs_gset:Npn \cartpow {\brtLHCartesianPower}
 
-    \providecommand \buildset {\brtLHSetCons}
-    \providecommand \buildfamily  {\brtLHFamilyCons}
+    \cs_gset:Npn \buildset {\brtLHSetCons}
+    \cs_gset:Npn \buildfamily  {\brtLHFamilyCons}
 
-    \providecommand \idxedset {\brtLHIndexedSet}
-    \providecommand \idxedfamily  {\brtLHIndexedFamily}
+    \cs_gset:Npn \idxedset {\brtLHIndexedSet}
+    \cs_gset:Npn \idxedfamily  {\brtLHIndexedFamily}
 
-    \providecommand \from {\brtLHFrom}
-    \providecommand \limplies {\brtLHLogicalImplies}
-    \providecommand \liff {\brtLHLogicalIff}
+    \cs_gset:Npn \from {\brtLHFrom}
+    \cs_gset:Npn \limplies {\brtLHLogicalImplies}
+    \cs_gset:Npn \liff {\brtLHLogicalIff}
 
-    \providecommand \dummycdot {\brtLHDummyCdot}
+    \cs_gset:Npn \dummycdot {\brtLHDummyCdot}
 
-    \providecommand \concat {\brtLHSeqConcatSymbol}
+    \cs_gset:Npn \concat {\brtLHSeqConcatSymbol}
 
-    \providecommand \union {\brtLHUnionSymbol}
-    \providecommand \intersect {\brtLHIntersectSymbol}
-    \providecommand \coproduct {\brtLHCoproductSymbol}
-    \providecommand \product {\brtLHProductSymbol}
-    \providecommand \coprod {\brtLHCoproductSymbol}
-    \providecommand \prod {\brtLHProductSymbol}
+    \cs_gset:Npn \union {\brtLHUnionSymbol}
+    \cs_gset:Npn \intersect {\brtLHIntersectSymbol}
+    \cs_gset:Npn \coproduct {\brtLHCoproductSymbol}
+    \cs_gset:Npn \product {\brtLHProductSymbol}
+    \cs_gset:Npn \coprod {\brtLHCoproductSymbol}
+    \cs_gset:Npn \prod {\brtLHProductSymbol}
 }
 
 % Process modules.

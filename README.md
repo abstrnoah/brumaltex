@@ -1,7 +1,7 @@
 [brumaltex3]
-==========
+============
 
-A latex package used by abstrnoah.
+A `\LaTeX` package used by abstrnoah.
 
 This package has had three iterations. Each iteration, I have essentially
 started over, so no cross-compatibility is guaranteed. Maybe they shouldn't be
@@ -20,7 +20,7 @@ exception to this is the `shorthand` module (see [below](#modules)).
 ## dependencies
 
 The package tries to limit dependencies to mainstream packages. I use the
-[tectonic] latex engine and occasionally [Overleaf]. Both platforms are able to
+[tectonic] `\LaTeX` engine and occasionally [Overleaf]. Both platforms are able to
 provide [brumaltex3]'s dependencies as of January 2024.
 
 Core dependencies:
@@ -32,7 +32,7 @@ Core dependencies:
 * amsthm
 * mathtools
 * physics
-    * Single most useful latex package I have ever found.
+    * Single most useful `\LaTeX` package I have ever found.
 * csquotes
     * For quotes, use
       `\enquote{Quoted text}`
@@ -83,12 +83,12 @@ Modules that are optional:
 
 * `expl3-library`
     * Some utilities built on top of [expl3].
-    * To use, you'll need to use `\ExplSyntaxOn...\ExplSyntaxOff`.
+    * To use, you'll need `\ExplSyntaxOn...\ExplSyntaxOff`.
 * `breaklessmaths`
     * Never ever break in maths mode.
 * `latex3-issue1090-workaround`
     * See <https://github.com/latex3/latex3/issues/1090>.
-    * This issue has been fixed in the current version of latex3, but [tectonic]
+    * This issue has been fixed in the current version of [expl3], but [tectonic]
       doesn't ship that version, so I ship this workaround for maximum
       compatibility.
 * `ref`
@@ -103,11 +103,11 @@ Modules that are optional:
       nested. 
     * This is done automatically; the user the does not have to do anything
       beyond loading this module and using `proof` as usual.
-    * Use `\brtQedSet {\topLevelQed, \secondQed, thirdQed, ...}` to set a custom
-      list of QED symbols.
     * See `\brtDefaultQeds` for the default list of qed symbols, which provides
       _six_ levels of nesting.
-    * An error will occur if you nest neeper than the number of QED symbols
+    * Use `\brtQedSet {\topLevelQed, \secondQed, \thirdQed, ...}` to set a
+      custom list of QED symbols.
+    * An error will occur if you nest deeper than the number of QED symbols
       passed to `\brtQedSet` (but you really shouldn't be nesting _that_ deeply,
       should you?).
 * `longhand`
@@ -118,6 +118,23 @@ Modules that are optional:
     * My own shorthand bindings to `longhand` macros.
     * Beware. I make zero effort to avoid conflicts with common names. I
       probably redefine your favourite command.
+
+# overriding
+
+Because I don't expect name conflicts, many commands are defined in a way that
+overrides existing definitions or errors out if there is a conflict.
+
+The "officially supported" approach to overriding this package's definitions is
+to override them _after_ the package is loaded.
+
+The `shorthand` package clobbers previous definitions and makes
+inconsistent efforts to save the macros it overrides. If you don't like
+`shorthand`'s definitions, then you should probably avoid loading it altogether
+and create your own shorthand on top of `longhand`.
+
+Most `longhand`/`shorthand` macros are declared without definition-time
+expansion meaning, e.g., that if you override a `longhand` command then the
+`shorthand` command pointing to it will also be changed.
 
 ---
 
