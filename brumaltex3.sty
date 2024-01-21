@@ -1,308 +1,151 @@
-% TODO
-% - Speed it up! Obj module is sooo slow :(
-% - Improve error reporting. Ideally, consider implementing static(er) typing.
-% - \brtLHIndexedFamily does not work as a \brtSetupType formatter but
-%   \brtLHFamilyCons does.
-
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex3}[2024/01/07]
+\ProvidesPackage{brumaltex3}[2024/01/20]
 
-% \RequirePackage{expl3}[2023/12/08] % Not yet available on tectonic.
-\ProvidesExplPackage{brumaltex3}{2024-01-07}{}{}
+% This is the latest version on tectonic, and seems sufficient for us.
+\RequirePackage{expl3}[2022-02-24]
 
-\RequirePackage{functional}[2023-01-07] % Not yet available on tectonic.
-\Functional{scoping=true}
+\ProvidesExplPackage{brumaltex3}{2024-01-20}{}{}
 
-\RequirePackage{xparse}[2023-10-10]
+% This is the latest version on tectonic, and seems sufficient for us.
+\RequirePackage{xparse}[2022-01-12]
 
-\RequirePackage{amsmath}
-\RequirePackage{amssymb}
-\RequirePackage{amsthm}
-\RequirePackage{mathtools}
-\RequirePackage{physics}
-\RequirePackage{csquotes}
-\RequirePackage{mathrsfs}
-\RequirePackage{stmaryrd}
-\RequirePackage{dsfont}
-\RequirePackage{bm}
+% List of all modules declared, in left-right order of declaration.
+% We refrain implementing this via the dependency feature (tempting as it may
+% be) to simplify the guarantee "modules load in order of declaration".
+\seq_new:N \g__brt_modules_seq
 
-\cs_new:Npn \brtWithTracing #1
-    {\Functional{tracing=true}
-     #1
-     \Functional{tracing=false}}
+\msg_new:nnn {brumaltex3} {brtModuleLoadInfo}
+    {Loading~requested~module:~#1}
+\cs_new:Npn \__brt_module_load_info:nn
+    {\msg_info:nnn {brumaltex3} {brtModuleLoadInfo}}
 
-% Create a new function after manipulating the first argument (name).
-\prgNewFunction \prgNewFunction:Mnn {Mnn}
-    {\prgNewFunction #1 {#2} {#3}}
+% Request that a module be loaded at load-time.
+% Do not call this within module code (use requires= option instead).
+\cs_new:Nn \brt_request_module:n % {module name}
+    {% This function is purposely non-recursive so as to help avoid cycles.
+     % Dependencies are already made transitive at declaration time.
+     \keys_set:nn {brumaltex3 / #1} {requested}
+     \clist_map_inline:cn {g__brt_module_ #1 _reqs_clist}
+        {\keys_set:nn {brumaltex3 / ##1} {requested}}}
 
-% Evaluate the argument, discarding the result, adding nothing to input stream.
-\prgNewFunction \brtVoid {m}
-    {}
+% Declare a new module.
+% Modules will be loaded in the order declared.
+% Supported module options:
+%   requires = <comma list of dependencies>
+% Behaviour is only defined if this command is called before \brt_load_modules:.
+% Behaviour is only defined when dependencies are declared before their
+% dependents.
+\cs_new:Nn \brt_declare_module:nnn % {name} {options} {code}
+    {\seq_gput_right:Nn \g__brt_modules_seq {#1}
+     % initialised as false
+     \bool_new:c {g__brt_module_ #1 _requested_bool}
+     \bool_new:c {g__brt_module_ #1 _loaded_bool}
+     \keys_define:nn {brumaltex3 / #1}
+        {requested .code:n = \bool_gset_true:c {g__brt_module_ #1 _requested_bool},
+         requested .value_forbidden:n = true,
+         % The code is stored in a token list to avoid parameter doubling.
+         code .tl_gset:c = {g__brt_module_ #1 _code_tl},
+         code .value_required:n = true,
+         % List of dependencies.
+         requires .clist_gset:c = {g__brt_module_ #1 _reqs_clist}}
+     \keys_set:nn {brumaltex3 / #1} {code = {#3}}
+     \keys_set:nn {brumaltex3 / #1} {#2}
+     % make dependencies transitive
+     \clist_map_inline:cn {g__brt_module_ #1 _reqs_clist}
+        {\clist_gconcat:ccc
+            {g__brt_module_ #1 _reqs_clist}
+            {g__brt_module_ ##1 _reqs_clist}
+            {g__brt_module_ #1 _reqs_clist}}
+     \cs_new:cn {__brt_module_ #1 _code:}
+        {\exp_not:n {\bool_if:cTF {g__brt_module_ #1 _loaded_bool}}
+            {% do nothing if already loaded
+             }
+            {\bool_gset_true:c {g__brt_module_ #1 _loaded_bool}
+             \tl_use:c {g__brt_module_ #1 _code_tl}}}
+     \DeclareOption {#1} {\brt_request_module:n {#1}}}
 
-% Delete a function which has been previously defined by \prgNewFunction.
-\prgNewFunction \__brt_fun_del:M {M}
-    {\cs_undefine:N #1
-     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 :w}}
+% Process the options passed to the package and then load the requested modules.
+% Modules are loaded in the order declared.
+% Modules are never loaded more than once.
+% Behaviour is undefined if this command is called more than once.
+\cs_new:Nn \brt_load_modules:
+    {\ProcessOptions\relax
+     \seq_map_inline:Nn \g__brt_modules_seq
+        {\bool_if:cTF {g__brt_module_ ##1 _requested_bool}
+            {\__brt_module_load_info:nn {##1}
+             \use:c {__brt_module_ ##1 _code:}}
+            {% do nothing if module was not requested
+             }}}
 
-% (Why we need a second version I don't understand.)
-\prgNewFunction \__brt_fun_del:N {N}
-    {\cs_undefine:N #1
-     \cs_undefine:c {__fun_defined_ \cs_to_str:N #1 :w}}
-
-\prgNewFunction \brtCallAnon {mn}
-    {\__brt_fun_del:N \__brt_anon:m
-     % Do we really need \prgReturn? ... Yes.
-     \prgNewFunction \__brt_anon:m {m} {\prgReturn {#2}}
-     \prgReturn {\__brt_anon:m {#1}}}
-
-% Imperative version, where #2 MUST use \prgReturn.
-\prgNewFunction \brtCallAnonImp {mn}
-    {\__brt_fun_del:N \__brt_anon:m
-     \prgNewFunction \__brt_anon:m {m} {#2}
-     \prgReturn {\__brt_anon:m {#1}}}
-
-\providecommand \__brt_anon:n {}
-\NewDocumentCommand \brtCallAnonLgcy {mm}
-    {\renewcommand \__brt_anon:n [1] {#2}
-     \__brt_anon:n {#1}}
-
-% #1 = object being indexed
-\msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
-\prgNewFunction \__brt_index_error:nm {nm}
-    {\msg_error:nnnn {brumaltex3} {brtIndexError} {#1} {#2}}
-
-\cs_new:Npn \NewCommandCopy:cc {\exp_args:Ncc \NewCommandCopy}
-\cs_new:Npn \NewCommandCopy:cn {\exp_args:Nc \NewCommandCopy}
-
-% Copy the second environment into the first.
-\prgNewFunction \brt_env_set_eq:mm {mm}
-    {\prgReturn
-        {\NewCommandCopy:cc {#1} {#2}
-         \NewCommandCopy:cc {end#1} {end#2}}}
-
-\prgNewFunction \brt_cs_gset_eq:NN {NN}
-    {\cs_gset_eq:cN {\cs_to_str:N #1 Old} #1
-     \cs_gset_eq:NN #1 #2}
-\cs_new:Npn \brt_cs_gset_eq:Nc {\exp_args:NNc \brt_cs_gset_eq:NN}
-
-% Swap the commands, saving `...Old` versions.
-\prgNewFunction \brt_cs_gswap:NN {NN}
-    {\brt_cs_gset_eq:NN #1 #2
-     \brt_cs_gset_eq:Nc #2 {\cs_to_str:N #1 Old}}
-
-\prgNewFunction \brt_if:eTF {enn}
-    {\bool_if:nTF {#1} {\prgReturn {#2}} {\prgReturn {#3}}}
-
-% the quantity of objects on the "heap" (lol)
-\intNew \g__brt_heap_size
-
-% {} -> a new unique csname
-\prgNewFunction \__brt_heap_alloc: {}
-    {\tlSet \lTmpaTl {\expName {c__brt_heap_ \int_use:N \g__brt_heap_size}}
-     \intIncr \g__brt_heap_size
-     \prgReturn {\tlUse \lTmpaTl}}
-
-% #1 = constant constructor; #2 = value; -> new constant
-\prgNewFunction \__brt_make:Nm {Nm}
-    {\tlSet \lTmpaTl {\__brt_heap_alloc:}
-     #1 {\tlUse \lTmpaTl} {#2}
-     \prgReturn {\tlUse \lTmpaTl}}
-
-% \brt_seq_item:MmTF #1=seq {#2=index based at 1} {#3=true code} {#4=false code}
-% True code takes one argument, the retrieved item.
-% False code takes no arguments.
-\prgNewFunction \brt_seq_item:MmTF {Mmnn}
-    {\prgReturn
-        {\brt_if:eTF
-            {\intCompare {#2} > {\seqVarCount #1}
-             || \intCompare {#2} < {1}}
-            {#4}
-            {\brtCallAnon {\seqVarItem #1 {#2}} {#3}}}}
-
-% Rerieve an item from the sequence.
-% If the index is out of bounds, then issue an error.
-\prgNewFunction \brt_seq_item:Mm {Mm}
-    {\prgReturn
-        {\brt_seq_item:MmTF #1 {#2}
-            {##1}
-            {\prgDo {\__brt_index_error:nm {#1} {#2}}}}}
-
-\DeclareOption {obj} {
-    % the quantity of objects with id
-    \intNew \g__brt_universe_size
-
-    % \__brt_id_alloc: -> new unique id string
-    \strClearNew \l__id
-    \prgNewFunction \__brt_id_alloc: {}
-        {\strSet \l__id {\evalWhole {brt Id \intUse \g__brt_universe_size}}
-         \intIncr \g__brt_universe_size
-         \prgReturn {\strUse \l__id}}
-
-    % \brtObjCons {#2=args:keyvals} -> new object
-    % If args does not provide @type=, then the object's @type is set to \brtTypeT.
-    % The object is automatically given an @id=, which overrides any args.@id.
-    % The @id= also serves as a name.
-    % If @name= is provided, then it is assigned as a name.
-    % The object's formatter is set to the type's default formatter.
-    \propClearNew \l__args
-    \strClearNew \l__id
-    \tlClearNew \l__obj_p
-    % We use an 'n'-type argument and \evalWhole it so that the entire argument
-    % is evaluated; with 'm'-type argument only the leading function would be
-    % evaluated and the rest would be dangling in the input stream.
-    % (TODO Make a version of \prgNewFunction that does this automatically.)
-    \prgNewFunction \brtObjCons {n}
-        {\propSetFromKeyval \l__args {\evalWhole {#1}}
-         \strSet \l__id {\__brt_id_alloc:}
-         \propPutIfNew \l__args {@type} {\brtTypeT}
-         \propPut \l__args {@id} {\strUse \l__id}
-         \tlSet \l__obj_p {\__brt_make:Nm \propConstFromKeyval {\propToKeyval \l__args}}
-         \brtObjName {\strUse \l__id} {\tlUse \l__obj_p}
-         \propGetT \l__args {@name} \lTmpaTl
-             {\brtObjName {\tlUse \lTmpaTl} {\tlUse \l__obj_p}}
-         \brtObjFmtSetLikeType {\tlUse \l__obj_p} {\brtObjElim {@type} {\tlUse \l__obj_p}}
-         \prgReturn {\tlUse \l__obj_p}}
-
-    % \brtObjElim {#1=attribute/path/separated/by/slash} #2=obj:obj -> value
-    \tlClearNew \l__obj_p
-    \seqClearNew \l__keys
-    \prgNewFunction \brtObjElim {mM}
-        {\seqSetSplit \l__keys {/} {#1}
-         \tlSet \l__obj_p {#2}
-         \Functional{scoping=false} % TODO Sus.
-         \seqVarMapInline \l__keys
-            {\tlSet \l__obj_p {\propVarItem {\tlUse \l__obj_p} {##1}}}
-         \Functional{scoping=true}
-         \prgReturn {\tlUse \l__obj_p}}
-
-    % \brtObjName {#1=name:str} #2=obj:obj -> void
-    % A priori, names can be arbitrary token lists.
-    % However, it is recommended that names be valid csnames (without using
-    % \csname...\endcsname etc.) so that wrappers can construct convenient macros
-    % around object names.
-    \prgNewFunction \brtObjName {mM}
-        {\tlConst {\expName {c__brt_obj_named_ #1}} #2}
-
-    % \brtObjNamed {#1=name:str} -> object named "name"
-    % Maps names to objects, not necessarily injectively.
-    % An object's @id= also serves as a name.
-    \prgNewFunction \brtObjNamed {m}
-        {\prgReturn {\tlUse {\expName {c__brt_obj_named_ #1}}}}
-
-    % \brtObjFmtSet #1=obj:obj {#2=fmtr:fun} -> void
-    % Set the formatter for the object.
-    \prgNewFunction \__brt_obj_fmt_p: {M}
-        {\prgReturn {\expName {\evalWhole {__brt_obj_fmt_ \brtObjElim {@id} #1}}}}
-    \prgNewFunction \brtObjFmtSet {Mn}
-        {\__brt_fun_del:M {\__brt_obj_fmt_p: #1}
-         \prgNewFunction:Mnn {\__brt_obj_fmt_p: #1} {M} {\prgReturn {#2}}}
-
-    % \brtTypeFmtSet #1=obj:Type -> void
-    % Set the formatter for the type, i.e. the default formatter for all inhabitants
-    % of this type.
-    \prgNewFunction \__brt_type_fmt_p: {M}
-        {\prgReturn {\expName {\evalWhole {__brt_type_fmt_ \brtObjElim {@id} #1}}}}
-    \prgNewFunction \brtTypeFmtSet {Mn}
-        {\__brt_fun_del:M {\__brt_type_fmt_p: #1}
-         \prgNewFunction:Mnn {\__brt_type_fmt_p: #1} {M} {\prgReturn {#2}}}
-
-    % \brtObjFmt #1=obj:obj -> formatted object
-    \prgNewFunction \brtObjFmt {M}
-        {\prgReturn {\evalWhole {\__brt_obj_fmt_p: #1 #1}}}
-
-    % \brtObjFmtSetLikeType #1=obj:obj #2=type:Type -> void
-    % Set the formatter for obj to the default formatter of type.
-    % This is by ref, i.e. if type's default formatter changes, then so does obj.
-    \prgNewFunction \brtObjFmtSetLikeType {MM}
-        {\brtObjFmtSet #1 {\evalWhole {\__brt_type_fmt_p: #2 ##1}}}
-
-    % \brtObjFmtLikeType #1=type #2=obj -> format obj with type's formatter
-    \prgNewFunction \brtObjFmtLikeType {MM}
-        {\prgReturn {\evalWhole {\__brt_type_fmt_p: #1 #2}}}
-
-    % \brtObjShow #1=obj:obj -> string serialisation of object
-    \prgNewFunction \brtObjShow {M}
-        {\prgReturn {\tlToStr {\propToKeyval #1}}}
-
-    % primitive type type (default formatter)
-    % We have to create it by-hand to bootstrap the universe.
-    \propConstFromKeyval \brtTypeT {@id = Type, @name = Type}
-    \brtObjName {Type} {\brtTypeT}
-    \brtObjFmtSet {\brtTypeT} {\brtObjShow #1}
-    \brtTypeFmtSet {\brtTypeT} {\brtObjShow #1}
-
-    % \brtObjPrimElim #1=obj:primitive -> primitive value
-    \prgNewFunction \brtObjPrimElim {M}
-        {\prgReturn {\brtObjElim {@value} #1}}
-
-    % primitive integer type (eliminates to expl3 integer, formats to arabic)
-    \brtTypeFmtSet
-        {\brtObjCons {@type = \brtTypeT, @name = Int}}
-        {\int_to_arabic:n {\brtObjPrimElim #1}}
-    \prgNewFunction \brtIntCons {m}
-        {\prgReturn
-            {\brtObjCons
-                {@type = \brtObjNamed {Int},
-                 @value = {\__brt_make:Nm \intConst {#1}}}}}
-
-    % primitive string type (eliminates and formats to expl3 string)
-    \brtTypeFmtSet
-        {\brtObjCons {@type = \brtTypeT, @name = Str}}
-        {\brtObjPrimElim #1}
-    \prgNewFunction \brtStrCons {m}
-        {\prgReturn
-            {\brtObjCons
-                {@type = \brtObjNamed {Str},
-                 @value = {\__brt_make:Nm \strConst {#1}}}}}
-
-    % \brtSetupObj #1=\csname #2=obj -> void
-    % Create two macros, \csname and \csnameO (the O stands for "abstract Object").
-    % \csname returns the object formatted, i.e. \brtObjFmt {#2}.
-    % \csnameO returns the abstract object, i.e. just #2.
-    \prgNewFunction \brtSetupObj {MM}
-        {\brtObjName {\cs_to_str:N #1} #2
-         \prgNewFunction #1 {} {\prgReturn {\brtObjFmt {#2}}}
-         \cs_gset_eq:cN {\cs_to_str:N #1 O} #2}
-
-    % \brtSetupType #1=csname #2=type #3=cons:fun #4=fmt:fun -> void
-    % Create two constructors (`cons`) for `type`, called \csname and \csnameO,
-    % and sets the formatter for the type to `fmt`.
-    % The constructor \csname returns a formatted object.
-    % The consturctor \csnameO returns an abstract object.
-    % Also create a macros \csnameT,\csnameTO which yields the type itself.
-    % The constructor `cons` anonymous function receives a single argument
-    % (probably a key-val list) and must return a key-val list that will be
-    % passed to \brtObjCons.
-    % The `cons` does not need to add @type=; that is appended automatically.
-    % (TODO: I don't know why but replacing #3 below with something like \prgDo {#3}
-    % causes an incromprehensible error.)
-    \prgNewFunction \brtSetupType {MMnn}
-        {\brtObjName {\cs_to_str:N #1} #2
-         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 T}} {}
-            {\prgReturn {\brtObjFmt {#2}}}
-         \cs_gset_eq:cN {\cs_to_str:N #1 TO} #2
-         \prgNewFunction #1 {m}
-            {\prgReturn
-                {\brtObjFmt
-                    {\brtObjCons {#3, @type = #2}}}}
-         \prgNewFunction:Mnn {\expName {\cs_to_str:N #1 O}} {m}
-            {\prgReturn
-                {\brtObjCons {#3, @type = #2}}}
-         \brtTypeFmtSet #2 {#4}}
-
-    % \brtKeyvalsElimAppend {#1=keyvals} {#2=keyvals to extract}
-    % Global because scoping=false workaround doesn't work for some reason. TODO
-    \propClearNew \g__args
-    \propClearNew \l__spec
-    \prgNewFunction \brtKeyvalsElimAppend {nn}
-        {\propSetFromKeyval \g__args {\evalWhole {#1}}
-         \propSetFromKeyval \l__spec {\evalWhole {#2}}
-         \propVarMapInline \l__spec
-            {\propPut \g__args {##1} {\brtObjElim {##2} \g__args}}
-         \prgReturn {\propToKeyval \g__args}}
+% This module is requested by default, so no need to declare as a dependency.
+\brt_declare_module:nnn {core-external-dependencies} {} {
+    \RequirePackage{amsmath}
+    \RequirePackage{amssymb}
+    \RequirePackage{amsthm}
+    \RequirePackage{mathtools}
+    \RequirePackage{physics}
+    \RequirePackage{csquotes}
+    \RequirePackage{mathrsfs}
+    \RequirePackage{stmaryrd}
+    \RequirePackage{dsfont}
+    \RequirePackage{bm}
 }
 
-\DeclareOption {latex3-issue1090-workaround} {
+\brt_declare_module:nnn {expl3-library} {} {
+    % A small library of functions built on top of expl3.
+
+    % Names follow expl3 conventions unless we are creating a variant of an
+    % existing command that doesn't.
+
+    % #1 = object being indexed; #2 = index
+    \msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
+    \cs_new:Nn \__brt_index_error:nn
+        {\msg_error:nnnn {brumaltex3} {brtIndexError} {#1} {#2}}
+
+    % Call an anonymous function on one argument.
+    \cs_new:Nn \brt_anon:nn % {argument} {function}
+        {\cs_set:Nn \__brt_anon_cs:n {#2}
+         \__brt_anon_cs:n {#1}}
+
+    \newcommand \brtAnon {\brt_anon:nn}
+
+    \cs_gset:Npn \NewCommandCopy:cc {\exp_args:Ncc \NewCommandCopy}
+    \cs_gset:Npn \NewCommandCopy:cn {\exp_args:Nc \NewCommandCopy}
+
+    % Copy the second environment into the first.
+    % This is the only approach I've found that reliably copies environments.
+    \cs_new:Nn \brt_env_gset_eq:nn
+        {\NewCommandCopy:cc {#1} {#2}
+         \NewCommandCopy:cc {end#1} {end#2}}
+
+    % Set #1 to #2, saving #1's original definition as #1Old
+    \cs_new:Nn \brt_cs_gset_save_old:NN
+        {\cs_gset_eq:cN {\cs_to_str:N #1 Old} #1
+         \cs_gset_eq:NN #1 #2}
+
+    % Swap the commands.
+    \cs_new:Nn \brt_cs_gswap:NN
+        {\cs_set_eq:NN \__tmp_cs #1
+         \cs_gset_eq:NN #1 #2
+         \cs_gset_eq:NN #2 \__tmp_cs}
+
+    % Get an item from a sequence, issuing an error if out of bounds.
+    \cs_new:Nn \brt_seq_item:Nn % seq {integer expression}
+        {\bool_if:nTF % true iff out of bounds
+            {\int_compare_p:nNn {#2} > {\seq_count:N #1}
+             || \int_compare_p:nNn {#2} < {1}}
+            {\brt_index_error:nn {#1} {#2}}
+            {\seq_item:Nn #1 {#2}}}
+}
+
+\brt_declare_module:nnn {breaklessmaths} {} {
+    % never ever break in maths mode
+    \binoppenalty=\maxdimen
+    \relpenalty=\maxdimen
+    \sloppy
+}
+
+\brt_declare_module:nnn {latex3-issue1090-workaround} {} {
     % See <https://github.com/latex3/latex3/issues/1090>
     \cs_gset_protected:Npn \peek_analysis_map_inline:n #1
       {
@@ -321,28 +164,22 @@
       }
 }
 
-\DeclareOption {breaklessmaths} {
-    % never ever break in maths mode
-    \binoppenalty=\maxdimen
-    \relpenalty=\maxdimen
-    \sloppy
+\brt_declare_module:nnn {ref} {} {
+    \RequirePackage{hyperref}
+    \RequirePackage[nameinlink]{cleveref}
 }
 
-\DeclareOption {ref} {
-    \AtEndOfPackage {
-        \RequirePackage{hyperref}
-        \RequirePackage[nameinlink]{cleveref}
-    }
+\brt_declare_module:nnn {biblatex} {} {
+    \RequirePackage
+        [backend = bibtex,
+         style = alphabetic,
+         url = false,
+         maxbibnames = 4]
+        {biblatex}
+    % The user should use \addbibresource after loading this module.
 }
 
-\DeclareOption {biblatex} {
-    \AtEndOfPackage {
-        \RequirePackage[backend=bibtex,style=alphabetic,url=false,maxbibnames=4]{biblatex}
-        % The user should use \addbibresource after loading this module.
-    }
-}
-
-\DeclareOption {environments} {
+\brt_declare_module:nnn {environments} {} {
     \theoremstyle{plain}
     \newtheorem{theorem}{Theorem}[section]
     \newtheorem{proposition}[theorem]{Proposition}
@@ -363,41 +200,43 @@
     }
 }
 
-\DeclareOption {nestedproofs} {
-    \brt_env_set_eq:mm {proofOld} {proof}
-    \intZeroNew \g__brt_proof_nesting_level
-    \seqClearNew \g__brt_proof_qed_symbols
+\brt_declare_module:nnn {nestedproofs} {requires = expl3-library} {
+    \brt_env_gset_eq:nn {proofOld} {proof}
+    \int_new:N \g__brt_proof_nesting_level_int
+    \seq_new:N \g__brt_proof_qeds_seq
 
-    % \brtQedSet {#1=comma-delimited list of qed symbols} -> void
+    % \brtQedsSet {#1=comma-delimited list of qed symbols} -> void
     % Set the QED symbols for nested proofs.
     % The left-most symbol is used for the top-level proof whilst the right-most
     % symbol is used for the deepest level proofs.
-    \prgNewFunction \brtQedSet {m}
-        {\seqSetFromClist \g__brt_proof_qed_symbols {#1}}
+    \NewDocumentCommand \brtQedsSet {m}
+        {\seq_gset_from_clist:Nn \g__brt_proof_qeds_seq {#1}}
 
-    \prgNewFunction \__brt_renew_qed:m {m}
-        {\prgReturn {\renewcommand \qedsymbol {#1}}}
+    \cs_new:Nn \__brt_renew_qed:n
+        {\renewcommand \qedsymbol {#1}}
 
     \RenewDocumentEnvironment {proof} {O{Proof}}
-        {\intIncr \g__brt_proof_nesting_level % top-most qed will be index 1
+        {% outer-most qed will be index 1
+         \int_gincr:N \g__brt_proof_nesting_level_int
          \begin{proofOld}[#1]
-         \__brt_renew_qed:m
-             {\brt_seq_item:Mm \g__brt_proof_qed_symbols
-                 {\intUse \g__brt_proof_nesting_level}}}
+         \__brt_renew_qed:n
+             {\brt_seq_item:Nn \g__brt_proof_qeds_seq
+                 {\g__brt_proof_nesting_level_int}}}
         {\end{proofOld}
-         \intDecr \g__brt_proof_nesting_level}
+         \int_gdecr:N \g__brt_proof_nesting_level_int}
 
     % Default qed symbols.
-    \brtQedSet
+    \newcommand \brtDefaultQeds
         {\(\square\),
          \(\boxtimes\),
          \(\blacksquare\),
          \(\checkmark\),
          \texttt{\small QED},
          \textsf{\tiny QED}}
+    \brtQedsSet {\brtDefaultQeds}
 }
 
-\DeclareOption {longhand} {
+\brt_declare_module:nnn {longhand} {requires = expl3-library} {
     % Useful macros for document authors that have long names prefixed by
     % `\brtLH...` which can be bound to the author's custom shorthands.
     % Although I try to tailor this module to a general audience, it undoubtably
@@ -446,20 +285,24 @@
 
     \providecommand \brtLHMidQty [2] {\left.#1\ \middle\vert\ #2\right.}
     \providecommand \brtLHDivQty [2] {\left.#1\middle/#2\right.}
+
+    % \brtLHSetCons {element expression} {set specification}
     \providecommand \brtLHSetCons [2] {\qty{\brtLHMidQty {#1} {#2}}}
+
+    % \brtLHFamilyCons {input expression} {output expression}
     \providecommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
 
     % \brtLHIndexedFamily {index} {input expression} {output expression}
     \ProvideDocumentCommand \brtLHIndexedFamily {mmm}
         {\brtLHFamilyCons
-            {\brtCallAnonLgcy {#1} {#2}}
-            {\brtCallAnonLgcy {#1} {#3}}}
+            {\brt_anon:nn {#1} {#2}}
+            {\brt_anon:nn {#1} {#3}}}
 
-    % \brtLHIndexedSet {index} {input expression} {output expression}
+    % \brtLHIndexedSet {index} {element expression} {set specification}
     \ProvideDocumentCommand \brtLHIndexedSet {mmm}
         {\brtLHSetCons
-            {\brtCallAnonLgcy {#1} {#3}}
-            {\brtCallAnonLgcy {#1} {#2}}}
+            {\brt_anon:nn {#1} {#2}}
+            {\brt_anon:nn {#1} {#3}}}
 
     \providecommand \brtLHFrom {\leftarrow}
     \providecommand \brtLHLogicalImplies {\Rightarrow}
@@ -476,11 +319,8 @@
     \providecommand \brtLHProductSymbol {\bigsqcap}
 }
 
-\DeclareOption {shorthand} {
+\brt_declare_module:nnn {shorthand} {requires = longhand} {
     % The package author's shorthands. Beware.
-
-    % TODO Setup a more robust depedency system (again).
-    \ExecuteOptions{longhand}
 
     % Text mode
 
@@ -494,8 +334,8 @@
 
     \brt_cs_gswap:NN \epsilon \varepsilon
     \brt_cs_gswap:NN \phi \varphi
-    \brt_cs_gset_eq:NN \leq \leqslant
-    \brt_cs_gset_eq:NN \geq \geqslant
+    \brt_cs_gset_save_old:NN \leq \leqslant
+    \brt_cs_gset_save_old:NN \geq \geqslant
 
     \providecommand \project {\brtLHProjectSymbol}
     \providecommand \proj {\brtLHProjectSymbol}
@@ -544,4 +384,7 @@
     \providecommand \prod {\brtLHProductSymbol}
 }
 
-\ProcessOptions\relax
+% Process modules.
+% (For some reason this cannot be put in a \AtEndOfPackage.)
+\brt_request_module:n {core-external-dependencies}
+\brt_load_modules:

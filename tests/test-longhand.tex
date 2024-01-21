@@ -2,8 +2,6 @@
 
 \usepackage[shorthand]{brumaltex3}
 
-\Functional{tracing=true}
-
 \begin{document}
 
     A \brtLHDefine{longhand} is a hand that is longer than
@@ -32,7 +30,7 @@
     \begin{gather}
         \brtLHMidQty {x^2} {x}
         \\
-        \brtLHSetCons {x \in \qty{1,2,3}} {x^2}
+        \brtLHSetCons {x^2} {x \in \qty{1,2,3}}
         \\
         \brtLHDivQty {X} {\sim}
         \\
@@ -40,8 +38,9 @@
         \\
         \brtLHIndexedFamily {i} {#1 \in I} {F(#1)}
         \\
-        \brtLHIndexedSet {i} {#1 \in I}
+        \brtLHIndexedSet {i}
             {\brtLHIndexedFamily {j} {##1 \in J_{#1}} {F(##1)}}
+            {#1 \in I}
     \end{gather}
 
     \begin{gather}
