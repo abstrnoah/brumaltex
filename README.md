@@ -96,11 +96,15 @@ Modules that are optional:
 * `biblatex`
     * Include package 'biblatex' with some custom options set.
     * Use `\addbibresource` after loading [brumaltex3] to load your `.bib` file.
+    * Use `biblatex-draft` module instead for faster compilation (does not load
+      biblatex; provides dummy commands instead).
 * `environments`
     * Provide some common environments via `\newtheorem`.
+* `sections`
+    * Just redefines `\paragraph{#1} -> \paragraph{#1.}`.
 * `nestedproofs`
     * Change the `proof` environment QED symbol depending on how deeply it is
-      nested. 
+      nested.
     * This is done automatically; the user the does not have to do anything
       beyond loading this module and using `proof` as usual.
     * See `\brtDefaultQeds` for the default list of qed symbols, which provides
