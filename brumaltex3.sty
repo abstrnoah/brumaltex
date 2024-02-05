@@ -407,6 +407,11 @@
     \sloppy
 }
 
+\brt_declare_module:nnn {sections} {} {
+    \cs_gset_eq:NN \paragraphOld \paragraph
+    \renewcommand \paragraph [1] {\paragraphOld {#1.}}
+}
+
 % Process modules.
 % (For some reason this cannot be put in a \AtEndOfPackage.)
 \brt_request_module:n {core-external-dependencies}
