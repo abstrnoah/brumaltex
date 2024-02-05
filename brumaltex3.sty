@@ -172,6 +172,15 @@
     % The user should use \addbibresource after loading this module.
 }
 
+\brt_declare_module:nnn {biblatex-draft} {} {
+    \providecommand \addbibresource [1] {}
+    \providecommand \printbibliography {}
+    \RenewDocumentCommand \cite {o m}
+        {\IfValueTF {#1}
+            {[#2 ; ~ #1]}
+            {[#2]}}
+}
+
 \brt_declare_module:nnn {environments} {} {
     \theoremstyle{plain}
     \newtheorem{theorem}{Theorem}[section]
