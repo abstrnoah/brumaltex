@@ -277,6 +277,11 @@
     \brtLHOperatorCons \brtLHSignOp {sgn}
     \brtLHOperatorCons \brtLHLengthOp {length}
 
+    \brtLHOperatorCons \brtLHMinimum {min}
+    \brtLHOperatorCons \brtLHMaximum {max}
+    \brtLHOperatorCons \brtLHInfimum {inf}
+    \brtLHOperatorCons \brtLHSupremum {sup}
+
     \newcommand \brtLHImageSet [2] {#1 \qty[#2]}
     \newcommand \brtLHInverseMap [1] {{#1}^{-1}}
     \newcommand \brtLHInverseSet [2] {\brtLHInverseMap {#1} \qty[#2]}
@@ -338,6 +343,7 @@
     \brt_cs_gswap:NN \phi \varphi
     \brt_cs_gset_save_old:NN \leq \leqslant
     \brt_cs_gset_save_old:NN \geq \geqslant
+    \brt_cs_gset_save_old:NN \bar \overline
 
     \cs_gset:Npn \project {\brtLHProjectSymbol}
     \cs_gset:Npn \proj {\brtLHProjectSymbol}
@@ -357,10 +363,18 @@
     \cs_gset:Npn \sgn {\brtLHSignOp}
     \cs_gset:Npn \length {\brtLHLengthOp}
     \cs_gset:Npn \len {\brtLHLengthOp}
+    \cs_gset:Npn \minimum {\brtLHMinimum}
+    \cs_gset:Npn \min {\brtLHMinimum}
+    \cs_gset:Npn \maximum {\brtLHMaximum}
+    \cs_gset:Npn \max {\brtLHMaximum}
+    \cs_gset:Npn \inf {\brtLHInfimum}
+    \cs_gset:Npn \sup {\brtLHSupremum}
 
     \cs_gset:Npn \imageset {\brtLHImageSet}
     \cs_gset:Npn \inversemap {\brtLHInverseMap}
     \cs_gset:Npn \inverseset {\brtLHInverseSet}
+    \cs_gset:Npn \preimagemap {\brtLHInverseMap}
+    \cs_gset:Npn \preimageset {\brtLHInverseSet}
 
     \cs_gset:Npn \cartpow {\brtLHCartesianPower}
 
