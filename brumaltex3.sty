@@ -97,10 +97,13 @@
     % Names follow expl3 conventions unless we are creating a variant of an
     % existing command that doesn't.
 
+    \cs_generate_variant:Nn \seq_gset_from_clist:Nn {No}
+
     % #1 = object being indexed; #2 = index
     \msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
     \cs_new:Nn \__brt_index_error:nn
         {\msg_error:nnnn {brumaltex3} {brtIndexError} {#1} {#2}}
+    \cs_generate_variant:Nn \__brt_index_error:nn {ee}
 
     % Call an anonymous function on one argument.
     \cs_new:Nn \brt_anon:nn % {argument} {function}
@@ -134,7 +137,9 @@
         {\bool_if:nTF % true iff out of bounds
             {\int_compare_p:nNn {#2} > {\seq_count:N #1}
              || \int_compare_p:nNn {#2} < {1}}
-            {\brt_index_error:nn {#1} {#2}}
+            {\__brt_index_error:ee
+                {\exp_not:n {#1}~(length=\seq_count:N #1)}
+                {#2=\int_use:N #2}}
             {\seq_item:Nn #1 {#2}}}
 }
 
@@ -235,7 +240,8 @@
          \(\checkmark\),
          \texttt{\small QED},
          \textsf{\tiny QED}}
-    \brtQedsSet {\brtDefaultQeds}
+    \seq_gset_from_clist:No \g__brt_proof_qeds_seq {\brtDefaultQeds}
+
 }
 
 \brt_declare_module:nnn {longhand} {requires = expl3-library} {
