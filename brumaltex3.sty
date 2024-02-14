@@ -304,6 +304,11 @@
     % \brtLHFamilyCons {input expression} {output expression}
     \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
 
+    % \brtLHForall {input} {output}
+    \newcommand \brtLHForall [2] {\forall #1 \, \qty(#2)}
+    % \brtLHExists {input} {output}
+    \newcommand \brtLHExists [2] {\exists #1 \, \qty(#2)}
+
     % \brtLHIndexedFamily {index} {input expression} {output expression}
     \NewDocumentCommand \brtLHIndexedFamily {mmm}
         {\brtLHFamilyCons
@@ -386,6 +391,10 @@
 
     \cs_gset:Npn \buildset {\brtLHSetCons}
     \cs_gset:Npn \buildfamily  {\brtLHFamilyCons}
+
+    \cs_gset:Npn \Forall {\brtLHForall}
+    \cs_gset:Npn \Exists {\brtLHExists}
+
 
     \cs_gset:Npn \idxedset {\brtLHIndexedSet}
     \cs_gset:Npn \idxedfamily  {\brtLHIndexedFamily}
