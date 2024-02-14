@@ -241,7 +241,6 @@
          \texttt{\small QED},
          \textsf{\tiny QED}}
     \seq_gset_from_clist:No \g__brt_proof_qeds_seq {\brtDefaultQeds}
-
 }
 
 \brt_declare_module:nnn {longhand} {requires = expl3-library} {
@@ -330,6 +329,7 @@
     \newcommand \brtLHIntersectSymbol {\bigcap}
     \newcommand \brtLHCoproductSymbol {\bigsqcup}
     \newcommand \brtLHProductSymbol {\bigsqcap}
+    \newcommand \brtLHTensorSymbol {\bigotimes}
 }
 
 \brt_declare_module:nnn {shorthand} {requires = longhand} {
@@ -404,6 +404,7 @@
     \cs_gset:Npn \product {\brtLHProductSymbol}
     \cs_gset:Npn \coprod {\brtLHCoproductSymbol}
     \cs_gset:Npn \prod {\brtLHProductSymbol}
+    \cs_gset:Npn \tensor {\brtLHProductSymbol}
 }
 
 \brt_declare_module:nnn {breaklessmaths} {} {
