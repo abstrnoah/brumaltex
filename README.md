@@ -114,6 +114,8 @@ Modules that are optional:
     * An error will occur if you nest deeper than the number of QED symbols
       passed to `\brtQedSet` (but you really shouldn't be nesting _that_ deeply,
       should you?).
+* `fullpage`
+    * Load the `geometry` package and set all margins to `1in`.
 * `longhand`
     * Useful macros for document authors (mostly mathematical).
     * All macros have long, self-descriptive names prefixed by `\brtLH...`; the

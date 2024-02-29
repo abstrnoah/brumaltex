@@ -430,6 +430,11 @@
     \renewcommand \paragraph [1] {\paragraphOld {#1.}}
 }
 
+\brt_declare_module:nnn {fullpage} {} {
+    \RequirePackage{geometry}
+    \geometry{margin=1in}
+}
+
 % Process modules.
 % (For some reason this cannot be put in a \AtEndOfPackage.)
 \brt_request_module:n {core-external-dependencies}
