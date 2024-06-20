@@ -24,7 +24,7 @@ The package tries to limit dependencies to mainstream packages. I use the
 provide [brumaltex3]'s dependencies as of January 2024.
 
 Core dependencies:
- 
+
 * expl3
 * xparse
 * amsmath
@@ -116,6 +116,14 @@ Modules that are optional:
       should you?).
 * `fullpage`
     * Load the `geometry` package and set all margins to `1in`.
+* `composition`
+    * Provide a way of declaring "composition rules" for pairs of macros.
+    * `\brt_comp_new_nn_nn:NNN` defines a composition rule for a pair of
+      functions each taking two arguments. See how `\brtLHForall` and
+      `\brtLHExists` compose for an example.
+    * Currently this is the only kind of composition implemented, since it's the
+      only one I've needed. Generalising composition signature is highly
+      nontrivial in LaTeX (believe me, I've tried).
 * `longhand`
     * Useful macros for document authors (mostly mathematical).
     * All macros have long, self-descriptive names prefixed by `\brtLH...`; the
@@ -124,6 +132,8 @@ Modules that are optional:
     * My own shorthand bindings to `longhand` macros.
     * Beware. I make zero effort to avoid conflicts with common names. I
       probably redefine your favourite command.
+* `experiments`
+    * Scary.
 
 # overriding
 

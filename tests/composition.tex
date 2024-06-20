@@ -1,0 +1,73 @@
+\documentclass{article}
+
+\usepackage
+    [ longhand
+    , shorthand
+    , composition ]
+    {brumaltex3}
+
+\begin{document}
+
+    \ExplSyntaxOn
+
+    \begin{gather}
+        \brtLHForall x {yy}
+        \\
+        \brtLHForall x {A(x)}
+        \\
+        \brtLHForall x \brtLHForall y {A(x)}
+        \\
+        % \brtLHForall x {\brtLHForall y {A(x)}}
+        % \\
+        % \brtLHForall x {\brtLHForall y {A(x)}}
+        % \\
+        \brtLHForall {x} \brtLHForall {y} \brtLHForall {z} {A(x,y,z)}
+        \\
+        \brtLHForall {x} \brtLHForall {y} \brtLHExists {z}
+        \brtLHForall {X} \brtLHExists {Y} \brtLHForall {Z}
+        {A(x,y,z,X,Y,Z)}
+        % \\
+        % \brtLHForall {x} { \brtLHForall {y} {\brtLHForall {z} {A(x,y,z)} }}
+    \end{gather}
+
+    \begin{gather}
+        \brtLHForall x {A(x)}
+        \\
+        \brtLHForall x \brtLHExists y {A(x)}
+        \\
+        \brtLHForall x {\brtLHExists y {A(x)}}
+        \\
+        \brtLHForall {x} \brtLHExists {y} \brtLHExists {z} {A(x,y,z)}
+        \\
+        \brtLHForall {x} \brtLHExists {y} \brtLHForall {z} {A(x,y,z)}
+        \\
+        \brtLHForall {x} { \brtLHExists {y} {\brtLHExists {z} {A(x,y,z)} }}
+    \end{gather}
+
+    \begin{gather}
+        \Forall x {A(x)}
+        \\
+        \Forall x \Exists y {A(x)}
+        \\
+        \Forall x {\Exists y {A(x)}}
+        \\
+        \Forall {x} \Exists {y} \Exists {z} {A(x,y,z)}
+        \\
+        \Forall {x} \Exists {y} \Forall {z} {A(x,y,z)}
+        \\
+        \Forall {x} { \Exists {y} {\Exists {z} {A(x,y,z)} }}
+    \end{gather}
+
+    \begin{gather}
+        \Forall x \Forall y {A(x)}
+        \\
+        \Exists x \Exists y {A(x)}
+        \\
+        \Forall x \Exists y {A(x)}
+        \\
+        \Exists x \Forall y {A(x)}
+    \end{gather}
+
+    \ExplSyntaxOff
+
+\end{document}

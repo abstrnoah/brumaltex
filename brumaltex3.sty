@@ -3,12 +3,12 @@
 % License: MIT <https://github.com/abstrnoah/brumaltex/blob/master/LICENSE>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex3}[2024/01/20]
+\ProvidesPackage{brumaltex3}[2024/06/20]
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{expl3}[2022-02-24]
 
-\ProvidesExplPackage{brumaltex3}{2024-01-20}{}{}
+\ProvidesExplPackage{brumaltex3}{2024-06-20}{}{}
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{xparse}[2022-01-12]
@@ -100,6 +100,8 @@
 
     % Names follow expl3 conventions unless we are creating a variant of an
     % existing command that doesn't.
+
+    \exp_args_generate:n {NNno, NNNo, Nne, no}
 
     \cs_generate_variant:Nn \seq_gset_from_clist:Nn {No}
 
@@ -248,7 +250,52 @@
     \seq_gset_from_clist:No \g__brt_proof_qeds_seq {\brtDefaultQeds}
 }
 
-\brt_declare_module:nnn {longhand} {requires = expl3-library} {
+\brt_declare_module:nnn {experiments} {requires = expl3-library} {
+    % \brt_token_in_tl:nNTF {tl} \token {true code} {false code}
+    \cs_new:Nn \brt_token_in_tl:nNTF
+        {\__brt_token_in_tl_worker:NTFN #2 {#3} {#4} #1 \q_recursion_tail
+         \q_recursion_stop}
+    \cs_new:Nn \__brt_token_in_tl_worker:NTFN
+        {\quark_if_recursion_tail_stop_do:Nn #4 {#3}
+         \token_if_eq_meaning:NNTF #4 #1
+            {#2 \use_none_delimit_by_q_recursion_stop:w}
+            {\__brt_token_in_tl_worker:NTFN #1 {#2} {#3}}}
+    \cs_generate_variant:Nn \brt_token_in_tl:nNTF {v}
+}
+
+\brt_declare_module:nnn {composition} {requires = expl3-library} {
+
+    % \brt_comp_nn_nn:NNN \csA \csB {rule}
+    % Redefine \csA to behave like rule when composed with \csB.
+    % \csA and \csB are function of signature :nn.
+    % Where rule is an anonymous function of one argument.
+    % You must define \csA first, without using this function.
+    % You may declare multiple compositions for \csA, but at most one per \csB.
+    % E.g. `\brt_comp_nn_nn:NNN \forall \exists {\forall #1 \, \exists}`
+    % behaves like `\forall x \exists y -> \forall x \, \exists y`.
+    \cs_new:Nn \brt_comp_nn_nn:NNn
+        {\cs_if_free:cT {__brt__ \cs_to_str:N #1 __base}
+            {\cs_gset_eq:cN {__brt__ \cs_to_str:N #1 __base} #1
+             \seq_new:c {__brt__ \cs_to_str:N #1 __composables_seq}
+             \cs_gset:Npn #1 ##1##2
+                {\seq_if_in:cnTF {__brt__ \cs_to_str:N #1 __composables_seq}
+                    {##2}
+                    {\use:c {__brt__ \cs_to_str:N #1 __ \cs_to_str:N ##2 __rule :n} {##1}}
+                    {\use:c {__brt__ \cs_to_str:N #1 __base} {##1} {##2}}}}
+         \cs_new:cn {__brt__ \cs_to_str:N #1 __ \cs_to_str:N #2 __rule :n} {#3}
+         \seq_gput_right:cn {__brt__ \cs_to_str:N #1 __composables_seq} {#2}}
+
+    % \brt_comp_quantifiers:NNnn \Forall \Exists \forall \exists
+    % Make a pair of quantifiers composable.
+    \cs_new:Nn \brt_comp_quantifiers:NNnn
+        {\brt_comp_nn_nn:NNn #1 #1 {#3 ##1 \, #1}
+         \brt_comp_nn_nn:NNn #1 #2 {#3 ##1 \, #2}
+         \brt_comp_nn_nn:NNn #2 #2 {#4 ##1 \, #2}
+         \brt_comp_nn_nn:NNn #2 #1 {#4 ##1 \, #1}}
+
+}
+
+\brt_declare_module:nnn {longhand} {requires = {expl3-library,composition}} {
     % Useful macros for document authors that have long names prefixed by
     % `\brtLH...` which can be bound to the author's custom shorthands.
     % Although I try to tailor this module to a general audience, it undoubtably
@@ -314,6 +361,7 @@
     \newcommand \brtLHForall [2] {\forall #1 \, \qty(#2)}
     % \brtLHExists {input} {output}
     \newcommand \brtLHExists [2] {\exists #1 \, \qty(#2)}
+    \brt_comp_quantifiers:NNnn \brtLHForall \brtLHExists {\forall} {\exists}
 
     % \brtLHIndexedFamily {index} {input expression} {output expression}
     \NewDocumentCommand \brtLHIndexedFamily {mmm}
@@ -343,7 +391,7 @@
     \newcommand \brtLHTensorSymbol {\bigotimes}
 }
 
-\brt_declare_module:nnn {shorthand} {requires = longhand} {
+\brt_declare_module:nnn {shorthand} {requires = {longhand,composition}} {
     % The package author's shorthands. Beware.
 
     % Text mode
@@ -401,7 +449,7 @@
 
     \cs_gset:Npn \Forall {\brtLHForall}
     \cs_gset:Npn \Exists {\brtLHExists}
-
+    \brt_comp_quantifiers:NNnn \Forall \Exists {\forall} {\exists}
 
     \cs_gset:Npn \idxedset {\brtLHIndexedSet}
     \cs_gset:Npn \idxedfamily  {\brtLHIndexedFamily}
