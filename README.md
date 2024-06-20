@@ -88,9 +88,9 @@ Modules that are optional:
     * Never ever break in maths mode.
 * `latex3-issue1090-workaround`
     * See <https://github.com/latex3/latex3/issues/1090>.
-    * This issue has been fixed in the current version of [expl3], but [tectonic]
-      doesn't ship that version, so I ship this workaround for maximum
-      compatibility.
+    * This issue has been fixed in the current version of [expl3], but
+      [tectonic] doesn't ship that version, so I ship this workaround for
+      maximum compatibility.
 * `ref`
     * Include packages 'hyperref' and 'cleverref' with some custom options set.
 * `biblatex`
@@ -124,6 +124,11 @@ Modules that are optional:
     * Currently this is the only kind of composition implemented, since it's the
       only one I've needed. Generalising composition signature is highly
       nontrivial in LaTeX (believe me, I've tried).
+* `composition-unwrap-ii`
+    * Like `composition`, but "unwrap" the second argument.
+    * E.g. with this module, the expression `\Forall x {\Exists y {A(x,y)}}`
+      behaves the same as `\Forall x \Exists y {A(x,y)}`. Without this module
+      and only `composition` loaded, the two are not equivalent.
 * `longhand`
     * Useful macros for document authors (mostly mathematical).
     * All macros have long, self-descriptive names prefixed by `\brtLH...`; the

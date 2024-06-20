@@ -103,6 +103,8 @@
 
     \exp_args_generate:n {NNno, NNNo, Nne, no}
 
+    \cs_generate_variant:Nn \cs_to_str:N {c}
+
     \cs_generate_variant:Nn \seq_gset_from_clist:Nn {No}
 
     % #1 = object being indexed; #2 = index
@@ -293,6 +295,21 @@
          \brt_comp_nn_nn:NNn #2 #2 {#4 ##1 \, #2}
          \brt_comp_nn_nn:NNn #2 #1 {#4 ##1 \, #1}}
 
+}
+
+\brt_declare_module:nnn {composition-unwrap-ii} {requires = composition} {
+    \cs_gset_eq:NN \__brt_comp_nn_nn_worker:NNn \brt_comp_nn_nn:NNn
+    \tl_new:N \l_head_tl
+    \cs_gset:Nn \brt_comp_nn_nn:NNn
+        {\__brt_comp_nn_nn_worker:NNn #1 #2 {#3}
+         \cs_if_free:cT {__brt__ \cs_to_str:N #1 __composer:nn}
+            {\cs_gset_eq:cN {__brt__ \cs_to_str:N #1 __composer:nn} #1
+             \cs_gset:Npn #1 ##1##2
+                {\exp_args:NNo \tl_set:No \l_head_tl {\tl_head:n {##2}}
+                 \seq_if_in:cVTF {__brt__ \cs_to_str:N #1 __composables_seq}
+                    \l_head_tl
+                    {\use:c {__brt__ \cs_to_str:N #1 __composer:nn} {##1} ##2}
+                    {\use:c {__brt__ \cs_to_str:N #1 __composer:nn} {##1} {##2}}}}}
 }
 
 \brt_declare_module:nnn {longhand} {requires = {expl3-library,composition}} {

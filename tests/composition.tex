@@ -3,7 +3,7 @@
 \usepackage
     [ longhand
     , shorthand
-    , composition ]
+    , composition-unwrap-ii ]
     {brumaltex3}
 
 \begin{document}
@@ -15,19 +15,19 @@
         \\
         \brtLHForall x {A(x)}
         \\
-        \brtLHForall x \brtLHForall y {A(x)}
+        \brtLHForall x \brtLHForall y {A(x,y)}
         \\
-        % \brtLHForall x {\brtLHForall y {A(x)}}
-        % \\
-        % \brtLHForall x {\brtLHForall y {A(x)}}
-        % \\
+        \brtLHForall x {\brtLHForall y {A(x,y)}}
+        \\
+        \brtLHForall x {\brtLHForall y {A(x)}}
+        \\
         \brtLHForall {x} \brtLHForall {y} \brtLHForall {z} {A(x,y,z)}
         \\
         \brtLHForall {x} \brtLHForall {y} \brtLHExists {z}
         \brtLHForall {X} \brtLHExists {Y} \brtLHForall {Z}
         {A(x,y,z,X,Y,Z)}
-        % \\
-        % \brtLHForall {x} { \brtLHForall {y} {\brtLHForall {z} {A(x,y,z)} }}
+        \\
+        \brtLHForall {x} { \brtLHForall {y} {\brtLHForall {z} {A(x,y,z)} }}
     \end{gather}
 
     \begin{gather}
