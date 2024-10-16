@@ -331,6 +331,8 @@
 
     \newcommand \brtLHOperatorFmt [1] {\textsf {\upshape #1}}
 
+    \newcommand \brtLHStatementFmt [1] {\texttt {\upshape #1}}
+
     % \brtLHOperatorCons {csname} {symbol}
     \NewDocumentCommand \brtLHOperatorCons {mm}
         {\NewDocumentCommand {#1} {d() g}
@@ -338,11 +340,18 @@
              \IfValueT {##1} {\qty(##1)}
              \IfValueT {##2} {\qty(##2)}}}
 
+    % \brtLHStatementCons {csname} {symbol}
+    \NewDocumentCommand \brtLHStatementCons {mm}
+        {\NewDocumentCommand {#1} {d() g}
+            {\brtLHStatementFmt {#2}
+             \IfValueT {##1} {\qty(##1)}
+             \IfValueT {##2} {\qty(##2)}}}
+
     \newcommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
     \newcommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
 
     \brtLHOperatorCons \brtLHDomainOp {dom}
-    \brtLHOperatorCons \brtLHCodomainOp {codom}
+    \brtLHOperatorCons \brtLHCodomainOp {cod}
     \brtLHOperatorCons \brtLHKernelOp {ker}
     \brtLHOperatorCons \brtLHCokernelOp {coker}
     \brtLHOperatorCons \brtLHImageOp {image}
@@ -374,6 +383,8 @@
     % \brtLHFamilyCons {input expression} {output expression}
     \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
 
+    \newcommand \brtLHExistsUniqueSymbol {\exists!}
+
     % \brtLHForall {input} {output}
     \newcommand \brtLHForall [2] {\forall #1 \, \qty(#2)}
     % \brtLHExists {input} {output}
@@ -393,6 +404,7 @@
             {\brt_anon:nn {#1} {#2}}}
 
     \newcommand \brtLHFrom {\leftarrow}
+    \newcommand \brtLHLogicalCoimplies {\Leftarrow}
     \newcommand \brtLHLogicalImplies {\Rightarrow}
     \newcommand \brtLHLogicalIff {\Leftrightarrow}
 
@@ -400,6 +412,7 @@
     \newcommand \brtLHAnonParamSymbol {\bullet}
 
     \newcommand \brtLHSeqConcatSymbol {{}^\frown}
+    \newcommand \brtLHSeqConcatPower [2] {#1 ^ {(\brtLHSeqConcatSymbol #2)}}
 
     \newcommand \brtLHUnionSymbol {\bigcup}
     \newcommand \brtLHIntersectSymbol {\bigcap}
@@ -436,6 +449,7 @@
     \cs_gset:Npn \dom {\brtLHDomainOp}
     \cs_gset:Npn \codomin {\brtLHCodomainOp}
     \cs_gset:Npn \codom {\brtLHCodomainOp}
+    \cs_gset:Npn \cod {\brtLHCodomainOp}
     \cs_gset:Npn \ker {\brtLHKernelOp}
     \cs_gset:Npn \coker {\brtLHCokernelOp}
     \cs_gset:Npn \image {\brtLHImageOp}
@@ -464,6 +478,9 @@
     \cs_gset:Npn \buildset {\brtLHSetCons}
     \cs_gset:Npn \buildfamily  {\brtLHFamilyCons}
 
+    \cs_gset:Npn \quotient {\brtLHDivQty}
+
+    \cs_gset:Npn \existsunique {\brtLHExistsUniqueSymbol}
     \cs_gset:Npn \Forall {\brtLHForall}
     \cs_gset:Npn \Exists {\brtLHExists}
     \brt_comp_quantifiers:NNnn \Forall \Exists {\forall} {\exists}
@@ -472,12 +489,14 @@
     \cs_gset:Npn \idxedfamily  {\brtLHIndexedFamily}
 
     \cs_gset:Npn \from {\brtLHFrom}
+    \cs_gset:Npn \lcoimplies {\brtLHLogicalCoimplies}
     \cs_gset:Npn \limplies {\brtLHLogicalImplies}
     \cs_gset:Npn \liff {\brtLHLogicalIff}
 
     \cs_gset:Npn \dummycdot {\brtLHDummyCdot}
 
     \cs_gset:Npn \concat {\brtLHSeqConcatSymbol}
+    \cs_gset:Npn \concatpow {\brtLHSeqConcatPower}
 
     \cs_gset:Npn \union {\brtLHUnionSymbol}
     \cs_gset:Npn \intersect {\brtLHIntersectSymbol}
