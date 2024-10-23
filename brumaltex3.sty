@@ -3,12 +3,12 @@
 % License: MIT <https://github.com/abstrnoah/brumaltex/blob/master/LICENSE>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex3}[2024/06/20]
+\ProvidesPackage{brumaltex3}[2024/10/20]
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{expl3}[2022-02-24]
 
-\ProvidesExplPackage{brumaltex3}{2024-06-20}{}{}
+\ProvidesExplPackage{brumaltex3}{2024-10-20}{}{}
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{xparse}[2022-01-12]
@@ -400,8 +400,8 @@
     % \brtLHSetCons {element expression} {set specification}
     \newcommand \brtLHSetCons [2] {\qty{\brtLHMidQty {#1} {#2}}}
 
-    % \brtLHFamilyCons {input expression} {output expression}
-    \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#2)} {#1}}
+    % \brtLHFamilyCons {output expression} {input expression}
+    \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#1)} {#2}}
 
     \newcommand \brtLHExistsUniqueSymbol {\exists!}
 
