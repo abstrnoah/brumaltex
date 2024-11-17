@@ -118,6 +118,11 @@
         {\cs_set:Nn \__brt_anon_cs:n {#2}
          \__brt_anon_cs:n {#1}}
 
+    % Call an anonymous function on two arguments.
+    \cs_new:Nn \brt_anon:nnn % {argument} {argument} {function}
+        {\cs_set:Nnn \__brt_anon_cs:nn {#3}
+         \__brt_anon_cs:nn {#1} {#2}}
+
     \newcommand \brtAnon {\brt_anon:nn}
 
     \cs_gset:Npn \NewCommandCopy:cc {\exp_args:Ncc \NewCommandCopy}
@@ -355,6 +360,14 @@
     \newcommand \brtLHOperatorFmt [1] {\textsf {\upshape #1}}
 
     \newcommand \brtLHStatementFmt [1] {\texttt {\upshape #1}}
+
+    % TODO experimental
+    % \brtLHOpCons {csname} {symbol} {operation}
+    \NewDocumentCommand \brtLHOpCons {mmm}
+        {\DeclareDocumentCommand {#1} {d()}
+            {\IfValueTF {##1}
+                {#3}
+                {#2}}}
 
     % \brtLHOperatorCons {csname} {symbol}
     \NewDocumentCommand \brtLHOperatorCons {mm}
