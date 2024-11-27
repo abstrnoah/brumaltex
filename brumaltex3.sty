@@ -346,6 +346,8 @@
     % Although I try to tailor this module to a general audience, it undoubtably
     % makes opinionated choices about mathematical notation.
 
+    \RequirePackage{xspace}
+
     % Text mode
 
     % TODO Build an index of terms defined by \brtLHDefine.
@@ -381,7 +383,8 @@
         {\NewDocumentCommand {#1} {d() g}
             {\brtLHStatementFmt {#2}
              \IfValueT {##1} {\qty(##1)}
-             \IfValueT {##2} {\qty(##2)}}}
+             \IfValueT {##2} {\qty(##2)}
+             \xspace}}
 
     \newcommand \brtLHProjectSymbol {\brtLHOperatorFmt {proj}}
     \newcommand \brtLHRestrictSymbol {\brtLHOperatorFmt {res}}
