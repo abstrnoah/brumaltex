@@ -139,6 +139,14 @@ Modules that are optional:
       probably redefine your favourite command.
 * `experiments`
     * Scary.
+* `font`
+    * Load my customm font setup at your own risk.
+* `datetime`
+    * Custom 'datetime' configuration, namely day-month-year.
+* `tikzcd`
+    * Custom 'tikz-cd' configuration, namely `ampersand replacement=\&`.
+* `parskip`
+    * Load 'parskip' package and fix spacing around `proof` environment.
 
 # overriding
 

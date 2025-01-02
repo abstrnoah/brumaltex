@@ -3,12 +3,12 @@
 % License: MIT <https://github.com/abstrnoah/brumaltex/blob/master/LICENSE>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex3}[2024/10/20]
+\ProvidesPackage{brumaltex3}[2024/12/09]
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{expl3}[2022-02-24]
 
-\ProvidesExplPackage{brumaltex3}{2024-10-20}{}{}
+\ProvidesExplPackage{brumaltex3}{2024-12-09}{}{}
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{xparse}[2022-01-12]
@@ -178,6 +178,7 @@
 \brt_declare_module:nnn {ref} {} {
     \RequirePackage{hyperref}
     \RequirePackage[nameinlink]{cleveref}
+    \renewcommand \thefootnote {\textsf{fn}\arabic{footnote}}
 }
 
 \brt_declare_module:nnn {biblatex} {} {
@@ -225,7 +226,7 @@
     \newtheorem {exercisepart} {Part} [exercise]
 
     \theoremstyle {definition}
-    \newtheorem* {definition} {Definition}
+    \newtheorem* {definition*} {Definition}
     \newtheorem {remark} [theorem] {Remark}
     \newtheorem* {remark*} {Remark}
     \newtheorem* {notation*} {Notation}
@@ -294,6 +295,12 @@
             {#2 \use_none_delimit_by_q_recursion_stop:w}
             {\__brt_token_in_tl_worker:NTFN #1 {#2} {#3}}}
     \cs_generate_variant:Nn \brt_token_in_tl:nNTF {v}
+
+
+    \RequirePackage{ebproof}
+    \NewDocumentEnvironment {Infer} {}
+        {\begin{prooftree}[template=\inserttext]}
+        {\end{prooftree}}
 }
 
 \brt_declare_module:nnn {composition} {requires = expl3-library} {
@@ -451,18 +458,30 @@
     \newcommand \brtLHLogicalCoimplies {\Leftarrow}
     \newcommand \brtLHLogicalImplies {\Rightarrow}
     \newcommand \brtLHLogicalIff {\Leftrightarrow}
+    \newcommand \brtLHEpicArrowRight {\twoheadrightarrow}
+    \newcommand \brtLHEpicArrowLeft {\twoheadleftarrow}
+    \newcommand \brtLHMonoArrowRight {\hookrightarrow}
+    \newcommand \brtLHMonoArrowLeft {\hookleftarrow}
+
+    \newcommand \brtLHIsomorphic {\cong}
+
+    \newcommand \brtLHSyntaxEntails {\vdash}
+    \newcommand \brtLHSemanticEntails {\vDash}
 
     \newcommand \brtLHDummyCdot {\,\cdot\,}
     \newcommand \brtLHAnonParamSymbol {\bullet}
 
     \newcommand \brtLHSeqConcatSymbol {{}^\frown}
     \newcommand \brtLHSeqConcatPower [2] {#1 ^ {(\brtLHSeqConcatSymbol #2)}}
+    \newcommand \brtLHSeqDrawnFrom [2] {#1\in\brtLHCartesianPower{#2}{<\omega}}
 
     \newcommand \brtLHUnionSymbol {\bigcup}
     \newcommand \brtLHIntersectSymbol {\bigcap}
     \newcommand \brtLHCoproductSymbol {\bigsqcup}
     \newcommand \brtLHProductSymbol {\bigsqcap}
     \newcommand \brtLHTensorSymbol {\bigotimes}
+    \newcommand \brtLHConjunctSymbol {\bigwedge}
+    \newcommand \brtLHDisjunctSymbol {\bigvee}
 }
 
 \brt_declare_module:nnn {shorthand} {requires = {longhand,composition}} {
@@ -539,17 +558,27 @@
     \cs_gset:Npn \lcoimplies {\brtLHLogicalCoimplies}
     \cs_gset:Npn \limplies {\brtLHLogicalImplies}
     \cs_gset:Npn \liff {\brtLHLogicalIff}
+    \cs_gset:Npn \epic {\brtLHEpicArrowRight}
+    \cs_gset:Npn \mono {\brtLHMonoArrowRight}
+
+    \cs_gset:Npn \iso {\brtLHIsomorphic}
+
+    \cs_gset:Npn \synentails {\brtLHSyntaxEntails}
+    \cs_gset:Npn \sementails {\brtLHSemanticEntails}
 
     \cs_gset:Npn \dummycdot {\brtLHDummyCdot}
 
     \cs_gset:Npn \concat {\brtLHSeqConcatSymbol}
     \cs_gset:Npn \concatpow {\brtLHSeqConcatPower}
+    \cs_gset:Npn \drawnfrom {\brtLHSeqDrawnFrom}
 
     \cs_gset:Npn \union {\brtLHUnionSymbol}
     \cs_gset:Npn \intersect {\brtLHIntersectSymbol}
     \cs_gset:Npn \coproduct {\brtLHCoproductSymbol}
     \cs_gset:Npn \product {\brtLHProductSymbol}
     \cs_gset:Npn \tensor {\brtLHProductSymbol}
+    \cs_gset:Npn \conjunct {\brtLHConjunctSymbol}
+    \cs_gset:Npn \disjunct {\brtLHDisjunctSymbol}
 }
 
 \brt_declare_module:nnn {breaklessmaths} {} {
@@ -567,6 +596,30 @@
 \brt_declare_module:nnn {fullpage} {} {
     \RequirePackage{geometry}
     \geometry{margin=1in}
+}
+
+\brt_declare_module:nnn {font} {} {
+    \RequirePackage {newtxmath}
+    \RequirePackage [sfdefault] {AlegreyaSans}
+}
+
+\brt_declare_module:nnn {datetime} {} {
+    \RequirePackage {datetime}
+    \newdateformat {brtDateFormat} {\THEDAY{}~\monthname[\THEMONTH]~\THEYEAR{}}
+    \AtEndOfPackage {
+        \brtDateFormat
+    }
+}
+
+\brt_declare_module:nnn {tikzcd} {} {
+    \RequirePackage {tikz-cd}
+    \tikzcdset {ampersand~replacement=\&}
+}
+
+\brt_declare_module:nnn {parskip} {} {
+    \RequirePackage {parskip}
+    \cs_if_exist:NT \proof
+        {\AtBeginEnvironment {proof} {\vspace*{-\parskip}}}
 }
 
 % Process modules.
