@@ -140,13 +140,20 @@ Modules that are optional:
 * `experiments`
     * Scary.
 * `font`
-    * Load my customm font setup at your own risk.
+    * Load my custom font setup at your own risk.
 * `datetime`
     * Custom 'datetime' configuration, namely day-month-year.
 * `tikzcd`
     * Custom 'tikz-cd' configuration, namely `ampersand replacement=\&`.
 * `parskip`
     * Load 'parskip' package and fix spacing around `proof` environment.
+* `delinearise`
+    * An experimental attempt to make LaTeX better at taking notes in a nonlinear fashion.
+    * `brtNode` environment with signature `{label}[comment]{type}`.
+        * Wraps 'thm-restate''s `restatable` environment.
+        * Wraps with `type` environment blindly, which must have signature `[title]`.
+        * Passes `label; comment` to title field of `type` environment.
+        * Automatically calls `\label{label}`.
 
 # overriding
 
