@@ -8,11 +8,10 @@ started over, so no cross-compatibility is guaranteed. Maybe they shouldn't be
 considered versions of the same package.
 Each iteration aims to be increasingly stable and useful to people who aren't me.
 That said, it's a personal package, so quite ___unstable___ and insufficiently
-documented. Let me know if you find its contents useful and I'd be happy to
-maintain it better.
+documented.
+If you find its contents useful and that it contains a bug, please do let me know!
 
-For "official" documentation, see docstrings in the source code (they are
-usually pretty good but, still, sorry).
+For broad documentation, see below; for per-macro documentation, see docstrings in the source.
 
 In general, command names are prefixed `\brt...` to avoid conflicts. The only
 exception to this is the `shorthand` module (see [below](#modules)).
