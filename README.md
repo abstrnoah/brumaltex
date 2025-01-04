@@ -6,7 +6,7 @@ A `\LaTeX` package used by abstrnoah.
 This package has had three iterations. Each iteration, I have essentially
 started over, so no cross-compatibility is guaranteed. Maybe they shouldn't be
 considered versions of the same package.
-Each iteration aims to be increasingly stable and useful to people aren't me.
+Each iteration aims to be increasingly stable and useful to people who aren't me.
 That said, it's a personal package, so quite ___unstable___ and insufficiently
 documented. Let me know if you find its contents useful and I'd be happy to
 maintain it better.
