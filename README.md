@@ -146,7 +146,7 @@ Modules that are optional:
     * Custom 'tikz-cd' configuration, namely `ampersand replacement=\&`.
 * `parskip`
     * Load 'parskip' package and fix spacing around `proof` environment.
-* `delinearise`
+* `node`
     * An experimental attempt to make LaTeX better at taking notes in a nonlinear fashion.
     * `brtNode` environment with signature `{type}{label}[comment]`.
         * Wraps 'thm-restate''s `restatable` environment.
@@ -154,6 +154,7 @@ Modules that are optional:
         * Passes `label; comment` to title field of `type` environment.
         * Automatically calls `\label{label}`.
     * `brtSection` which environmentises builtin `\section` and automatically `\label`s.
+    * TODO
 
 # overriding
 

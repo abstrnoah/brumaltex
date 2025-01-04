@@ -105,7 +105,7 @@
 
     \cs_generate_variant:Nn \cs_to_str:N {c}
 
-    \cs_generate_variant:Nn \seq_gset_from_clist:Nn {No}
+    \cs_generate_variant:Nn \seq_gset_from_clist:Nn {No, cn}
 
     % #1 = object being indexed; #2 = index
     \msg_new:nnn {brumaltex3} {brtIndexError} {Index~out~of~bounds:~#1~[#2]}
@@ -230,7 +230,7 @@
     \newtheorem* {examples*} {Examples}
 
     \theoremstyle {definition}
-    \newtheorem {definition} {Definition}
+    \newtheorem {definition} [theorem] {Definition}
     \newtheorem* {definition*} {Definition}
     \newtheorem {remark} [theorem] {Remark}
     \newtheorem* {remark*} {Remark}
@@ -627,29 +627,76 @@
         {\AtBeginEnvironment {proof} {\vspace*{-\parskip}}}
 }
 
-\brt_declare_module:nnn {delinearise} {requires = {environments,ref}} {
+\brt_declare_module:nnn {nodes} {requires = {environments,ref}} {
     \RequirePackage {thm-restate}
+
+    \theoremstyle {definition}
+    \newtheorem {brtNodeBase} [theorem] {Node}
+    \newtheorem {brtNodeListBase} [brtNodeBase] {List}
+    \counterwithout {theorem} {section}
 
     \cs_new:Nn \brt_node_fmt:n {\texttt{@#1}}
 
     % TODO Decouple from restatable so any environment can be used as type.
     % TODO Add tag field.
-    \NewDocumentEnvironment {brtNode} {mmo}
-        {\restatable [{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}] {#1} {#2Contents}
+    \NewDocumentEnvironment {brtNode} {mmo} % {type} {label} [comment]
+        {\restatable [{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}] {#1} {#2Restatable}
          \label{#2}}
         {\endrestatable}
 
     % TODO merge into brtNode
     % TODO support subsections via nesting level
-    \NewDocumentEnvironment {brtSection} {mo}
+    \NewDocumentEnvironment {brtSection} {mo} % {label} [comment]
         {\section{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{#1}}
         {}
 
-    \newcommand \brtLinkTo [1] {\texttt{[\hyperref[#1]{\brt_node_fmt:n {#1}(\ref{#1})}}]}
+    \newcommand \brtNodeLinkTo [1] {\texttt{[\hyperref[#1]{\brt_node_fmt:n {#1}(\ref{#1})}}]}
 
-    \newcommand \brtRestate [1] {\use:c {#1Contents} *}
+    \newcommand \brtNodeRestate [1] {\use:c {#1Restatable} *}
 
-    \counterwithout {theorem} {section}
+    \cs_new:Nn \brt_node_seq_new:nnnn % {UNUSED} {label} {UNUSED} {clist of labels}
+        {\seq_new:c {g__brt_node_list_ #2 _seq}
+         \seq_gset_from_clist:cn {g__brt_node_list_ #2 _seq} {#4}}
+
+    % FIXME this can't be restatable because it contains a parameter (thm-restate is bad)
+    \cs_new:Nn \brt_node_list_new:nnnn % {type} {label} {UNUSED} {clist of labels}
+        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
+         \begin{#1}[#2]\label{#2}\leavevmode
+             \begin{enumerate}
+                 \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
+                    {\item \brtNodeLinkTo {##1}}
+             \end{enumerate}
+         \end{#1}}
+
+    \NewDocumentCommand \brtNodeList {O{brtNodeListBase} m o m}
+        {\brt_node_list_new:nnnn {#1} {#2} {#3} {#4}}
+
+    \cs_new:Nn \brt_node_section_new:nnnn % {type} {label} {comment} {clist of labels}
+        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
+         \begin{#1}{#2}[#3]
+             \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
+                {\brtNodeRestate {##1}}
+         \end{#1}}
+
+    \NewDocumentCommand \brtNodeSection {O{brtSection} m o m}
+        {\brt_node_section_new:nnnn {#1} {#2} {#3} {#4}}
+
+    \cs_new:Nn \brt_node_list_section_new:nnnn % {type} {label} {UNUSED} {clist of labels}
+        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
+         \begin{#1}{#2}[#3]
+             \begin{enumerate}
+                 \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
+                    {\item \brtNodeLinkTo {##1}}
+             \end{enumerate}
+         \end{#1}}
+
+    \NewDocumentCommand \brtNodeListSection {O{brtSection} m o m}
+        {\brt_node_list_section_new:nnnn {#1} {#2} {#3} {#4}}
+
+    \NewDocumentCommand \brtNodeStub {mmo} % {type} {label} [comment]
+        {\begin{brtNode}{#1}{#2}[#3]
+            TODO \end{brtNode}}
+
 }
 
 % Process modules.
