@@ -148,11 +148,12 @@ Modules that are optional:
     * Load 'parskip' package and fix spacing around `proof` environment.
 * `delinearise`
     * An experimental attempt to make LaTeX better at taking notes in a nonlinear fashion.
-    * `brtNode` environment with signature `{label}[comment]{type}`.
+    * `brtNode` environment with signature `{type}{label}[comment]`.
         * Wraps 'thm-restate''s `restatable` environment.
         * Wraps with `type` environment blindly, which must have signature `[title]`.
         * Passes `label; comment` to title field of `type` environment.
         * Automatically calls `\label{label}`.
+    * `brtSection` which environmentises builtin `\section` and automatically `\label`s.
 
 # overriding
 

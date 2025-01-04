@@ -224,8 +224,13 @@
     \newtheorem {exercise} {Exercise}
     \newtheorem* {exercise*} {Exercise}
     \newtheorem {exercisepart} {Part} [exercise]
+    \newtheorem {example} [theorem] {Example}
+    \newtheorem* {example*} {Example}
+    \newtheorem {examples} [theorem] {Examples}
+    \newtheorem* {examples*} {Examples}
 
     \theoremstyle {definition}
+    \newtheorem {definition} {Definition}
     \newtheorem* {definition*} {Definition}
     \newtheorem {remark} [theorem] {Remark}
     \newtheorem* {remark*} {Remark}
@@ -622,12 +627,29 @@
         {\AtBeginEnvironment {proof} {\vspace*{-\parskip}}}
 }
 
-\brt_declare_module:nnn {delinearise} {requires = environments} {
+\brt_declare_module:nnn {delinearise} {requires = {environments,ref}} {
     \RequirePackage {thm-restate}
-    \NewDocumentEnvironment {brtNode} {mOm}
-        {\begin{restatable} [{#1 \IfValueT {#2} {;~#2}}] {#3} {#1}
-         \label{#1}}
-        {\end{restatable}}
+
+    \cs_new:Nn \brt_node_fmt:n {\texttt{@#1}}
+
+    % TODO Decouple from restatable so any environment can be used as type.
+    % TODO Add tag field.
+    \NewDocumentEnvironment {brtNode} {mmo}
+        {\restatable [{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}] {#1} {#2Contents}
+         \label{#2}}
+        {\endrestatable}
+
+    % TODO merge into brtNode
+    % TODO support subsections via nesting level
+    \NewDocumentEnvironment {brtSection} {mo}
+        {\section{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{#1}}
+        {}
+
+    \newcommand \brtLinkTo [1] {\texttt{[\hyperref[#1]{\brt_node_fmt:n {#1}(\ref{#1})}}]}
+
+    \newcommand \brtRestate [1] {\use:c {#1Contents} *}
+
+    \counterwithout {theorem} {section}
 }
 
 % Process modules.
