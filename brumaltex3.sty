@@ -472,6 +472,7 @@
 
     \newcommand \brtLHSyntaxEntails {\vdash}
     \newcommand \brtLHSemanticEntails {\vDash}
+    \newcommand \brtLHEntailment [2] {\qty[#1]\vdash\qty[#2]}
 
     \newcommand \brtLHDummyCdot {\,\cdot\,}
     \newcommand \brtLHAnonParamSymbol {\bullet}
@@ -568,7 +569,11 @@
 
     \cs_gset:Npn \iso {\brtLHIsomorphic}
 
+    \cs_gset:Npn \entailment {\brtLHEntailment}
+    \cs_gset:Npn \entails {\brtLHSyntaxEntails}
+    \cs_gset:Npn \proves {\brtLHSyntaxEntails}
     \cs_gset:Npn \synentails {\brtLHSyntaxEntails}
+    % \models builtin
     \cs_gset:Npn \sementails {\brtLHSemanticEntails}
 
     \cs_gset:Npn \dummycdot {\brtLHDummyCdot}
