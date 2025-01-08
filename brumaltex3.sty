@@ -201,8 +201,11 @@
 }
 
 \brt_declare_module:nnn {environments} {} {
+    % FIXME Ideally, this only loads for 'nodes' module. But we put it here for now beacuse it must be loaded before environments are defined.
+    \RequirePackage {thm-restate}
+
     \theoremstyle {plain}
-    \newtheorem {theorem} {Theorem} [section]
+    \newtheorem {theorem} {Theorem}
     \newtheorem* {theorem*} {Theorem}
     \newtheorem {proposition} [theorem] {Proposition}
     \newtheorem* {proposition*} {Proposition}
@@ -633,29 +636,29 @@
 }
 
 \brt_declare_module:nnn {nodes} {requires = {environments,ref}} {
-    \RequirePackage {thm-restate}
-
     \theoremstyle {definition}
     \newtheorem {brtNodeBase} [theorem] {Node}
     \newtheorem {brtNodeListBase} [brtNodeBase] {List}
-    \counterwithout {theorem} {section}
 
     \cs_new:Nn \brt_node_fmt:n {\texttt{@#1}}
 
     % TODO Decouple from restatable so any environment can be used as type.
     % TODO Add tag field.
     \NewDocumentEnvironment {brtNode} {mmo} % {type} {label} [comment]
-        {\restatable [{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}] {#1} {#2Restatable}
+        {\restatable [{\brtNodeLinkTo[{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}]{#2}}] {#1} {#2Restatable}
          \label{#2}}
         {\endrestatable}
 
     % TODO merge into brtNode
     % TODO support subsections via nesting level
     \NewDocumentEnvironment {brtSection} {mo} % {label} [comment]
-        {\section{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{#1}}
+        {\section{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{section:#1}}
         {}
 
-    \newcommand \brtNodeLinkTo [1] {\texttt{[\hyperref[#1]{\brt_node_fmt:n {#1}(\ref{#1})}}]}
+    \NewDocumentCommand \brtNodeLinkTo {om}
+        {\IfValueTF {#1}
+            {\hyperref[#2]{#1}}
+            {\texttt{[\hyperref[#2]{\brt_node_fmt:n {#2}(\ref{#2})}}]}}
 
     \newcommand \brtNodeRestate [1] {\use:c {#1Restatable} *}
 
