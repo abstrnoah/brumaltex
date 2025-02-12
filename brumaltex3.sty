@@ -254,6 +254,10 @@
         {\begin{proof}[\underline{#1}]}
         {\end{proof}}
 
+    \NewDocumentEnvironment {brtlist} {o}
+        {\begin{listbase}[#1]\leavevmode\begin{enumerate}}
+        {\end{enumerate}\end{listbase}}
+
     \AtEndOfPackage {
         \theoremstyle {plain}
     }
