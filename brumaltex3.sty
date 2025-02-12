@@ -398,7 +398,7 @@
 
     % \brtLHOperatorCons {csname} {symbol}
     \NewDocumentCommand \brtLHOperatorCons {mm}
-        {\NewDocumentCommand {#1} {d() g}
+        {\DeclareDocumentCommand {#1} {d() g}
             {\brtLHOperatorFmt {#2}
              \IfValueT {##1} {\qty(##1)}
              \IfValueT {##2} {\qty(##2)}}}
