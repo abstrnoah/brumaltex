@@ -426,6 +426,7 @@
     \brtLHOperatorCons \brtLHSignOp {sgn}
     \brtLHOperatorCons \brtLHLengthOp {length}
     \brtLHOperatorCons \brtLHRankOp {rank}
+    \brtLHOperatorCons \brtLHDiameter {diam}
 
     \brtLHOperatorCons \brtLHMinimum {min}
     \brtLHOperatorCons \brtLHMaximum {max}
@@ -477,6 +478,7 @@
     \newcommand \brtLHEpicArrowLeft {\twoheadleftarrow}
     \newcommand \brtLHMonoArrowRight {\hookrightarrow}
     \newcommand \brtLHMonoArrowLeft {\hookleftarrow}
+    \newcommand \brtLHPartialTo {\rightharpoonup}
 
     \newcommand \brtLHIsomorphic {\cong}
 
@@ -490,6 +492,7 @@
     \newcommand \brtLHSeqConcatSymbol {{}^\frown}
     \newcommand \brtLHSeqConcatPower [2] {#1 ^ {(\brtLHSeqConcatSymbol #2)}}
     \newcommand \brtLHSeqDrawnFrom [2] {#1\in\brtLHCartesianPower{#2}{<\omega}}
+    \newcommand \brtLHCardSucc [1] {#1^+}
 
     \newcommand \brtLHUnionSymbol {\bigcup}
     \newcommand \brtLHIntersectSymbol {\bigcap}
@@ -498,6 +501,8 @@
     \newcommand \brtLHTensorSymbol {\bigotimes}
     \newcommand \brtLHConjunctSymbol {\bigwedge}
     \newcommand \brtLHDisjunctSymbol {\bigvee}
+    
+    \newcommand \brtLHValuation [1] {\left\llbracket#1\right\rrbracket}
 }
 
 \brt_declare_module:nnn {shorthand} {requires = {longhand,composition}} {
@@ -548,6 +553,8 @@
     \cs_gset:Npn \max {\brtLHMaximum}
     \cs_gset:Npn \inf {\brtLHInfimum}
     \cs_gset:Npn \sup {\brtLHSupremum}
+    \cs_gset:Npn \diam {\brtLHDiameter}
+    \cs_gset:Npn \diameter {\brtLHDiameter}
 
     \cs_gset:Npn \imageset {\brtLHImageSet}
     \cs_gset:Npn \inversemap {\brtLHInverseMap}
@@ -576,6 +583,7 @@
     \cs_gset:Npn \liff {\brtLHLogicalIff}
     \cs_gset:Npn \epic {\brtLHEpicArrowRight}
     \cs_gset:Npn \mono {\brtLHMonoArrowRight}
+    \cs_gset:Npn \partialto {\brtLHPartialTo}
 
     \cs_gset:Npn \iso {\brtLHIsomorphic}
 
@@ -591,6 +599,7 @@
     \cs_gset:Npn \concat {\brtLHSeqConcatSymbol}
     \cs_gset:Npn \concatpow {\brtLHSeqConcatPower}
     \cs_gset:Npn \drawnfrom {\brtLHSeqDrawnFrom}
+    \cs_gset:Npn \cardsucc {\brtLHCardSucc}
 
     \cs_gset:Npn \union {\brtLHUnionSymbol}
     \cs_gset:Npn \intersect {\brtLHIntersectSymbol}
@@ -599,6 +608,8 @@
     \cs_gset:Npn \tensor {\brtLHProductSymbol}
     \cs_gset:Npn \conjunct {\brtLHConjunctSymbol}
     \cs_gset:Npn \disjunct {\brtLHDisjunctSymbol}
+
+    \cs_gset:Npn \valuate {\brtLHValuation}
 }
 
 \brt_declare_module:nnn {breaklessmaths} {} {
