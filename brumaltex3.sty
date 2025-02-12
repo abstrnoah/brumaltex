@@ -661,7 +661,7 @@
         {\BeforeBeginEnvironment {proof} {\vspace*{-\parskip}}}
 }
 
-\brt_declare_module:nnn {nodes} {requires = {environments,ref}} {
+\brt_declare_module:nnn {nodes} {requires = {environments,ref,sections}} {
     \theoremstyle {definition}
     \newtheorem {brtNodeBase} [theorem] {Node}
     \newtheorem {brtNodeListBase} [brtNodeBase] {List}
@@ -678,8 +678,8 @@
     % TODO merge into brtNode
     % TODO support subsections via nesting level
     \NewDocumentEnvironment {brtSection} {mo} % {label} [comment]
-        {\section{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{section:#1}}
-        {}
+        {\brtsection{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{section:#1}}
+        {\endbrtsection}
 
     \NewDocumentCommand \brtNodeLinkTo {om}
         {\IfValueTF {#1}
