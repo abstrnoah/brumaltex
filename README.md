@@ -92,6 +92,8 @@ Modules that are optional:
       maximum compatibility.
 * `ref`
     * Include packages 'hyperref' and 'cleverref' with some custom options set.
+    * Reformats `\thefootnote`.
+    * Provides `\brtRef[text]{label}` wrapper around `\hyperref`.
 * `biblatex`
     * Include package 'biblatex' with some custom options set.
     * Use `\addbibresource` after loading [brumaltex3] to load your `.bib` file.
