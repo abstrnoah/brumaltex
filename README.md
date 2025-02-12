@@ -13,8 +13,8 @@ If you find its contents useful and that it contains a bug, please do let me kno
 
 For broad documentation, see below; for per-macro documentation, see docstrings in the source.
 
-In general, command names are prefixed `\brt...` to avoid conflicts. The only
-exception to this is the `shorthand` module (see [below](#modules)).
+To avoid conflicts, command names are prefixed like `\brtCommand` and environment names like `brtenvironment`.
+Excepts are noted below (see [below](#modules)).
 
 ## dependencies
 
@@ -99,8 +99,12 @@ Modules that are optional:
       biblatex; provides dummy commands instead).
 * `environments`
     * Provide some common environments via `\newtheorem`.
+    * Provide some wrappers around `proof`.
+    * Provide an environment `scope` which does nothing except create a new environment scope.
+    * Warning: Environments are _not_ `brt`-prefixed.
 * `sections`
-    * Just redefines `\paragraph{#1} -> \paragraph{#1.}`.
+    * Redefine `\paragraph{#1} -> \paragraph{#1.}`.
+    * Provides `brtsection` environment which automatically "subs" upon nesting.
 * `nestedproofs`
     * Change the `proof` environment QED symbol depending on how deeply it is
       nested.
@@ -134,18 +138,17 @@ Modules that are optional:
       user could bind their own shorthand commands to these.
 * `shorthand`
     * My own shorthand bindings to `longhand` macros.
-    * Beware. I make zero effort to avoid conflicts with common names. I
-      probably redefine your favourite command.
+    * Warning: Names are _not_ `brt`-prefixed, so beware conflicts. I probably redefine your favourite command.
 * `experiments`
     * Scary.
 * `font`
-    * Load my custom font setup at your own risk.
+    * Load my custom font setup at your own risk (I don't actually know how LaTeX fonts work).
 * `datetime`
     * Custom 'datetime' configuration, namely day-month-year.
 * `tikzcd`
     * Custom 'tikz-cd' configuration, namely `ampersand replacement=\&`.
 * `parskip`
-    * Load 'parskip' package and fix spacing around `proof` environment.
+    * Load 'parskip' package and (partially) fix spacing around `proof` environment.
 * `node`
     * An experimental attempt to make LaTeX better at taking notes in a nonlinear fashion.
     * `brtNode` environment with signature `{type}{label}[comment]`.
@@ -155,6 +158,9 @@ Modules that are optional:
         * Automatically calls `\label{label}`.
     * `brtSection` which environmentises builtin `\section` and automatically `\label`s.
     * TODO
+* `abstrnoah-*`
+    * Several collections of modules for the author's common use-cases.
+    * Unstable, so check the source for an up-to-date list.
 
 # overriding
 

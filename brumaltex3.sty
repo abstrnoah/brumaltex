@@ -3,12 +3,12 @@
 % License: MIT <https://github.com/abstrnoah/brumaltex/blob/master/LICENSE>
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{brumaltex3}[2025/01/02]
+\ProvidesPackage{brumaltex3}[2025/02/12]
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{expl3}[2022-02-24]
 
-\ProvidesExplPackage{brumaltex3}{2025-01-02}{}{}
+\ProvidesExplPackage{brumaltex3}{2025-02-12}{}{}
 
 % This is the latest version on tectonic, and seems sufficient for us.
 \RequirePackage{xparse}[2022-01-12]
@@ -237,8 +237,6 @@
     \newtheorem* {notation*} {Notation}
     \newtheorem {question} {Question}
     \newtheorem {conjecture} {Conjecture}
-    \newtheorem {listbase} [theorem] {List}
-    \newtheorem* {listbase*} {List}
     \newtheorem {example} [theorem] {Example}
     \newtheorem* {example*} {Example}
     \newtheorem {examples} [theorem] {Examples}
@@ -253,10 +251,6 @@
     \NewDocumentEnvironment {proofpart} {m}
         {\begin{proof}[\underline{#1}]}
         {\end{proof}}
-
-    \NewDocumentEnvironment {brtlist} {o}
-        {\begin{listbase}[#1]\leavevmode\begin{enumerate}}
-        {\end{enumerate}\end{listbase}}
 
     \AtEndOfPackage {
         \theoremstyle {plain}
@@ -623,6 +617,7 @@
     \cs_gset_eq:NN \paragraphOld \paragraph
     \renewcommand \paragraph [1] {\paragraphOld {#1.}}
 
+    % TODO Become `paragraph` when nested far enough
     \str_new:N \g__current_section_str
     \NewDocumentEnvironment {brtsection} {m}
         {\use:c {\g__current_section_str section} {#1}
@@ -732,6 +727,27 @@
             TODO \end{brtNode}}
 
 }
+
+\brt_declare_module:nnn {abstrnoah-base} {requires = {
+    breaklessmaths,
+    datetime,
+    environments,
+    font,
+    fullpage,
+    nestedproofs,
+    ref,
+    shorthand
+}} {}
+
+\brt_declare_module:nnn {abstrnoah-pset} {requires = {
+    abstrnoah-base
+}} {}
+
+\brt_declare_module:nnn {abstrnoah-notes} {requires = {
+    abstrnoah-base,
+    parskip,
+    sections
+}} {}
 
 % Process modules.
 % (For some reason this cannot be put in a \AtEndOfPackage.)
