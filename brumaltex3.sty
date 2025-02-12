@@ -654,9 +654,11 @@
 }
 
 \brt_declare_module:nnn {parskip} {} {
+    % \RequirePackage [tocskip=-\parskip] {parskip} % TODO why is this sometimes needed and othertimes not??
     \RequirePackage {parskip}
+    % TODO FIXME Doesn't seem to work with nested proofs.
     \cs_if_exist:NT \proof
-        {\AtBeginEnvironment {proof} {\vspace*{-\parskip}}}
+        {\BeforeBeginEnvironment {proof} {\vspace*{-\parskip}}}
 }
 
 \brt_declare_module:nnn {nodes} {requires = {environments,ref}} {
