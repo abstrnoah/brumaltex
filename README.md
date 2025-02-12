@@ -14,7 +14,7 @@ If you find its contents useful and that it contains a bug, please do let me kno
 For broad documentation, see below; for per-macro documentation, see docstrings in the source.
 
 To avoid conflicts, command names are prefixed like `\brtCommand` and environment names like `brtenvironment`.
-Excepts are noted below (see [below](#modules)).
+Exceptions are noted [below](#modules).
 
 ## dependencies
 
