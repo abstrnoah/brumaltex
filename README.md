@@ -105,6 +105,7 @@ Modules that are optional:
 * `sections`
     * Redefine `\paragraph{#1} -> \paragraph{#1.}`.
     * Provides `brtsection` environment which automatically "subs" upon nesting.
+        * Experimental: Also automatically `\label{section:#1}` the section with its title.
 * `nestedproofs`
     * Change the `proof` environment QED symbol depending on how deeply it is
       nested.

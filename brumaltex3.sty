@@ -623,6 +623,7 @@
     \str_new:N \g__current_section_str
     \NewDocumentEnvironment {brtsection} {m}
         {\use:c {\g__current_section_str section} {#1}
+         \label {#1}
          \str_gput_left:Nn \g__current_section_str {sub}}
         {\str_gremove_once:Nn \g__current_section_str {sub}}
 }
