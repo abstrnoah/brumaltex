@@ -179,6 +179,10 @@
     \RequirePackage{hyperref}
     \RequirePackage[capitalise,noabbrev]{cleveref}
     \renewcommand \thefootnote {\textsf{fn}\arabic{footnote}}
+    \NewDocumentCommand \brtRef {om} % [text] {label}
+        {\IfValueTF {#1}
+            {\hyperref[#2]{#1}}
+            {\hyperref[#2]{[[#2]](\ref{#2})}}}
 }
 
 \brt_declare_module:nnn {biblatex} {} {
@@ -201,9 +205,6 @@
 }
 
 \brt_declare_module:nnn {environments} {} {
-    % FIXME Ideally, this only loads for 'nodes' module. But we put it here for now beacuse it must be loaded before environments are defined.
-    \RequirePackage {thm-restate}
-
     \theoremstyle {plain}
     \newtheorem {theorem} {Theorem}
     \newtheorem* {theorem*} {Theorem}
@@ -654,78 +655,6 @@
     % TODO FIXME Doesn't seem to work with nested proofs.
     \cs_if_exist:NT \proof
         {\BeforeBeginEnvironment {proof} {\vspace*{-\parskip}}}
-}
-
-\brt_declare_module:nnn {nodes} {requires = {environments,ref,sections}} {
-    \theoremstyle {definition}
-    \newtheorem {brtNodeBase} [theorem] {Node}
-    \newtheorem {brtNodeListBase} [brtNodeBase] {List}
-
-    \cs_new:Nn \brt_node_fmt:n {\texttt{@#1}}
-
-    % TODO Decouple from restatable so any environment can be used as type.
-    % TODO Add tag field.
-    \NewDocumentEnvironment {brtNode} {mmo} % {type} {label} [comment]
-        {\restatable [{\brtNodeLinkTo[{\brt_node_fmt:n {#2} \IfValueT {#3} {;~#3}}]{#2}}] {#1} {#2Restatable}
-         \label{#2}}
-        {\endrestatable}
-
-    % TODO merge into brtNode
-    % TODO support subsections via nesting level
-    \NewDocumentEnvironment {brtSection} {mo} % {label} [comment]
-        {\brtsection{\brt_node_fmt:n {#1} \IfValueT {#2} {;~#2}} \label{section:#1}}
-        {\endbrtsection}
-
-    \NewDocumentCommand \brtNodeLinkTo {om}
-        {\IfValueTF {#1}
-            {\hyperref[#2]{#1}}
-            {\texttt{[\hyperref[#2]{\brt_node_fmt:n {#2}(\ref{#2})}}]}}
-
-    \newcommand \brtNodeRestate [1] {\use:c {#1Restatable} *}
-
-    \cs_new:Nn \brt_node_seq_new:nnnn % {UNUSED} {label} {UNUSED} {clist of labels}
-        {\seq_new:c {g__brt_node_list_ #2 _seq}
-         \seq_gset_from_clist:cn {g__brt_node_list_ #2 _seq} {#4}}
-
-    % FIXME this can't be restatable because it contains a parameter (thm-restate is bad)
-    \cs_new:Nn \brt_node_list_new:nnnn % {type} {label} {UNUSED} {clist of labels}
-        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
-         \begin{#1}[#2]\label{#2}\leavevmode
-             \begin{enumerate}
-                 \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
-                    {\item \brtNodeLinkTo {##1}}
-             \end{enumerate}
-         \end{#1}}
-
-    \NewDocumentCommand \brtNodeList {O{brtNodeListBase} m o m}
-        {\brt_node_list_new:nnnn {#1} {#2} {#3} {#4}}
-
-    \cs_new:Nn \brt_node_section_new:nnnn % {type} {label} {comment} {clist of labels}
-        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
-         \begin{#1}{#2}[#3]
-             \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
-                {\brtNodeRestate {##1}}
-         \end{#1}}
-
-    \NewDocumentCommand \brtNodeSection {O{brtSection} m o m}
-        {\brt_node_section_new:nnnn {#1} {#2} {#3} {#4}}
-
-    \cs_new:Nn \brt_node_list_section_new:nnnn % {type} {label} {UNUSED} {clist of labels}
-        {\brt_node_seq_new:nnnn {#1} {#2} {#3} {#4}
-         \begin{#1}{#2}[#3]
-             \begin{enumerate}
-                 \seq_map_inline:cn {g__brt_node_list_ #2 _seq}
-                    {\item \brtNodeLinkTo {##1}}
-             \end{enumerate}
-         \end{#1}}
-
-    \NewDocumentCommand \brtNodeListSection {O{brtSection} m o m}
-        {\brt_node_list_section_new:nnnn {#1} {#2} {#3} {#4}}
-
-    \NewDocumentCommand \brtNodeStub {mmo} % {type} {label} [comment]
-        {\begin{brtNode}{#1}{#2}[#3]
-            TODO \end{brtNode}}
-
 }
 
 \brt_declare_module:nnn {abstrnoah-base} {requires = {

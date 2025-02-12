@@ -149,15 +149,6 @@ Modules that are optional:
     * Custom 'tikz-cd' configuration, namely `ampersand replacement=\&`.
 * `parskip`
     * Load 'parskip' package and (partially) fix spacing around `proof` environment.
-* `node`
-    * An experimental attempt to make LaTeX better at taking notes in a nonlinear fashion.
-    * `brtNode` environment with signature `{type}{label}[comment]`.
-        * Wraps 'thm-restate''s `restatable` environment.
-        * Wraps with `type` environment blindly, which must have signature `[title]`.
-        * Passes `label; comment` to title field of `type` environment.
-        * Automatically calls `\label{label}`.
-    * `brtSection` which environmentises builtin `\section` and automatically `\label`s.
-    * TODO
 * `abstrnoah-*`
     * Several collections of modules for the author's common use-cases.
     * Unstable, so check the source for an up-to-date list.
