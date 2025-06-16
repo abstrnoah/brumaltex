@@ -106,8 +106,10 @@ Modules that are optional:
     * Warning: Environments are _not_ `brt`-prefixed.
 * `sections`
     * Redefine `\paragraph{#1} -> \paragraph{#1.}`.
+    * Provides `brtpart` environment wrapper around `\part`.
+        * Experimental: Auto `\label{part:#1}`.
     * Provides `brtsection` environment which automatically "subs" upon nesting.
-        * Experimental: Also automatically `\label{section:#1}` the section with its title.
+        * Experimental: Auto `\label{section:#1}`.
 * `nestedproofs`
     * Change the `proof` environment QED symbol depending on how deeply it is
       nested.
@@ -142,6 +144,8 @@ Modules that are optional:
 * `shorthand`
     * My own shorthand bindings to `longhand` macros.
     * Warning: Names are _not_ `brt`-prefixed, so beware conflicts. I probably redefine your favourite command.
+* `friends-*`
+    * TODO
 * `experiments`
     * Scary.
 * `font`

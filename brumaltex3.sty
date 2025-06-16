@@ -182,7 +182,11 @@
     \NewDocumentCommand \brtRef {om} % [text] {label}
         {\IfValueTF {#1}
             {\hyperref[#2]{#1}}
-            {\hyperref[#2]{[[#2]](\ref{#2})}}}
+            {\hyperref[#2]{#2}}}
+    \NewDocumentCommand \brtLink {om} % [text] {link}
+        {\IfValueTF {#1}
+            {\href{#2}{#1}}
+            {\url{#2}}}
 }
 
 \brt_declare_module:nnn {biblatex} {} {
@@ -219,6 +223,7 @@
     \newtheorem {corollary} [theorem] {Corollary}
     \newtheorem* {corollary*} {Corollary}
     \newtheorem {observation} [theorem] {Observation}
+    \newtheorem* {observation*} {Observation}
     % TODO improve problem and problempart
     \newtheorem {problem} {Problem}
     \newtheorem* {problem*} {Problem}
@@ -230,18 +235,20 @@
     \newtheorem {exercisepart} {Part} [exercise]
 
     \theoremstyle {definition}
-    \newtheorem {definition} [theorem] {Definition}
+    \newtheorem {definition} {Definition}
     \newtheorem* {definition*} {Definition}
     \newtheorem {remark} [theorem] {Remark}
     \newtheorem* {remark*} {Remark}
-    \newtheorem {notation} [theorem] {Notation}
+    \newtheorem {notation} {Notation}
     \newtheorem* {notation*} {Notation}
+    \newtheorem* {question*} {Question}
     \newtheorem {question} {Question}
     \newtheorem {conjecture} {Conjecture}
     \newtheorem {example} [theorem] {Example}
     \newtheorem* {example*} {Example}
     \newtheorem {examples} [theorem] {Examples}
     \newtheorem* {examples*} {Examples}
+    \newtheorem* {notice*} {Notice}
 
     \NewDocumentEnvironment {solution} {O{Solution}}
         {\begin{proof}[#1]}
@@ -258,6 +265,8 @@
     }
 
     \NewDocumentEnvironment {scope} {} {} {}
+
+    \NewDocumentEnvironment {interlude} {} {\normalfont} {}
 }
 
 \brt_declare_module:nnn {nestedproofs} {requires = expl3-library} {
@@ -376,6 +385,8 @@
 
     % Maths mode
 
+    \newcommand \mint [1] {\text{~\upshape #1~}}
+
     % Needed inside of ExplSyntax.
     \newcommand \brtLHMaSubscript [2] {#1 \c_math_subscript_token {#2}}
 
@@ -429,11 +440,15 @@
     \brtLHOperatorCons \brtLHInfimum {inf}
     \brtLHOperatorCons \brtLHSupremum {sup}
 
+    \newcommand \brtLHCeiling [1] {\left\lceil#1\right\rceil}
+    \newcommand \brtLHFloor [1] {\left\lfloor#1\right\rfloor}
+
     \newcommand \brtLHImageSet [2] {#1 \qty[#2]}
     \newcommand \brtLHInverseMap [1] {{#1}^{-1}}
     \newcommand \brtLHInverseSet [2] {\brtLHInverseMap {#1} \qty[#2]}
 
-    \newcommand \brtLHCartesianPower [2] {{}^{#2}{#1}}
+    \newcommand \brtLHCartesianPower [2] {{#1}^{#2}}
+    \brtLHOpCons \brtLHPowerset {\mathcal{P}} {\mathcal{P}(#1)}
 
     \newcommand \brtLHRestrict [2] {#1 \restriction #2}
 
@@ -447,6 +462,15 @@
     \newcommand \brtLHFamilyCons [2] {\brtLHMaSubscript {\qty(#1)} {#2}}
 
     \newcommand \brtLHExistsUniqueSymbol {\exists!}
+
+    % TODO FIXME
+    % NOTICE: The optional arguments in these commands are not (yet) compatible with `brt_comp_quantifiers` behaviour.
+    % \brtLHForall [qualifier] {input} {output}
+    \ProvideDocumentCommand \brtLHForallQualified {omm}
+        {\forall \IfValueT{#1}{^{#1}} #2 \, \qty(#3)}
+    % \brtLHExists [qualifier] {input} {output}
+    \ProvideDocumentCommand \brtLHExistsQualified {omm}
+        {\exists \IfValueT{#1}{^{#1}} #2 \, \qty(#3)}
 
     % \brtLHForall {input} {output}
     \newcommand \brtLHForall [2] {\forall #1 \, \qty(#2)}
@@ -497,7 +521,7 @@
     \newcommand \brtLHTensorSymbol {\bigotimes}
     \newcommand \brtLHConjunctSymbol {\bigwedge}
     \newcommand \brtLHDisjunctSymbol {\bigvee}
-    
+
     \newcommand \brtLHValuation [1] {\left\llbracket#1\right\rrbracket}
 }
 
@@ -552,6 +576,9 @@
     \cs_gset:Npn \diam {\brtLHDiameter}
     \cs_gset:Npn \diameter {\brtLHDiameter}
 
+    \cs_gset:Npn \ceil {\brtLHCeiling}
+    \cs_gset:Npn \floor {\brtLHFloor}
+
     \cs_gset:Npn \imageset {\brtLHImageSet}
     \cs_gset:Npn \inversemap {\brtLHInverseMap}
     \cs_gset:Npn \inverseset {\brtLHInverseSet}
@@ -559,6 +586,7 @@
     \cs_gset:Npn \preimageset {\brtLHInverseSet}
 
     \cs_gset:Npn \cartpow {\brtLHCartesianPower}
+    \cs_gset:Npn \powerset {\brtLHPowerset}
 
     \cs_gset:Npn \buildset {\brtLHSetCons}
     \cs_gset:Npn \buildfamily  {\brtLHFamilyCons}
@@ -569,6 +597,8 @@
     \cs_gset:Npn \Forall {\brtLHForall}
     \cs_gset:Npn \Exists {\brtLHExists}
     \brt_comp_quantifiers:NNnn \Forall \Exists {\forall} {\exists}
+    \cs_gset:Npn \ExistsQ {\brtLHExistsQualified}
+    \cs_gset:Npn \ForallQ {\brtLHForallQualified}
 
     \cs_gset:Npn \idxedset {\brtLHIndexedSet}
     \cs_gset:Npn \idxedfamily  {\brtLHIndexedFamily}
@@ -608,6 +638,22 @@
     \cs_gset:Npn \valuate {\brtLHValuation}
 }
 
+\brt_declare_module:nnn {friends} {} {
+    \ProvideDocumentCommand \Naturals {} {\mathbb {N}}
+    \ProvideDocumentCommand \Integers {} {\mathbb {Z}}
+    \ProvideDocumentCommand \Rationals {} {\mathbb {Q}}
+    \ProvideDocumentCommand \Reals {} {\mathbb {R}}
+    \ProvideDocumentCommand \BaireSpace {} {\cartpow{\omega}{\omega}}
+    \ProvideDocumentCommand \CantorSpace {} {\cartpow{2}{\omega}}
+    \ProvideDocumentCommand \BaireTree {} {\cartpow{\omega}{<\omega}}
+    \ProvideDocumentCommand \CantorTree {} {\cartpow{2}{<\omega}}
+}
+
+\brt_declare_module:nnn {friends-dst} {} {
+    \cs_gset:Npn \GZero {\mathbb {G} _ 0}
+    \cs_gset:Npn \EZero {\mathbb {E} _ 0}
+}
+
 \brt_declare_module:nnn {breaklessmaths} {} {
     % never ever break in maths mode
     \binoppenalty=\maxdimen
@@ -619,13 +665,23 @@
     \cs_gset_eq:NN \paragraphOld \paragraph
     \renewcommand \paragraph [1] {\paragraphOld {#1.}}
 
+    \NewDocumentEnvironment {brtpart} {m}
+        {\part {#1}
+         \label {part:#1}}
+        {}
+
+    % TODO Incorporate `part`?
     % TODO Become `paragraph` when nested far enough
     \str_new:N \g__current_section_str
-    \NewDocumentEnvironment {brtsection} {m}
+    \NewDocumentEnvironment {brtsection} {mo}
         {\use:c {\g__current_section_str section} {#1}
-         \label {#1}
+         \label {section:\IfValueTF{#2}{#2}{#1}}
          \str_gput_left:Nn \g__current_section_str {sub}}
         {\str_gremove_once:Nn \g__current_section_str {sub}}
+    \NewDocumentEnvironment {brtparagraph} {m}
+        {\paragraph {#1}
+         \label{paragraph:#1}}
+        {}
 }
 
 \brt_declare_module:nnn {fullpage} {} {
@@ -667,7 +723,8 @@
     fullpage,
     nestedproofs,
     ref,
-    shorthand
+    shorthand,
+    friends
 }} {}
 
 \brt_declare_module:nnn {abstrnoah-pset} {requires = {
