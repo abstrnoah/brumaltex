@@ -467,15 +467,15 @@
     % NOTICE: The optional arguments in these commands are not (yet) compatible with `brt_comp_quantifiers` behaviour.
     % \brtLHForall [qualifier] {input} {output}
     \ProvideDocumentCommand \brtLHForallQualified {omm}
-        {\forall \IfValueT{#1}{^{#1}} #2 \, \qty(#3)}
+        {\forall \IfValueT{#1}{^{#1}} #2 .\, #3}
     % \brtLHExists [qualifier] {input} {output}
     \ProvideDocumentCommand \brtLHExistsQualified {omm}
-        {\exists \IfValueT{#1}{^{#1}} #2 \, \qty(#3)}
+        {\exists \IfValueT{#1}{^{#1}} #2 .\, #3}
 
     % \brtLHForall {input} {output}
-    \newcommand \brtLHForall [2] {\forall #1 \, \qty(#2)}
+    \newcommand \brtLHForall [2] {\forall #1 .\, #2}
     % \brtLHExists {input} {output}
-    \newcommand \brtLHExists [2] {\exists #1 \, \qty(#2)}
+    \newcommand \brtLHExists [2] {\exists #1 .\, #2}
     \brt_comp_quantifiers:NNnn \brtLHForall \brtLHExists {\forall} {\exists}
 
     % \brtLHIndexedFamily {index} {input expression} {output expression}
